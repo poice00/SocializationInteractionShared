@@ -1,0 +1,18 @@
+package com.socialization.service;
+
+import java.util.List;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.Social;
+import com.socialization.domain.Talk;
+import com.socialization.domain.User;
+
+public interface TalkService extends DaoSupport<Talk>{
+
+	List<Talk> findByContent();
+
+	Talk findByContent(String content);
+
+	List<Talk> findByFriends(User user);
+	
+}

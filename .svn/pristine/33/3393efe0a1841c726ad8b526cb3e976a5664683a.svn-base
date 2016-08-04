@@ -1,0 +1,174 @@
+package com.socialization.domain;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.Type;
+
+
+@Entity
+@SuppressWarnings("serial")
+public class Activity implements Serializable{
+	private Long id;  //活动ID
+	private String activityName;  //活动名称
+	private User user;   //活动发起人员
+	private Date postTime; //活动创建时间
+	private Date startTime;   //活动开始时间
+	private Date endTime;     //活动结束时间 
+	private String activitydescription;  //活动描述   
+	private String activityTags;    //活动标签，用于活动推荐
+	private String activityPlace;  //活动地点
+	private String activityState;   //活动状态
+	private Integer activityMemNum;   //活动参加人员数量
+	private String activityInteNum;  //活动初始人员数量
+	private ActivityType activityType;    //活动类型
+	private int interestUserCount;     //感兴趣的人数
+	private String activityPrice;  //活动价格
+	private String activityImg;    //活动照片
+	private Set<User> partUsers=new HashSet<User>();  //活动参加人员列表
+	private Set<User> intrestUsers=new HashSet<User>();  //对活动感兴趣的人
+	private Set<User> wantInUsers=new HashSet<User>();   //申请参加活动的人
+ 	
+	
+	@Id
+	@GeneratedValue
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	
+	public String getActivityName() {
+		return activityName;
+	}
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "userId")
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public Date getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	public Date getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	@Type(type="text")
+	public String getActivitydescription() {
+		return activitydescription;
+	}
+	public void setActivitydescription(String activitydescription) {
+		this.activitydescription = activitydescription;
+	}
+	public String getActivityPlace() {
+		return activityPlace;
+	}
+	public void setActivityPlace(String activityPlace) {
+		this.activityPlace = activityPlace;
+	}
+	public String getActivityState() {
+		return activityState;
+	}
+	public void setActivityState(String activityState) {
+		this.activityState = activityState;
+	}
+	public Integer getActivityMemNum() {
+		return activityMemNum;
+	}
+	public void setActivityMemNum(Integer activityMemNum) {
+		this.activityMemNum = activityMemNum;
+	}
+
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "activityTypeId")
+	public ActivityType getActivityType() {
+		return activityType;
+	}
+	public void setActivityType(ActivityType activityType) {
+		this.activityType = activityType;
+	}
+	public String getActivityPrice() {
+		return activityPrice;
+	}
+	public void setActivityPrice(String activityPrice) {
+		this.activityPrice = activityPrice;
+	}
+	public String getActivityImg() {
+		return activityImg;
+	}
+	public void setActivityImg(String activityImg) {
+		this.activityImg = activityImg;
+	}
+	
+	@ManyToMany(mappedBy = "partActivities",fetch=FetchType.EAGER)
+	public Set<User> getPartUsers() {
+		return partUsers;
+	}
+	public void setPartUsers(Set<User> partUsers) {
+		this.partUsers = partUsers;
+	}
+	@ManyToMany(mappedBy = "userIntrestActy",fetch=FetchType.EAGER)
+	public Set<User> getIntrestUsers() {
+		return intrestUsers;
+	}
+	public void setIntrestUsers(Set<User> intrestUsers) {
+		this.intrestUsers = intrestUsers;
+	}
+	@ManyToMany(mappedBy = "userWantInAct",fetch=FetchType.EAGER)
+	public Set<User> getWantInUsers() {
+		return wantInUsers;
+	}
+	public void setWantInUsers(Set<User> wantInUsers) {
+		this.wantInUsers = wantInUsers;
+	}
+	public Date getPostTime() {
+		return postTime;
+	}
+	public void setPostTime(Date postTime) {
+		this.postTime = postTime;
+	}
+	public int getInterestUserCount() {
+		return interestUserCount;
+	}
+	public void setInterestUserCount(int interestUserCount) {
+		this.interestUserCount = interestUserCount;
+	}
+	public String getActivityTags() {
+		return activityTags;
+	}
+	public void setActivityTags(String activityTags) {
+		this.activityTags = activityTags;
+	}
+	public String getActivityInteNum() {
+		return activityInteNum;
+	}
+	public void setActivityInteNum(String activityInteNum) {
+		this.activityInteNum = activityInteNum;
+	}
+
+
+}

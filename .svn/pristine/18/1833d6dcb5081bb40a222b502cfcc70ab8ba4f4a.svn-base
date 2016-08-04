@@ -1,0 +1,66 @@
+package com.socialization.serviceImpl;
+
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.User;
+import com.socialization.service.UserService;
+
+@Service
+@Transactional
+public class UserServiceImpl extends DaoSupportImpl<User> implements UserService {
+
+	@Override
+	public User findByLoginNameAngPassword(String loginName, String password) {
+		User u = (User) getSession().createQuery(//
+					"FROM User u WHERE u.loginName=? and u.password=?")//
+					.setParameter(0, loginName)//
+					.setParameter(1, password)//
+					.uniqueResult();
+		
+		return u;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> OrderByupCount(String st) {
+		// TODO Auto-generated method stub
+		if (st == "总榜单") {
+			return getSession().createQuery(
+					"FROM User u ORDER BY u.resUpCount DESC")
+					.setMaxResults(3)
+					.list();
+		} else {
+			return getSession().createQuery(
+					"FROM User u ORDER BY u.resUpCount DESC")
+					.list();
+		}
+	}
+
+
+	/**
+	 * @desc 判断用户名是否存在
+	 * @param loginName 用户名
+	 * @return 如果存在，返回true，否则返回false
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 3, 2015 11:55:26 AM
+	 */
+	@Override
+	public boolean isExist(String loginName) {
+		long count = (long)getSession().createQuery(
+				"SELECT COUNT(*) FROM User WHERE loginName = ?")//
+				.setParameter(0, loginName)//
+				.uniqueResult();
+		
+		if(count > 0)
+			return true;
+		
+		return false;
+	}
+	
+}

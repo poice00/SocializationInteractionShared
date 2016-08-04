@@ -1,0 +1,105 @@
+package com.socialization.action.zone;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.apache.struts2.ServletActionContext;
+import org.aspectj.util.FileUtil;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.User;
+import com.socialization.service.InformationService;
+import com.socialization.util.MD5Util;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class InformationAction extends BaseAction<User>{
+	
+	
+	private String passwordOne;
+	private String newPassword;
+	
+	
+	/** 列表 */
+	public String list() throws Exception {
+        User user = informationService.getById(getCurrentUser().getId());
+		ActionContext.getContext().put("user", user);
+		return "list";
+	}
+
+	/** 修改密码页面 */
+	public String changePasswordUI() throws Exception {
+		return "changePasswordUI";
+	}
+	
+	/** 修改密码 */
+	public String changePassword() throws Exception {
+		User user = informationService.getById(model.getId());
+		String password = MD5Util.MD5(model.getPassword());
+		System.out.println("======oldPassword=========" + user.getPassword());
+		System.out.println("======newPassword=========" + password);
+		if(newPassword.equals(passwordOne)){	//判断两次密码是否输入一致
+			if(password.equals(user.getPassword())){	//判断旧密码是否输入正确
+				user.setPassword(MD5Util.MD5(newPassword));
+				System.out.println("++++++++++++++++++" + newPassword);
+				ActionContext.getContext().getSession().remove("user");
+				informationService.update(user);
+				return "changePassword";
+			}else{
+				addFieldError("fail", "原密码错误");
+				return "changePasswordUI";
+			}
+		}else{
+			addFieldError("fail", "两次输入不一致！");
+			return "changePasswordUI";
+		}
+			
+		
+	}
+	/** 修改页面 */
+	public String editUI() throws Exception {
+		User information = informationService.getById(model.getId());
+		ActionContext.getContext().getValueStack().push(information);
+		return "saveUI";
+	}
+	
+	/** 修改 */
+	public String edit() throws Exception {
+		System.out.println("=======1=========");
+		User information = informationService.getById(model.getId());
+		System.out.println("=============model:" + model.getId());
+		
+		information.setName(model.getName()); //
+		information.setBirthday(model.getBirthday());
+		information.setEducation(model.getEducation());//
+		information.setEmail(model.getEmail());
+		information.setTelephone(model.getTelephone());
+		information.setQq(model.getQq());
+		
+		informationService.update(information);
+		
+		return "toList";
+	}
+
+	public String getPasswordOne() {
+		return passwordOne;
+	}
+
+	public void setPasswordOne(String passwordOne) {
+		this.passwordOne = passwordOne;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
+}

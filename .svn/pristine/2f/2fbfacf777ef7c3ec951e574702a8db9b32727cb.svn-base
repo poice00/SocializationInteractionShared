@@ -1,0 +1,61 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/index.css">	
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+<body>
+<%@ include file="/WEB-INF/jsp/public/commons_head.jspf"%>
+<center>
+<div class="nav-bar">
+        	<s:a action="resource_homePage" >首页</s:a>
+        	<s:a action="resource_resTypeUI" >资源分类</s:a>
+			<s:a action="resource_resRankUI">排行榜</s:a>
+			<s:a action="resource_resHelpUI" >帮助</s:a>
+			<s:a action="resource_highsearchUI">高级搜索</s:a>
+			<s:a action="myresource_uplist">我的资源</s:a>
+			<s:a action="myresource_showupload">我要上传</s:a>	
+</div>
+<br />
+<div>
+下载量最多的资源：
+<s:iterator value="#resCounList">
+		<s:a action="myresource_showSingleRes?idd=%{id}">${name }</s:a><br/>
+		作者：${user.name }|+++++++上传时间：${postTime }|下载次数：${downCount }<br/>
+		————————————————————————————————————————————————————————————<br/>
+</s:iterator>
+  <%-- <s:url action="resource_singalresRankUI" id="ResDown">
+    <s:param name="resTvalue">下载量</s:param>
+   </s:url>
+<s:a href="%{ResDown}">查看更多</s:a> --%>
+<s:a action="resource_singalresRankUI?resTvalue=下载量">查看更多</s:a>
+</div>
+<div>
+收藏数最多的资源：
+<s:iterator value="#resColleList">
+		<s:a action="myresource_showSingleRes?idd=%{id}">${name }</s:a><br/>
+		作者：${user.name }|+++++++上传时间：${postTime }|下载次数：${downCount }<br/>
+		————————————————————————————————————————————————————————————<br/>
+</s:iterator>
+<s:a action="resource_singalresRankUI?resTvalue=收藏量">查看更多</s:a>
+</div>
+<div>
+上传量最多的用户：
+<s:iterator value="#userupCountList">
+		<s:a action="">${name }</s:a><br/>
+		————————————————————————————————————————————————————————————<br/>
+</s:iterator>
+</div>
+<s:a action="resource_singalresRankUI?resTvalue=上传量">查看更多</s:a>
+</center>
+</body>
+</html>

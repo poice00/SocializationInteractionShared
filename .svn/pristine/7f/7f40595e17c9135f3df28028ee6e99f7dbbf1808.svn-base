@@ -1,0 +1,47 @@
+package com.socialization.util;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.socialization.domain.User;
+
+
+public class CheckInterceptor implements Interceptor{
+
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String intercept(ActionInvocation invocation) throws Exception {
+		User user = (User) ActionContext.getContext().getSession().get("user");
+		String nameSpace = invocation.getProxy().getNamespace(); 
+		String actionName = invocation.getProxy().getActionName();
+		String priUrl = nameSpace + actionName;
+		System.out.println("priurl="+priUrl);
+		//如果用户为空
+		if(user == null){
+			//如果请求是下列的action，放行
+			if(priUrl.startsWith("/user_login")||priUrl.startsWith("/forum_list")
+					||priUrl.startsWith("/forum_show")||priUrl.startsWith("/topic_show")
+					||priUrl.startsWith("/home_index")||priUrl.startsWith("home_title")
+					||priUrl.startsWith("home_top")||priUrl.startsWith("home_blank")
+					||priUrl.startsWith("home_mid")||priUrl.startsWith("home_bottom")){
+				return invocation.invoke();
+			}else{
+			//否则转到登陆界面
+				return "loginUI";
+			}
+		}
+		return invocation.invoke();
+	}
+	
+}

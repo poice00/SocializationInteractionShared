@@ -1,0 +1,620 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+	<%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<html class="bbs-page">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script type="text/javascript" async="" src="./ty/h.js"></script>
+	<script type="text/javascript" async=""
+		src="${pageContext.request.contextPath}/ty/atrk.js"></script>
+	<meta charset="utf-8">
+		<title>SISP论坛</title>
+<link rel="stylesheet" href="css/breakingnews.css">
+<script src="js/breakingnews.js"></script>
+
+<link href="css/fliptimer.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery.fliptimer.js"></script>
+<!-- 返回顶部 -->
+<style type="text/css">
+	.backToTop {
+	 display: none;
+	 width: 18px;
+	 line-height: 1.2;
+	 padding: 5px 0;
+	 background-color: #000;
+	 color: #fff;
+	 font-size: 12px;
+	 text-align: center;
+	 position: fixed;
+	 _position: absolute;
+	 right: 10px;
+	 bottom: 100px;
+	 _bottom: "auto";
+	 cursor: pointer;
+	 opacity: .6;
+	 filter: Alpha(opacity=60);
+	 
+}
+</style>
+ <div></div>
+<script type="text/javascript">
+	(function() {
+	    var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+	        .text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+	            $("html, body").animate({ scrollTop: 0 }, 120);
+	    }), $backToTopFun = function() {
+	        var st = $(document).scrollTop(), winh = $(window).height();
+	        (st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+	        //IE6下的定位
+	        if (!window.XMLHttpRequest) {
+	            $backToTopEle.css("top", st + winh - 166);
+	        }
+	    };
+	    $(window).bind("scroll", $backToTopFun);
+	    $(function() { $backToTopFun(); });
+	})();
+</script>
+<!--  滚动新闻 -->
+<script>
+$(function(){
+	$('#breakingnews1').BreakingNews({
+		title: '公告'
+	});
+
+	$('#breakingnews2').BreakingNews({
+		title: '滚动新闻',
+		titlebgcolor: '#099',
+		linkhovercolor: '#099',
+		border: '1px solid #099',
+		timer: 3000,
+		effect: 'slide'	
+	});
+
+});
+</script>
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<meta name="keywords" content="天涯,天涯论坛,天涯社区,论坛,tianya,bbs">
+		<meta name="description"
+			content="全民话题，天涯制造——天涯论坛，全球最具有影响力的中文论坛，全球华人网上家园">
+			<meta name="baidu-site-verification" content="755H5N0sveOcDb9H">
+				<meta name="google-site-verification"
+					content="5fLfafRyiLezPeGUYUEAR2IN-_hwPlffctMkMg_879k">
+					<meta name="chinaz-site-verification"
+						content="5d2dc0dc-f327-468e-b580-fa4b97c7118c">
+						<meta http-equiv="mobile-agent"
+							content="format=xhtml; url=http://m.tianya.cn">
+							<link href="${pageContext.request.contextPath}/ty/TY.css"
+rel="stylesheet" type="text/css">
+<link
+	href="${pageContext.request.contextPath}/ty/bbs_5c03c0c.css"
+rel="stylesheet" type="text/css">
+<link rel="shortcut icon"
+	href="http://static.tianyaui.com/favicon.ico"
+	type="image/vnd.microsoft.icon">
+	<script type="text/javascript" charset="utf-8"
+		src="${pageContext.request.contextPath}/ty/TY.js"></script>
+<script charset="utf-8"
+	src="${pageContext.request.contextPath}/ty/refresh.jsp"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${pageContext.request.contextPath}/ty/main_84ded00.js"></script>
+<style>
+.layout-1280 #bbsdoc {
+	width: 1255px;
+}
+
+.layout-1280 #bbsdoc .layout-lmr #main {
+	width: 920px;
+}
+
+.layout-1280 #bbsdoc .layout-mr #main {
+	width: 1035px;
+}
+
+.layout-1280 #bbsdoc .layout-lm #main {
+	width: 1110px;
+}
+
+.layout-1280 #bbsdoc .layout-m #main {
+	width: 1215px;
+}
+
+.layout-1280 .ad-additional {
+	display: inline-block;
+}
+
+.layout-1280-top-nav div#top_nav_wrap {
+	width: 1115px;
+}
+</style>
+<script type="text/javascript" charset="utf-8"
+	src="${pageContext.request.contextPath}/ty/interface.js"
+	async=""></script>
+<script type="text/javascript" charset="utf-8"
+	src="${pageContext.request.contextPath}/ty/cookie.js"
+	async=""></script>
+<script defer=""
+	src="${pageContext.request.contextPath}/ty/cityid.jsp"></script>
+<img
+	src="${pageContext.request.contextPath}/ty/clickAnalyse.jsp"
+height="0" width="0"><img
+src="${pageContext.request.contextPath}/ty/guid.jsp"
+height="0" width="0"><script
+		src="${pageContext.request.contextPath}/ty/s"
+	type="text/javascript" charset="gb2312"></script>
+<style type="text/css">
+#ty_msg_mod *, #ty_msg_mod {
+	margin: 0px;
+	padding: 0px;
+}
+
+#ty_msg_mod #ty_msg_hd_close, #ty_msg_mod .ty-msg-ft a {
+	background:
+		url(http://static.tianyaui.com/global/wizard/images/ty-msg-bg.png?v=20130509)
+		no-repeat;
+	display: inline-block;
+}
+
+#ty_msg_mod {
+	z-index: 100;
+	width: 351px;
+	position: fixed;
+	_position: absolute;
+	right: 2px;
+	font-size: 12px;
+	display: none;
+	bottom: 34px;
+	_top: expression(( document.documentElement.clientHeight ?
+		document.documentElement.clientHeight : document.body.clientHeight)+documentElement.scrollTop-MSG_GLOBAL.heightHead-MSG_GLOBAL.heightClose-MSG_GLOBAL.heightAd-MSG_GLOBAL.heightBottom-MSG_GLOBAL.heightBorder-2-34+"px");
+	_left: expression(( document.documentElement.clientWidth ? 
+		document.documentElement.clientWidth : document.body.clientWidth)+(document.documentElement.scrollLeft?
+		 document.documentElement.scrollLeft: document.body.scrollLeft)
+		-MSG_GLOBAL.width -MSG_GLOBAL.widthBorder+"px");
+	_bottom: auto;
+}
+
+#ty_msg_mod #msg_border_ctn {
+	border: 2px solid #84a9d2;
+	overflow: hidden;
+	background: #fff;
+}
+
+#ty_msg_mod #head_msg {
+	width: 100%;
+}
+
+#ty_msg_mod .ty-msg-hd {
+	background: none;
+	width: 100%;
+	height: 19px;
+	overflow: hidden;
+}
+
+#ty_msg_mod #ty_msg_hd_close {
+	cursor: pointer;
+	margin-right: 2px;
+	height: 14px;
+	width: 14px;
+	float: right;
+	background: #6699CC;
+	border: 1px solid #ccc;
+	line-height: 14px;
+	text-align: center;
+	color: #fff;
+	font-size: 14px;
+	overflow: hidden;
+}
+
+#ty_msg_mod .ty-msg-bd iframe {
+	height: 189px;
+	width: 346px;
+	overflow: hidden;
+}
+
+#ty_msg_mod .ty-msg-bd {
+	line-height: 0;
+}
+
+#ty_msg_mod .ty-msg-bd iframe.ad {
+	height: 240px;
+	width: 346px;
+	overflow: hidden;
+}
+</style>
+<style type="text/css">
+@charset "UTF-8"; 
+
+.open-vip-tips-pop {
+	border: 2px solid #76c7f0;
+	background: #f1f9fd;
+	width: 496px;
+}
+
+.open-vip-tips-pop .hd {
+	height: 30px;
+	position: relative;
+	*zoom: 1;
+}
+
+
+.open-vip-tips-pop .bd {
+	padding: 35px 40px 45px;
+	text-align: center;
+}
+
+
+.open-vip-tips-pop .bd .text {
+	font: 18px/24px "微软雅黑";
+	color: #1983b8;
+	margin-bottom: 6px;
+}
+
+.open-vip-tips-pop .bd .text a {
+	text-decoration: underline;
+	color: #e17a14;
+}
+
+.open-vip-tips-pop .bd .ignore {
+	font: 12px/24px "宋体";
+	color: #999;
+}
+
+.open-vip-tips-pop .bd .ignore label {
+	vertical-align: middle;
+}
+
+.open-vip-tips-pop .bd .ignore label .nolonger-show {
+	vertical-align: middle;
+	margin: -2px 4px 0 0;
+}
+
+.open-vip-tips-pop .bd .open-btn {
+	display: inline-block;
+	width: 190px;
+	height: 34px;
+	font: 20px/34px "微软雅黑";
+	color: #fff;
+	background: #ee8e30;
+	text-decoration: none;
+	border-radius: 5px;
+	*display: inline;
+	*zoom: 1;
+}
+
+.open-vip-tips-pop .bd .open-btn:hover {
+	background: #e17a14;
+}
+</style>
+</head>
+
+
+<body>
+<%@ include file="/WEB-INF/jsp/public/nav.jsp"%>
+	
+	<div id="bbsdoc" class="bbsdoc">
+		<div class="clearfix"></div>
+		<!--兼容个别浏览器强制改变最小字号而导致的页面错乱-->
+		<div id="hd"></div>
+		<div id="bd" class="layout-lmr clearfix" >
+			<div id="left" >
+
+				<div id="bbs_left_nav" class="bbs_left_nav" style="margin-top:70px">
+					
+					 <s:iterator value="#forumList">
+						<ul class="nav_parent">
+							<li><s:a action="forum_show?id=%{id}" cssClass="expand" item="lookout">${name }</s:a></li>
+						</ul>
+					</s:iterator>
+					<hr>
+					<s:a action="topic_addUI">
+					<img src="${pageContext.request.contextPath}/img/qt.jpg" alt="快速发贴" style="width: 30px;height: 30px" />快速发贴</s:a><br>
+					<hr>
+					<s:a action="message_addUI">
+					<img src="${pageContext.request.contextPath}/img/m.jpg" alt="快速发消息" style="width: 30px;height: 30px" />快速发消息</s:a>
+					<hr>
+					<s:a action="message_CollectionUI">
+					<img src="${pageContext.request.contextPath}/img/coll.jpg" alt="收藏夹" style="width: 30px;height: 30px" />收藏夹</s:a>
+					<hr>
+					<s:a action="message_MyTopicListUI">
+					<img src="${pageContext.request.contextPath}/img/topic.jpg" alt="我发布的" style="width: 30px;height: 30px" />我发布的</s:a>
+				</div>
+			</div>
+			<div id="main-right" style="margin-top: 50px">
+				<!-- 滚动新闻 -->
+					<div>
+						<div class="BreakingNewsController easing" id="breakingnews2" >
+								<div class="bn-title"></div>
+									<ul>
+										<s:iterator value="#hotTopicList">
+										<li>
+											<span class="badge">热</span><font color="#0000CC"><s:date name="lastUpdateTime"/>
+											</font> <s:a action="topic_show?id=%{id}">${title }</s:a></td>	
+										</li>
+									</s:iterator> 
+									</ul>
+								<div class="bn-arrows"><span class="bn-arrows-left"></span><span class="bn-arrows-right"></span></div>	
+							</div>
+						
+						<div>
+					</div>
+				
+			<div id="right">
+
+				<!--180*150中图-->
+				<div id="AD_img_180_150_LINK" class="section ads-loc-holder"
+					data-ads-order="07" style="display: block;">
+					<div class="adsame-box" style="">
+						<a
+							href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111107&ci=11&or=90&l=9411&bg=9411&b=9448&u=http%3A//bbs.tianya.cn/post-travel-712366-1.shtml%23fabu_anchor"
+							target="_blank"><img
+							src="${pageContext.request.contextPath}/ty/0_453.jpg" width="180"
+							height="150" border="0" data-baiduimageplus-ignore=""></a>
+					</div>
+					<img src=""
+						style="width: 0px; height: 0px; border: none; display: none;"
+						border="0">
+				</div>
+
+				<!--阅读量排行-->
+
+
+				<div class="section" _stat="/stat/bbs/block/版块排行" _tystat="版块排行">
+					<div class="hd clearfix">
+						<h2>阅读量排行Top 3</h2>
+					</div>
+					<div class="bd">
+					
+						<ul >
+							<s:iterator value="#lookTopicList" status="status">
+								<li><span>${status.count }&nbsp;</span>
+										<s:a action="topic_show?id=%{id}">${title }</s:a>
+								</li>
+							</s:iterator>
+						</ul>
+					</div>
+				</div>
+
+
+				<!--粉丝排行-->
+
+
+				<div class="section" _stat="/stat/bbs/block/版块排行" _tystat="版块排行">
+					<div class="hd clearfix">
+						<h2>粉丝排行TOP 3
+						</h2>
+					</div>
+					<div class="bd">
+						<s:iterator value="#fansCountList" status="status">
+															
+							<li><span>第${status.count }名&nbsp;</span>
+								<span>${name }</span>
+							
+							</li>
+						</s:iterator>
+					
+					</div>
+				</div>
+				
+
+
+
+
+				<!--版块排行-->
+
+
+				<div class="section" _stat="/stat/bbs/block/版块排行" _tystat="版块排行">
+					<div class="hd clearfix">
+						<h2>版块排行</h2>
+					</div>
+					<div class="bd">
+						<s:iterator value="#forumRankList" status="status">
+							<ul class="block-ranking">
+								<li><span>${status.count }&nbsp;</span>
+								<s:a action="forum_show?id=%{id}">${name }</s:a><span
+									class="trend-img trend-img-unchanging">&nbsp;</span></li>
+							</ul>
+						</s:iterator>
+					</div>
+				</div>
+				
+				<!--关注-->
+
+
+				<div class="section">
+					<div class="hd clearfix">
+						<h2>关注列表</h2>
+					</div>
+					<div class="bd">
+							  <s:iterator value="#user.friends">
+							  		<ul class="block-ranking">
+							  			<li>
+											<img style="width:30px;height:30px;" src="${headImage}" alt="">
+											<span> ${name }
+											</span>
+											
+										</li>
+										
+							  			<li>
+											 <s:a action="user_removeAttention?friendId=%{id}" onClick="return confirm('确定取消关注吗？')">不再关注</s:a>
+										</li>
+										
+							  			<li>
+											 <s:a action="message_addUI?friendId=%{id}">发私信</s:a>
+										</li>
+									</ul>
+							  
+							  
+							  </s:iterator>
+					</div>
+				</div>
+				<!--粉丝-->
+
+
+				<div class="section">
+					<div class="hd clearfix">
+						<h2>粉丝列表</h2>
+					</div>
+					<div class="bd">
+					 <s:iterator value="#user.users">
+							 <ul class="block-ranking">
+					  			<li>
+									<img style="width:30px;height:30px;" src="${headImage}" alt="">
+									<span>${name }
+									</span>
+								</li>
+					  			<li>
+									<s:a action="message_addUI?friendId=%{id}">发私信</s:a>
+								</li>
+							 </ul>
+					  </s:iterator>
+					</div>
+				</div>
+				<!--私信-->
+
+
+				<div class="section">
+					<div class="hd clearfix">
+						<h2>私信信箱</h2>
+					</div>
+					<div class="bd">
+						<s:a action="message_sendUI">
+						<img src="${pageContext.request.contextPath}/img/s.png" alt="发信箱" style="width: 30px;height: 30px" />发信箱</s:a><br>
+						<s:a action="message_receiveUI">
+						<img src="${pageContext.request.contextPath}/img/r.png" alt="收信箱" style="width: 30px;height: 30px" />收信箱</s:a>
+					</div>
+				</div>
+
+				
+
+
+			</div>
+			<div id="main">
+				<div class="clearfix">
+				</div>
+				<!--最新发表-->
+				<div class="wrap-1 clearfix js-bbs-hot-list">
+					<div class="tag-list clearfix">
+						<ul class="clearfix">
+							<li class="curr"><span>最新发表</span></li>
+						</ul>
+						<div class="mineBBS" id="mineBBS"></div>
+					</div>
+					<div class="wrap-hd clearfix">
+						<div class="wrap-hd-l"></div>
+						<div class="wrap-hd-r"></div>
+					</div>
+					<div class="wrap-bd clearfix">
+						<div class="wrap-bd-in bbs-list-box show clearfix"
+							_stat="/stat/bbs/index/热帖榜" _tystat="热帖榜">
+							<s:iterator value="#lastestTopicList">
+							<ul class="bbs-list curr">
+								<li><span><s:a action="forum_show?id=%{forum.id}">${forum.name }</s:a></span>
+								<div class="title">
+									<s:date name="lastUpdateTime"/>
+										<s:a action="topic_show?id=%{id}">${title }</s:a>
+									</div></li>
+							</ul>
+							</s:iterator>
+							
+						</div>
+
+					</div>
+					<div class="wrap-ft clearfix">
+						<div class="wrap-ft-l"></div>
+						<div class="wrap-ft-t"></div>
+					</div>
+				</div>
+
+
+
+				<div class="clearfix">
+					<div id="q_topbanner_685_90_1_additional"
+						class="banner-img-mt10 ad-additional" _nodispaly="true">
+						<!--宽屏补充广告位-->
+					</div>
+					<div id="q_topbanner_685_90_1"
+						class="ads-loc-holder banner-img-mt10" data-ads-order="04">
+						<!--固定高度class:banner-h100 通栏广告1-->
+					</div>
+				</div>
+				
+				<!--热帖榜-->
+
+				<div class="wrap-1 mt5 clearfix js-bbs-hot-list">
+					<div class="tag-list clearfix">
+						<ul class="clearfix">
+							<li class="curr"><span>热帖榜</span></li>
+						</ul>
+					</div>
+					<div class="wrap-hd clearfix">
+						<div class="wrap-hd-l"></div>
+						<div class="wrap-hd-r"></div>
+					</div>
+					<div class="wrap-bd clearfix">
+						<div class="wrap-bd-in bbs-list-box show clearfix"
+							_stat="/stat/bbs/index/别院榜" _tystat="别院榜">
+							<s:iterator value="#hotTopicList">
+							<ul class="bbs-list curr">
+								<li><span><s:a action="forum_show?id=%{forum.id}">${forum.name }</s:a>
+								</span>
+									<div class="title">
+										<s:date name="lastUpdateTime"/>
+										<s:a action="topic_show?id=%{id}">${title }</s:a>
+									</div></li>
+
+
+							</ul>
+							</s:iterator>
+						</div>
+					</div>
+					<div class="wrap-ft clearfix">
+						<div class="wrap-ft-l"></div>
+						<div class="wrap-ft-t"></div>
+					</div>
+				</div>
+				
+
+				<div class="clearfix">
+					<div id="q_topbanner_685_90_2_additional"
+						class="banner-img-mt10 ad-additional" _nodispaly="true">
+						<!--宽屏补充广告位-->
+					</div>
+					<div id="q_topbanner_685_90_2"
+						class="ads-loc-holder banner-img-mt10" data-ads-order="05"
+						style="display: block;">
+						<div class="adsame-box" style="">
+							<a
+								href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111105&ci=73&or=769&l=10413&bg=10413&b=10502&u=http%3A//travel.tianya.cn/s/wudang/index.shtml"
+								target="_blank"><img
+								src="${pageContext.request.contextPath}/ty/0_387.jpg"
+								width="670" height="90" border="0" data-baiduimageplus-ignore=""></a>
+						</div>
+						<img src=""
+							style="width: 0px; height: 0px; border: none; display: none;"
+							border="0">
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div id="foot">
+		<p>
+			<a href="#" rel="nofollow" target="_blank">关于sisp</a> | <a href="#"
+				rel="nofollow" target="_blank">广告服务</a> |
+			<a href="#" rel="nofollow" target="_blank">sisp客服</a> | <a href="#"
+				rel="nofollow" target="_blank">隐私和版权</a> | <a href="#"
+				rel="nofollow" target="_blank">联系我们</a> | <a href="#" rel="nofollow"
+				target="_blank">加入sisp</a> | <a href="#" rel="nofollow"
+				target="_blank">手机版</a> | <a href="#" rel="nofollow" target="_blank">举报投诉</a>
+		</p>
+		<p class="copyright">© 2015 SISP</p>
+	</div>
+
+
+
+</body>
+</html>

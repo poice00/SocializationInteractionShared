@@ -1,0 +1,119 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+	<jsp:include page="/WEB-INF/jsp/public/style.jsp" flush="true"></jsp:include>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>个人信息</title>
+</head>
+<body>
+	<!-- 导航栏 -->
+		<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+		
+	<div style="margin-top: 1%;margin-left: 80%">
+		<table class="table">
+		<s:iterator value="#user" status="status">
+			<tr>
+				<td>
+				<img src="${pageContext.request.contextPath}/style/images/defaultAvatar.gif"" width="180px" height="180px">
+				</td>
+			</tr>
+			<tr >
+				<td>
+					关注:${attentionCount }<br>
+					粉丝:${fansCount }
+				</td>
+			</tr>
+			<tr >
+				<td>
+				资源上传数量：${resUpCount}
+				</td>
+			</tr>
+			</s:iterator>
+		</table>
+	</div>
+	
+	
+	<!-- 基本資料 -->
+	<div style="margin-top: 10%;margin-left: 200px">
+		<table class="table" >
+			<s:iterator value="#user" status="status">
+					<tr>
+						<td >
+							<font color="#003399">昵称：</font>
+						</td>
+						<td>
+							${name}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">生日：</font>
+						</td>
+						<td>
+							<s:date name="birthday" format="yyyy-MM-dd"/>
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">学历：</font>
+						</td>
+						<td>
+							${education}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">邮箱：</font>
+						</td>
+						<td>
+							${email}
+						</td>
+					</tr>	
+					
+					<tr>
+						<td>
+						<font color="#003399">电话：</font>
+						</td>
+						<td>
+							${telephone}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">QQ：</font>
+						</td>
+						<td>
+							${qq}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">注册时间：</font>
+						</td>
+						<td>
+							<s:date name="registTime"/> 
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<s:a action="information_editUI?id=%{id}"><button class="btn btn-default">修改个人资料</button></s:a>
+						<s:a action="information_changePasswordUI?id=%{id}"><button class="btn btn-default">修改密码</button></s:a>
+						</td>
+					</tr>
+			
+			</s:iterator>
+		</table>
+	</div>			
+		<!-- 页脚 -->
+		<%@ include file="/WEB-INF/jsp/public/footer.jsp" %>
+</body>
+</html>

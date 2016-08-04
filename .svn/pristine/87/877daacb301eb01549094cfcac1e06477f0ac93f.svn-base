@@ -1,0 +1,50 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="kindeditor/themes/default/default.css" />
+<script charset="utf-8" type="text/javascript" language="javascript"
+	src="kindeditor/kindeditor-reply.js"></script>
+<script charset="utf-8" type="text/javascript" language="javascript"
+	src="kindeditor/lang/zh_CN.js"></script>
+<script>
+	KindEditor.ready(function(K) {
+		K.create('textarea[name="content"]', {
+			uploadJson : 'kindeditor/jsp/upload_json.jsp',
+			fileManagerJson : 'kindeditor/jsp/file_manager_json.jsp',
+			allowFileManager : true,
+			allowImageUpload : true,
+			autoHeightMode : true,
+			afterCreate : function() {
+				this.loadPlugin('autoheight');
+			},
+			afterBlur : function() {
+				this.sync();
+			} //Kindeditor下获取文本框信息
+		});
+	});
+	
+</script>
+
+</head>
+<body>
+	<font> &gt; </font>
+	<s:a action="forum_list">论坛</s:a>
+	<font> &gt; </font>
+	<s:a action="forum_show?id=%{#topic.forum.id}">${topic.forum.name }</s:a>
+	<font> &gt;&gt; </font>
+				帖子回复
+	<s:form action="reply_add">
+		<s:hidden name="topicId"></s:hidden>
+		<s:hidden name="id"></s:hidden>
+		帖子主题：${topic.title }
+		标题:<s:textfield name="title" value="回复：%{id==null?#topic.title:#reply.user.name}"/><br>
+		内容:<s:textarea name="content"></s:textarea><br>
+		<s:submit value="回复"></s:submit>
+		 <a href="javascript:history.go(-1);">返回上一级</a>
+	</s:form>
+</body>
+</html>

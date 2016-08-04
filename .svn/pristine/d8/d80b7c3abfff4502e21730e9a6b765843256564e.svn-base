@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"></constant>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<!-- 把扩展名设置为action -->
+	<constant name="struts.action.extension" value="action"></constant>
+
+
+	<package name="default" extends="struts-default">
+		
+		
+		
+		<!-- 首页 -->
+		<action name="home_*" class="homeAction" method="{1}">
+			<result name="{1}">/WEB-INF/jsp/homeAction/{1}.jsp</result>
+		</action>
+		
+		<!-- 用户管理 -->
+    	<action name="user_*" class="userAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/userAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/userAction/saveUI.jsp</result>
+    	    <result name="toList" type="redirectAction">user_list</result>
+    	</action>
+    	
+    	<!-- 资源列表 -->
+    	
+    	<!-- 我的资源-->
+    	<action name="resourceshow" class="resourceAction">
+    	<result name="showup">/WEB-INF/jsp/resourceAction/upload.jsp</result>
+    	</action> 
+    	<!-- 上传资源-->
+    	
+    	<!-- 下载资源-->
+    	
+	</package>
+
+</struts>
+

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" " http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0037)http://zt.tianya.cn/top10/index.shtml -->
+<html xmlns=" http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+ 
+<meta name="keywords" content=""> 
+<meta name="description" content="">
+<title>天涯财经牛人版</title><script src="TY.js" charset="utf-8" type="text/javascript"></script><link rel="stylesheet" type="text/css" href="TY.css"><link rel="stylesheet" href="http://cms.tianyaui.com/template_base/css/base870.css"> 
+<script type="text/javascript" src="comm.js"></script> 
+<link rel="stylesheet" href="http://cms.tianyaui.com/cms_fragments/res/9177/css/custom_css.css"> <img src="clickAnalyse(5).jsp" height="0" width="0"></head> 
+<body> 
+<div id="cms_template_document" class="cms_template_document"> 
+<div id="cms_head" class="cms_head"> 
+</div> 
+<div id="cms_body" class="cms_body"> 
+        <div id="cms_Location_1" class="tui-870 tui-box cf">
+        	<div class="tui-center cf">
+
+<div class="tui-list-box tui-section     custom_css12111611" id="cms_fragment_1">
+    <div class="hd cf"><h2>栏目名称</h2>
+
+				<span><a href="http://zt.tianya.cn/top10/98/list_1.shtml" target="_blank">更多&gt;&gt;</a></span>
+	
+	</div>
+	<div class="bd cf" style="">
+		<div class="tui-text-list cf    custom_css_bd12111611 f12     li-4" onclick="javascript:void(0)">
+
+	<ul id="cms_fragment_1_ul">
+				<li class="aid0 cf">
+				<span class="sectionShortName">[<a href="" target="_blank" id="cms_fragment_1_1_sectionShorName"></a>排行<a></a>]</span>
+				
+				<s:iterator value="#fansCountList" status="status">
+				
+					<h3><a desc="标题" href="#" title="天涯原创牛人评选" target="_blank" id="cms_fragment_1_1_title">天涯原创牛人评选</a></h3>
+					</li>
+					
+					<li class="aid0 cf">
+					<span class="sectionShortName">[<a href="" target="_blank" id="cms_fragment_1_2_sectionShorName"></a>第一名<a></a>]</span>
+					
+					<h3><a desc="标题" href="http://bbs.tianya.cn/post-feeling-3859727-1.shtml" title="玫瑰漫余香" target="_blank" id="cms_fragment_1_2_title">玫瑰漫余香</a></h3>
+					
+					</li>
+				
+				</s:iterator>
+	</ul>
+	
+		</div>
+	</div>
+</div>
+<div class="" id="cms_control_2" fragmentid="normal-column" ftype="normal-column" fragmenturl="/cms_fragments/dynamicFragments/normal_frame_60.htm" groupid="undefined" templatename="undefined"><div class="tui-list-box tui-section space cf  custom_css121111947" ftype="normal-column">
+			<div class="hd"><h2>栏目名称</h2><span><a id="more" href="http://zt.tianya.cn/top10/index.shtml#" target="_blank"></a></span><span><em class="emtext"></em></span></div>
+        	<div class="bd cf">
+    			
+        	<div class="" id="cms_control_3" fragmentid="static-text-link" ftype="static_html" fragmenturl="" groupid="undefined" templatename="undefined">            <div id="cms_nav_5" style="" ftype="static-text-link" fragmentid="static-text-link_359" class="tui-text-list cf custom_css_bd121112029" columnnbr="1">
+                <ul>
+                <li style="clear: none; float: left; width: 99.95%;"><a href="javascript:void(0)" target="_blank" class="text">天涯原创牛人</a></li></ul>
+            </div>
+        </div></div>
+    	</div>
+</div></div>
+        </div>
+        </div> 
+<div id="cms_foot" class="cms_foot cf"> 
+</div> 
+</div> 
+ 
+ 
+ 

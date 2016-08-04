@@ -1,0 +1,56 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>版块列表</title>
+
+</head>
+<body>
+<%@ include file="/WEB-INF/jsp/public/commons_head.jspf"%>
+ 
+ 
+<div class="panel panel-default">
+	<div class="panel-heading">
+	  	<ol class="breadcrumb">
+		  <li><s:a action="forum_index">首页</s:a>
+		  <li>版块列表</li>
+		</ol> 
+	</div>
+	<div class="panel-body">
+	  <table class="table table-hover">
+					<!--表头-->
+					<tr align="center" class="success">
+						<td>版块</td>
+						<td>主题数</td>
+						<td>最后发表的主题</td>
+					</tr>
+					
+					<!--版面列表-->
+					<s:iterator value="#forumList">
+						<tr align="center" >
+							<td>
+								<s:a action="forum_show?id=%{id}">${name}</s:a><br>
+								<small><cite title="Source Title">${description}</cite></small>
+							</td>
+							<td>${topicCount}</td>
+							<td>
+									主题： <s:a
+										action="topic_show?id=%{lastTopic.id}">${lastTopic.title}</s:a>
+									<small><br>作者：
+										${lastTopic.user.name}</small><br>
+									<small>时间：
+										<s:date name="lastTopic.postTime"/></small>
+								
+							</td>
+						</tr>
+					</s:iterator>
+		</table>
+	</div>
+</div>
+	
+	
+<%@ include file="/WEB-INF/jsp/public/commons_foot.jspf"%>
+</body>
+</html>

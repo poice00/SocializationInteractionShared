@@ -1,0 +1,19 @@
+package com.socialization.service.resource;
+
+import java.util.List;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+
+public interface UpdowncollectResService extends DaoSupport<Resource>{
+
+	List<Resource> getByuserupId(User user);
+	List<Resource> getByuserdownId(User user);
+	List<Resource> getByusercolleId(User user);
+	void downsave(Resource resource, User user);
+	void collectsave(Resource resource, User user);
+	void delete(Resource resource);
+	List<Resource> highSearch();
+	
+}

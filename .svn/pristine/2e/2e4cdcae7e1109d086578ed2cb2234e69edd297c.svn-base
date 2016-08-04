@@ -1,0 +1,93 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib prefix="s" uri="/struts-tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div class="nav-bar">
+        	<s:a action="resource_homePage" >首页</s:a>
+        	<s:a action="resource_resTypeUI" >资源分类</s:a>
+			<s:a action="resource_resRankUI">排行榜</s:a>
+			<s:a action="resource_resHelpUI" >帮助</s:a>
+			<s:a action="resource_highsearchUI">高级搜索</s:a>
+			<s:a action="myresource_uplist">我的资源</s:a>
+			<s:a action="myresource_showupload">我要上传</s:a>	
+</div>
+<div class="search_high">
+	<form action="resource_highsearch" method="get">
+	<s:actionmessage></s:actionmessage><br/>
+		<table border="0" cellspacing="0" cellpadding="0">
+		<colgroup><col width="330" /><col /></colgroup>
+		<tr>
+		<th>标题中包含：</th>
+		<td><input name="title" type="text" class="input_1" /></td>
+		</tr>
+		<tr>
+		<th>简介中包含：</th>
+		<td><input name="body" type="text" class="input_1" /></td>
+		</tr>
+		<tr>
+			<th>用户ID：</th>
+			<td><input name="user_name" type="text" class="input_1" /></td>
+		</tr>
+		<tr>
+			<th>Tag中包含：</th>
+			<td><input name="tag" type="text" class="input_1" /></td>
+		</tr>
+		<tr>
+		<th>分类：</th>
+		<td>
+			<select name="categoryid">
+			<option value=''>全部</option>
+			<option value='21000-22000'>移动开发</option>
+			<option value='16000-17000'>开发技术</option>
+			<option value='15000-16000'>课程资源</option>
+			<option value='19000-20000'>网络技术</option>
+			<option value='12000-13000'>操作系统</option>
+			<option value='10000-11000'>安全技术</option>
+			<option value='18000-19000'>数据库</option>
+			<option value='14000-15000'>行业</option>
+			<option value='13000-14000'>服务器应用</option>
+			<option value='11000-12000'>存储</option>
+			<option value='20000-21000'>信息化</option>
+			<option value='17000-18000'>考试认证</option>
+			</select>		</td>
+		</tr>
+		<tr>
+		<th>积分：</th>
+		<td>
+			<select name="source_money">
+			<option value=''>全部</option>
+			<option value='0-0'>0</option>
+			<option value='1-5'>1-5</option>
+			<option value='5-10'>5-10</option>
+			</select>		</td>
+		</tr>
+		<tr>
+		<th>上传时间：</th>
+		<td>			<select name="created_at">
+				<option value="">全部</option>
+				<option value="2015071800-2015072515">一周以内</option>
+				<option value="2015062500-2015072515">一月以内</option>
+				<option value="2015012600-2015072515">半年以内</option>
+				<option value="2014073000-2015072515">1年以内</option>
+				<option value="2013080400-2015072515">2年以内</option>
+				<option value="2012080900-2015072515">3年以内</option>
+				<option value="2010082000-2015072515">5年以内</option>
+				<option value="2010082000">5年以上</option>
+			</select>		</td>
+		</tr>
+		<tr>
+		<td>&nbsp;</td>
+		<td><input name="" type="image" src="images/btn_search_high.png" /></td>
+		</tr>
+		</table>
+	</form>
+	</div>
+
+</body>
+</html>

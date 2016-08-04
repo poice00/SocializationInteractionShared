@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<!-- 解决长时间不登录，再次登录页面嵌套问题 -->
+	<script type="text/javascript">
+		$(function(){
+			document.forms[0].loginName.focus();
+		// 在被嵌套时就刷新上级窗口
+		 if(window.parent != window){
+			//window.parent.location.reload(true);
+			window.parent.location = window.location;
+		 } 
+		 
+		});
+		
+	</script>
+</head>
+<body>
+	<s:form action="user_login">
+		<s:textfield name="loginName"></s:textfield><br>
+		<s:password name="password"></s:password><br>
+		<s:submit value="提交"></s:submit>
+		<font color="red"><s:fielderror/></font>
+	</s:form>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+package com.socialization.base;
+
+import java.lang.reflect.ParameterizedType;
+
+import javax.annotation.Resource;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+import com.socialization.domain.User;
+import com.socialization.service.UserService;
+import com.socialization.service.resource.ResReplyService;
+import com.socialization.service.resource.TagResourceService;
+import com.socialization.service.resource.UpdowncollectResService;
+
+
+@SuppressWarnings({ "unchecked", "serial" })
+public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
+	// =========================================================
+	protected T model;
+
+	public BaseAction() {
+		try {
+			ParameterizedType pt = (ParameterizedType) this.getClass().getGenericSuperclass();
+			Class<T> clazz = (Class<T>) pt.getActualTypeArguments()[0];
+			model = (clazz.newInstance());
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+	}
+
+	@Override
+	public T getModel() {
+
+		return model;
+	}
+
+
+	/**
+	 * 获取当前登陆用户
+	 */
+	protected User getCurrentUser() {
+		return (User) ActionContext.getContext().getSession().get("user");
+	}
+	// =============================================================
+	@Resource
+	protected UserService userService;
+	@Resource
+	protected UpdowncollectResService updowncollectResService;
+	@Resource
+	protected ResReplyService resReplyService;
+    @Resource
+    protected TagResourceService tagResourceService;
+	
+	
+	
+
+}

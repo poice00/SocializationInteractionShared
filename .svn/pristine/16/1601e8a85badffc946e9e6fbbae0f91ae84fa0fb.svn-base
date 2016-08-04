@@ -1,0 +1,39 @@
+package com.socialization.action.resource;
+
+import java.io.InputStream;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionSupport;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Resource;
+
+@SuppressWarnings("serial")
+@Controller
+public class DownloadAction extends BaseAction<Resource> {
+
+	private InputStream fileInput;
+	private String fileName;
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public String execute() throws Exception {  
+		setFileInput(ServletActionContext.getServletContext().getResourceAsStream("WEB-INF\\upload\\" + "web.xml"));
+		return "success";
+	}
+
+	public InputStream getFileInput() {
+		return fileInput;
+	}
+
+	public void setFileInput(InputStream fileInput) {
+		this.fileInput = fileInput;
+	}
+}

@@ -1,0 +1,219 @@
+package com.socialization.action;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.User;
+import com.socialization.util.MD5Util;
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class UserAction extends BaseAction<User> {
+
+	private Long friendId;
+	
+	//向浏览器输出
+	private HttpServletResponse response = ServletActionContext.getResponse();
+    
+	public UserAction() {
+		//尼玛，就因为写成uft，浪费了一个多小时
+		response.setContentType("text/html;charset=utf-8");
+	}
+	
+	/** 列表 */
+	public String list() throws Exception {
+		List<User> userList = userService.findAll();
+		ActionContext.getContext().put("userList", userList);
+		return "list";
+	}
+
+	/** 删除 */
+	public String delete() throws Exception {
+		userService.delete(model.getId());
+		return "toList";
+	}
+
+	/** 添加页面 */
+	public String addUI() throws Exception {
+		return "saveUI";
+	}
+
+	/** 添加 */
+	public String add() throws Exception {
+		model.setRegistTime(new Date());
+		userService.save(model);
+		return "toList";
+	}
+
+	/** 修改页面 */
+	public String editUI() throws Exception {
+		return "saveUI";
+	}
+
+	/** 修改 */
+	public String edit() throws Exception {
+		return "toList";
+	}
+	
+	/** 增加关注 */
+	public String addAttention()  throws Exception {
+		//需要加的好友
+		User friend = userService.getById(friendId);
+		
+		//当前登陆用户
+		User user = userService.getById(getCurrentUser().getId());
+		
+		user.getFriends().add(friend);
+		
+		userService.update(user);
+		
+		return "toShowTip";
+	}
+	/** 取消关注*/
+	public String removeAttention()  throws Exception {
+		//需要加的好友
+		User friend = userService.getById(friendId);
+		
+		//当前登陆用户
+		User user = userService.getById(getCurrentUser().getId());
+		
+		user.getFriends().remove(friend);
+		
+		userService.update(user);
+		
+		return "toShowTip";
+	}
+	
+	/** 登陆 */
+	public String login() throws Exception {
+		User u = userService.findByLoginNameAngPassword(model.getLoginName(),model.getPassword());
+		 //获取跳转到登陆界面之前的页面地址，由拦截器提供
+        String prePage = (String) ActionContext.getContext().getSession().get("prePage");
+        
+		if(u==null){
+			addFieldError("fail", "用户名或密码错误！");
+			return "loginUI";
+		}else{
+			ActionContext.getContext().getSession().put("user", u);
+			System.out.println("======prePage========" + prePage);
+			if(prePage==null){
+				return "toLogin";
+			}else {
+				return "myOrder";
+			}
+		}
+	}
+	
+	/**
+	 * @desc 用ajax发送登录请求，由此方法处理
+	 * @throws IOException
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 3, 2015 1:55:26 PM
+	 */
+	public void signIn() throws IOException{
+		
+		String loginName = model.getLoginName();
+		String password = model.getPassword();
+		
+		if(!userService.isExist(loginName))
+			response.getWriter().write("用户名不存在");
+		else{
+			if(userService.findByLoginNameAngPassword(loginName, MD5Util.MD5(password)) == null)
+				response.getWriter().write("密码错误");
+			else{
+				response.getWriter().write("登录成功");
+				
+				ActionContext.getContext().getSession()
+				.put("user", userService.findByLoginNameAngPassword(loginName, MD5Util.MD5(password)));
+			}
+		}
+	}
+	
+	/**
+	 * @desc 从session中获取当前登录用户,返回结果给ajax请求
+	 * @author yanbaobin@yeah.net
+	 * @throws IOException 
+	 * @date Aug 3, 2015 3:52:11 PM
+	 */
+	public void getUser() throws IOException{
+		User user = (User) ActionContext.getContext().getSession().get("user");
+		
+		if(user != null)
+			response.getWriter().write(user.getLoginName());
+	}
+	
+	/**
+	 * @desc 判断用户名是否已被注册
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 3, 2015 8:03:21 PM
+	 */
+	public void isExist(){
+		if(userService.isExist(model.getLoginName()))
+			try {
+				response.getWriter().write("用户名已被注册");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}
+	
+	
+	/**
+	 * @desc 用户注册或者管理员添加用户
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 4, 2015 11:19:15 AM
+	 */
+	public void regist() {
+		try {
+			//抛出异常，插入数据库的语句不被执行
+			if(model.getPassword() == null)
+				throw new NullPointerException("密码未传递成功！");
+			
+			model.setPassword(MD5Util.MD5(model.getPassword()));	//对密码加密
+			model.setRegistTime(new Date());
+			userService.save(model);
+			
+			try {
+				response.getWriter().write("注册成功");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (NullPointerException e) {
+			
+		}
+	}
+	
+	/** 登录界面 */
+	public String loginUI() throws Exception {
+		return "loginUI";
+	}
+	
+	/** 注销 */
+	public String logout() throws Exception {
+		ActionContext.getContext().getSession().remove("user");
+		return "logout";
+	}
+
+	
+	//=====
+	public Long getFriendId() {
+		return friendId;
+	}
+	
+	public void setFriendId(Long friendId) {
+		this.friendId = friendId;
+	}
+	
+}

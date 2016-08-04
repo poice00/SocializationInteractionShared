@@ -1,0 +1,42 @@
+package com.socialization.action;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+
+import com.opensymphony.xwork2.ActionSupport;
+import com.socialization.action.activity.ActivityAction;
+import com.socialization.action.resource.ResourceAction;
+import com.socialization.action.resource.UpdowncollectAction;
+import com.socialization.action.zone.TalkAction;
+import com.socialization.domain.Resource;
+
+public class SpringTest{
+	private ApplicationContext ac = new ClassPathXmlApplicationContext("beans.xml");
+	
+	
+	@Test
+	public void TestBean(){
+		HomeAction at = (HomeAction) ac.getBean("homeAction");	
+		System.out.println(at);
+		ResourceAction ra=(ResourceAction) ac.getBean("resourceAction");
+		ActivityAction att=(ActivityAction) ac.getBean("activityAction");
+		System.out.println(att);
+		TalkAction bbb=(TalkAction) ac.getBean("talkAction");
+		System.out.println(bbb);
+	}
+	
+	@Test
+	public void TestSessionFactory(){
+		SessionFactory sf = (SessionFactory) ac.getBean("sessionFactory");
+		System.out.println(sf);
+	}
+
+}

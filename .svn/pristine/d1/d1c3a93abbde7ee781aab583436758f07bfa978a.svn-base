@@ -1,0 +1,105 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="utf-8"%>
+
+<div id="enter">
+	<div id="sign">
+		<div id="in"  class="form">
+			<input id="in_user_name" class="sign form-control" type="text" name="user_name"
+			 placeholder="用户名" data-container="body" data-placement="left" data-content="Vivamus sagittis"
+			 data-template='<div class="popover" style="background-color:#FF4400;" role="tooltip">
+			 					<div class="arrow"></div>
+			 					<h3 class="popover-title"></h3>
+			 					<div id="popover_name" class="popover-content"></div>
+			 				</div>'
+			  >
+			<input id="in_password" class="sign form-control" type="password" name="password"
+			placeholder="密码" data-container="body" data-placement="left" data-content="Vivamus sagittis"
+			 data-template='<div class="popover" style="background-color:#FF4400;" role="tooltip">
+			 					<div class="arrow"></div>
+			 					<h3 class="popover-title"></h3>
+			 					<div id="popover_pwd" class="popover-content"></div>
+			 				</div>'
+			>
+			<input class="sign btn btn-success" type="submit" name="" value="登录" onclick="sign_in(this)"><br><br>
+			<label class="checkbox">
+				<input type="checkbox" checked="checked" value="" >
+				<span class="in_sign">下次自动登录</span>
+			</label>
+			<a class="in_sign" style="margin-left:15px;" href="#">忘记密码？</a>
+			<a style="font-size:12px; margin-left:30px;" href="#" onclick="toggle()">立即注册</a>
+			<hr style="margin-top:15px; margin-bottom:5px;">
+			<span class="in_sign">使用其他方式登录</span>
+			<a class="icon-24 icon-24-account-qq" href="http://www.liepin.com/connect/?open_account=3&user_kind=0" target="_blank"></a>
+	           <a class="icon-24 icon-24-account-weixin" href="http://www.liepin.com/connect/?open_account=4&user_kind=0" target="_blank"></a>
+	           <a class="icon-24 icon-24-account-weibo" href="http://www.liepin.com/connect/?open_account=1&user_kind=0" target="_blank"></a>
+			
+		</div>
+		<div id="up" class="form">
+			<input id="up_user_name" class="sign form-control" type="text" name="user_name"
+			placeholder="用户名（5-20位字符的组合）" data-container="body" data-placement="left"
+			data-content="Vivamus sagittis"
+			data-template='<div class="popover" style="background-color:#FF4400;" role="tooltip">
+			 					<div class="arrow"></div>
+			 					<h3 class="popover-title"></h3>
+			 					<div id="popover_regist_name" class="popover-content"></div>
+			 			   </div>'
+			 onblur="validateName()"
+			 >
+			<input id="up_password" class="sign form-control" type="password" name="password"
+			placeholder="密码(6-16位字母、数字、无空格)" data-container="body" data-placement="left"
+			data-content="Vivamus sagittis"
+			data-template='<div class="popover" style="background-color:#FF4400;" role="tooltip">
+			 					<div class="arrow"></div>
+			 					<h3 class="popover-title"></h3>
+			 					<div id="popover_regist_pwd" class="popover-content"></div>
+			 				</div>'
+			onblur="validatePwd()"
+			>
+			
+			<input id="code" class="sign form-control" style="width:125px; float:left;" type="text"
+			 name="captcha" placeholder="验证码"  data-container="body" data-placement="left"
+			data-content="Vivamus sagittis"
+			data-template='<div class="popover" style="background-color:#FF4400;" role="tooltip">
+			 					<div class="arrow"></div>
+			 					<h3 class="popover-title"></h3>
+			 					<div id="popover_regist_captcha" class="popover-content"></div>
+			 				</div>'
+			onblur="validateCaptcha()"
+			>
+			
+			<input id="captcha" class="form-control" type="text" readonly="readonly" onclick="createCaptcha()" >
+			
+			<input class="sign btn btn-danger" type="submit" name="" value="立即注册"
+			onclick="sign_up()">
+			
+			<hr style="margin-top:15px; margin-bottom:5px;">
+			<label class="checkbox">
+				<input type="checkbox" checked="checked" value="" >
+				<span class="in_sign">接受用户服务协议</span>
+			</label>
+			<a style="font-size:12px; margin-left:80px;" href="#" onclick="toggle()">马上登录</a>
+		</div>
+	</div>
+	
+	<!-- APP二维码 -->
+	<div id="app_qrCode">
+		<img src="img/app.jpg">
+	</div>
+</div>
+
+<!-- 注册结果提示框 -->
+<div id="regist_result" class="modal fade bs-example-modal-sm">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 id="regist_result_title" class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <p id="reigst_result_body" style="text-align:center;"> 
+		</p>
+      </div>
+ 
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

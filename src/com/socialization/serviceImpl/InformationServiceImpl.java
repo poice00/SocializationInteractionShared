@@ -1,0 +1,19 @@
+package com.socialization.serviceImpl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.User;
+import com.socialization.service.InformationService;
+
+@Service
+@Transactional
+@SuppressWarnings("unchecked")
+public class InformationServiceImpl extends DaoSupportImpl<User> implements InformationService{
+
+
+
+}

@@ -1,0 +1,88 @@
+package com.socialization.serviceImpl.resource;
+
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+
+import org.apache.log4j.DailyRollingFileAppender;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.ActApply;
+import com.socialization.domain.Activity;
+import com.socialization.domain.User;
+import com.socialization.service.resource.ActApplyService;
+
+@Service
+@Transactional
+public class ActApplyServiceImpl extends DaoSupportImpl<ActApply> implements ActApplyService{
+
+	@Override
+	public boolean checkApplyExit(Activity activityDetails, User currentUser) {
+		String sql = "select * from  actapply where userId = " + currentUser.getId() + " and activityId = "
+				+ activityDetails.getId();
+		if (getSession().createSQLQuery(sql).list().size() == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+    //添加活动申请
+	@Override
+	public void saveActApply(Activity activity, User user, Date date, String string) {
+	getSession().createSQLQuery("insert into actapply(activityId,userId,postTime,state) values(?,?,?,?)")
+	.setParameter(0, activity.getId())
+	.setParameter(1, user.getId())
+	.setParameter(2, date)
+	.setParameter(3, string)
+	.executeUpdate();
+	}
+    //删除活动申请
+	@Override
+	public void deleteUserApply(User user, Activity activityDetails) {
+		getSession().createSQLQuery("delete from actapply where userId = ? and activityId = ?")
+		.setParameter(0, user.getId())
+		.setParameter(1, activityDetails.getId()).executeUpdate();
+	}	
+	//检查是否申请中
+	@SuppressWarnings("unchecked")
+	@Override
+	public int checkPartInExit(Activity activityDetails, User currentUser) {
+		String sql="select * from actapply where activityId = "+activityDetails.getId()+" and userId = "+currentUser.getId();
+		List<ActApply> actApplyList=getSession().createSQLQuery(sql).addEntity(ActApply.class).list();
+		if (actApplyList.size()==0) {
+			return 0;
+		} else {
+			String str=actApplyList.get(0).getState();
+			switch (str) {
+			case "申请中":
+				return 1;
+			case "已拒绝":
+				return 2;
+			case "已通过":
+				return 3;
+			default:
+				return 0;
+			}
+		}
+	}
+	//查询申请的活动
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ActApply> findByUserId(Long id) {
+		String sql="select * from actapply where userId = "+id;
+		return getSession().createSQLQuery(sql)
+				.addEntity(ActApply.class).list();
+	}
+	//查询申请列表
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> findUsers(Long id) {
+		String sql="select * from actapply where state='申请中' and activityId in (select id from activity where userId = "+id+")";
+		return getSession().createSQLQuery(sql)
+				.addEntity(ActApply.class).list();
+	}
+}

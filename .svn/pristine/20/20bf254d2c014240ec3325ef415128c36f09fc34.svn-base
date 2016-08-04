@@ -1,0 +1,163 @@
+package com.socialization.serviceImpl.resource;
+
+
+import java.awt.TexturePaint;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.ResType;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+import com.socialization.service.resource.UpdowncollectResService;
+
+
+@Service
+@Transactional
+public class UpdowncollectResServiceImpl extends DaoSupportImpl<Resource> implements UpdowncollectResService {
+
+	
+	@SuppressWarnings("unchecked")
+	@Override        //查询用户所拥有的资源
+	public List<Resource> getByuserupId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createQuery(
+					"FROM Resource r WHERE r.user.id=?")
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所下载的资源
+	public  List<Resource> getByuserdownId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_downresource where userId=?)")
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所搜藏的资源
+	public List<Resource> getByusercolleId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_resource where userId=?)")
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+	
+	@Override     //添加用户-资源下载表
+	public void downsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_downresource(userId,resourceId) values (?,?)")
+		        .setParameter(0,resource.getId())
+		        .setParameter(1, user.getId())
+		        .executeUpdate();
+	}
+	
+	@Override     //添加用户-资源收藏表
+	public void collectsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_resource(userId,resourceId) values (?,?)")
+		        .setParameter(0,user.getId())
+		        .setParameter(1, resource.getId())
+		        .executeUpdate();
+	}
+	
+	
+	
+	@Override  //重写资源保存的方法
+	public void save(Resource resource) {
+		//保存资源
+		getSession().save(resource);		
+		//维护特殊数据
+		User user=resource.getUser();
+		System.out.println(user.getId());
+		user.setResUpCount(user.getResUpCount()+1);	
+		getSession().update(user);
+		
+		ResType resType=resource.getResType();
+		resType.setResCount(resType.getResCount()+1);
+		getSession().update(resType);
+	}
+	
+	
+	@Override
+	public void delete(Resource resource) {
+		//删除
+		getSession().delete(resource);		
+		//维护特殊数据
+		ResType resType=resource.getResType();   //相应的资源类型的资源总数减1
+		resType.setResCount(resType.getResCount()-1);  
+		getSession().update(resType);
+		getSession().createSQLQuery(    //相应的收藏表中的有关该资源的删除
+				                    "delete from user_resource where resourceId= ?")
+		                            .setParameter(0, resource.getId())
+		                            .executeUpdate();
+		getSession().createSQLQuery(   //相应的下载表中的有关该资源的删除
+                "delete from user_downresource where resourceId= ?")
+                .setParameter(0, resource.getId())
+                .executeUpdate();
+		User user=resource.getUser();   //相应的用户上传资源的数目减一
+		user.setResUpCount(user.getResUpCount()-1);
+		getSession().update(user);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> OrderByCount() {	  //按照下载次数的排序，取前10
+		return getSession().createSQLQuery(
+				"select top 10 from resource order by downCount desc")
+				.addEntity(Resource.class)
+				.list();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> OrderByCollect() {   //按照收藏次数的前十排序，取前10
+		return getSession().createSQLQuery(
+				"select top 10 from resource order by collectionCount desc")
+				.addEntity(Resource.class)
+				.list();
+	}
+
+
+	@Override
+	public boolean checkExist(Resource resource,User user) {
+		if (getSession().createSQLQuery(
+				"select * from user_resource where resourceId=? and userId=?")
+				.setParameter(0, resource.getId())
+				.setParameter(1, user.getId())
+				.list().size()==0) {
+			
+			return true;
+		}else
+		{
+		    return false;
+		}
+	}
+
+
+	@Override
+	public List<Resource> highSearch() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

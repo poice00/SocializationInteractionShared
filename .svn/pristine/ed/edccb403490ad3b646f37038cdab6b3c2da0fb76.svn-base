@@ -1,0 +1,300 @@
+
+/**
+ * 网站前端控制、验证等基础逻辑的实现
+ * @author yanbaobin@yeah.net
+ */
+
+$(document).ready(function(){
+	/*初始化所有弹出框*/
+	$(function () {
+		  $('[data-toggle="popover"]').popover()
+	});
+	
+	/*判断是否有登录用户*/
+	$.ajax({
+		url:'user_getUser.action',
+		post:'post',
+		success:function(response){
+			if(response != "")
+				update(response);
+			else
+				$("#sign").show();
+		}
+	});
+	
+	
+	
+});
+
+/**
+ * 用户已登录的情况下，执行以下操作
+ * 隐藏登录面板
+ * 修改头像路径
+ * 修改显示的用户名
+ */
+function update(nick_name){
+	$("#img_user").attr("src","img/user/" + nick_name + ".jpg");
+	$("#nick_name").html("<b>" + nick_name + "</b>");
+	$("#nick_name").attr("href","user_list.action");
+	$("#info").show();
+}
+
+/**
+ * 登录和注册面板的切换
+ * 把显示的隐藏，隐藏的显示
+ */
+function toggle(){
+	if(document.getElementById("up").style.display != "block"){
+		$("#in").hide();
+		
+		createCaptcha();		//生成验证码
+		$("#up").show();
+	}
+	else{
+		//$("#up").style.display = "none";
+		//$("#in").style.display = "block";
+		$("#up").hide();
+		$("#in").show("slow");
+	}
+}
+
+var isNameMeet = false;		//标记用户所填写的用户名是否否符合要求
+var isPwdMeet = false;		//标记用户所填写的密码否符合要求
+var isCaptchaMeet = false;		//标记验证码是否正确
+
+/**
+ * 验证用户名
+ * 1.非空
+ * 2.不符合规则
+ * 3.已被注册
+ */
+function validateName(){
+	var user_name = $("#up_user_name").val();
+	var error = "";
+	if(user_name == ""){
+		error = "用户名不能为空";
+		isNameMeet = false;
+	}
+	else if(!(/^[a-zA-Z]{1}[\w]{4,19}$/).test(user_name)){
+		error = "不符合要求";
+		isNameMeet = false;
+	}
+	/*判断用户名是否被注册*/
+	else{
+		$.ajax({
+			url:'user_isExist.action',
+			data:{
+				loginName:user_name
+			},
+			type:'post',
+			async:false,	//默认为true，这里需要改为false
+			success:function(response){
+				if(response == "用户名已被注册"){
+					error = response;
+					isNameMeet = false;
+				}
+			}
+		});
+	}
+	
+	if(error != ""){
+		//顺序不能颠倒
+		$("#up_user_name").popover("show");
+		$("#popover_regist_name").html(error);
+	}
+	else{
+		$("#up_user_name").popover("hide");
+		isNameMeet = true;
+	}
+}
+
+/**
+ * 验证密码
+ * 1.非空
+ * 2.不符合规则
+ */
+function validatePwd(){
+	var pwd = $("#up_password").val();
+	var error = "";
+	
+	if(pwd == ""){
+		error = "密码不能为空";
+		isPwdMeet = false;
+	}
+	else if(!(/^[\w]{6,16}$/).test(pwd)){
+		error = "不符合要求";
+		isPwdMeet = false;
+	}
+	
+	if(error != ""){
+		$("#up_password").popover("show");
+		$("#popover_regist_pwd").html(error);
+	}
+	else{
+		$("#up_password").popover("hide");
+		isPwdMeet = true;
+	}
+}
+
+/**
+ * 检查验证码
+ * 1.非空
+ * 2.不正确
+ */
+function validateCaptcha(){
+	var captcha = $("#code").val();
+	var error = "";
+	
+	if(captcha == ""){
+		error = "请输入验证码";
+		isCaptchaMeet = false;
+	}
+	else if(captcha != sum){
+		error = "验证码不正确";
+		isCaptchaMeet = false;
+	}
+	
+	if(error != ""){
+		$("#code").popover("show");
+		$("#popover_regist_captcha").html(error);
+	}
+	else{
+		$("#code").popover("hide");
+		isCaptchaMeet = true;
+	}
+}
+
+var sum;	//验证码之和
+
+/**
+ * 生成验证码
+ * 随机生成两个两位数，验证码的值为两数之和
+ * 验证码显示在一个只读型从文本框里
+ */
+function createCaptcha() {
+  code = "";
+  function RndNum(n) {
+    var rnd = "";
+    for (var i = 0; i < n; i++)
+      rnd += Math.floor(Math.random() * 10);
+    return rnd;
+  }
+
+  var num = RndNum(2);
+  var num2 = RndNum(2);
+
+  code = num + " + " + num2 + " = ?";
+  sum = parseInt(num) + parseInt(num2);
+  $("#captcha").val(code);
+}
+
+/**
+ * 验证注册
+ * 用户名和密码是否符合规范
+ * 验证码是否正确
+ */
+function sign_up(){
+	if(isNameMeet && isPwdMeet && isCaptchaMeet){
+		$.ajax({
+			url:'user_regist.action',
+			data:{
+				loginName: $("#up_user_name").val(),
+				password: $("#up_password").val()		//就因为写错，又耽误了几个小时
+														//不过还好，对异常有了新的了解
+			},
+			type:'post',
+			success:function(data){
+				if(data == "注册成功"){
+					$("#regist_result_title").html("注册成功");
+					$("#reigst_result_body").html("<img src='img/success.jpg' alt='success'>"
+							+ "恭喜您，注册成功！"
+							+ "<a href='javascript:toLogin()'>"
+							+ "现在就去登录</a>");
+				}
+				else{
+					$("#regist_result_title").html("注册失败");
+					$("#reigst_result_body").html("<img src='img/fail.jpg' alt='fail'>"
+							+ "很抱歉，服务器端发生异常,注册失败！请"
+							+ "<a href='javascript:toRegist()'>"
+							+ "重新注册</a>");
+				}
+				
+				$(".bs-example-modal-sm").modal({
+					backdrop:"static"				//禁止点击时关闭模态框
+				});
+			}
+		});
+	}
+}
+
+/**
+ * 注册成功后，去登录
+ * 关闭模态框、
+ * 隐藏注册界面，显示登录界面
+ * 清空原注册界面的信息， 防止下次切换进去有历史数据
+ */
+function toLogin(){
+	$(".bs-example-modal-sm").modal("hide");
+	$("#up").hide();
+	$("#in").show();
+	
+	/*清空注册信息*/
+	$("#up_user_name").val("");
+	$("#up_password").val("");
+	$("#code").val("");
+}
+
+/**
+ * 妈蛋，非要我重新定义一个方法
+ */
+function toRegist(){
+	$(".bs-example-modal-sm").modal("hide");
+}
+
+
+/**
+ * 验证登录
+ * 1.用户名为空
+ * 2.用户名不存在
+ * 3.密码错误
+ */
+function sign_in(){
+	var user_name = $("#in_user_name").val();
+	if(user_name == ""){
+		$("#popover_name").html("用户名不能为空");
+		$("#in_user_name").popover("show");
+	}
+	else{
+		var password = $("#in_password").val();
+		if(password == ""){
+			$("#popover_pwd").html("密码不能为空");
+			$("#in_password").popover("show");
+		}
+		else{
+			/*发送登录请求*/
+			$.ajax({
+				url:'user_signIn.action',
+				data:{
+					loginName:user_name,
+					password:password
+				},
+				type:'post',
+				success:function(data){
+					if(data == "用户名不存在"){
+						$("#in_user_name").popover("show");
+						$("#popover_name").html(data);
+					}
+					else if(data == "密码错误"){
+						$("#in_password").popover("show");
+						$("#popover_pwd").html(data);
+					}
+					else{
+						$("#sign").hide();
+						
+						update(user_name);	//显示用户登录信息
+					}
+				}
+			});
+		}
+	}
+}

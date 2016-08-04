@@ -1,0 +1,14 @@
+ADFHOST476="http://csdnim.allyes.com";
+ADFCID476=76;
+ADFBID476=476;
+ADFLOC='CNXAXA00';
+ADFUSER476="http://csdnim.allyes.com/c?d=csdnim&i=z76,10319091,476,1050&rf=&a=dNBlrpUGK0pd62A5yG65AgHcgi8G&u=";
+ALLYESID4="LygHZ0MtM2A5yGX5GjC";
+ADFPGC="2,25,76,0,462,476,1050,10319091";
+
+document.write("<script type=\"text/javascript\">\n");
+document.write("/*下载频道资源分类页上button220*90，创建于2014-7-3*/\n");
+document.write("var cpro_id = \"u1608328\";\n");
+document.write("</Scr"+"ipt>\n");
+document.write("<script src=\"http://cpro.baidustatic.com/cpro/ui/c.js\" type=\"text/javascript\"></Scr"+"ipt>");
+

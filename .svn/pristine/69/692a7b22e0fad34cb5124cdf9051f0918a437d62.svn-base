@@ -1,0 +1,166 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>新建话题</title>
+<style>
+#footer{position:relative;}
+</style>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap/css/interaction.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<jsp:include page="/WEB-INF/jsp/public/style.jsp" flush="true"></jsp:include>
+</head>
+<body>
+<!-- 导航栏 -->
+<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+<div class="container">
+		<div class="row">
+			<div class="span12" style="padding-top: 10px;">
+				<div class="span2" style="width: 200px;float:left;margin-left: 100px;">
+					<h3>线下活动</h3>
+				</div>
+				<div class="span6" style="padding-top: 15px;">
+					<ul class="nav nav-pills">
+						<li class="active"><a href="activity_activityHomePage.action" style="margin-right: 100px;">所有活动</a></li>	
+						<li><a class="btn btn-primary" href="activity_createUI.action" style="padding-left: 20px;">+创建活动</a></li>
+						<s:if test='#session.user !=null'>
+						<li><a  href="activity_myAct.action" style="padding-left: 20px;">+我的活动</a></li>
+						</s:if>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span9">
+				<div class="media">
+					<a href="#" class="pull-left"> <img alt="140x140" width="140"
+						height="140" src="${user.headImage }" />
+					</a>
+					<div class="media-body">
+						<h4 class="media-heading">${title }</h4>
+						<div>
+							<strong>${user.name }发表于</strong>
+							<s:date format="yyyy-MM-dd hh:mm:ss" name="%{postTime }"></s:date>
+						</div>
+						<p>帖子内容：${content }</p>
+					</div>
+				</div>
+				<hr>
+				<%-- <c:if test="${user ne null }">
+					<div class="row">
+						<div class="span9">
+							<p>
+								<a href="#"><i class="icon-thumbs-up"></i>推荐</a>&nbsp;&nbsp;<a
+									href="#"><i class="icon-bookmark"></i>收藏</a>&nbsp;<span
+									id="report-span" class="pull-right">
+									 <c:choose>
+										<c:when test="${isReported eq 'false' }">
+											<a href="#reportModal" id="report" data-toggle="modal"><i
+												class="icon-warning-sign"></i>举报</a>
+										</c:when>
+									</c:choose> <c:choose>
+										<c:when test="${isReported eq 'true' }">
+										已举报
+									</c:when>
+									</c:choose> <c:choose>
+										<c:when test="${isReported eq 'mine' }">
+										</c:when>
+									</c:choose>
+								</span>
+							</p>
+							<!-- Modal -->
+							<div id="reportModal" class="modal hide fade"
+								style="width: 600px;" tabindex="-1" role="dialog"
+								aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">×</button>
+									<h3 id="myModalLabel">举报活动</h3>
+								</div>
+								<div class="modal-body">
+									<textarea class="input-xxlarge" rows="4" id="reportReason"
+										placeholder="举报原因"></textarea>
+								</div>
+								<div class="modal-footer">
+									<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+									<button id="addReport" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr>
+				</c:if> --%>
+				   <s:if test="#actTopicRepliesList.isEmpty()">
+						<p>下面还没有回复</p>
+				    </s:if>
+				    <s:else>
+				   <s:iterator value="#actTopicRepliesList" status="actTopicReply">
+						<div class="media">
+								<a href="#" class="pull-left"> <img alt="140x140" width="140"
+									height="140" src="${user.headImage }" />
+								</a>
+								<div class="media-body">
+									<div>
+										<strong class="media-heading">${user.name }于</strong>
+										<s:date format="yyyy-MM-dd hh:mm:ss" name="%{postTime }"></s:date>回复到：	
+									</div>
+									${content }
+								</div>
+						</div>
+				     </s:iterator>
+				   </s:else>
+				<hr>
+				
+				<s:if test='#session.user ==null'>
+						<p>
+							<a href="showLogin.htm">请登陆后发表评论</a>
+				    </s:if>
+				    <s:else>
+				   <s:form class="form-horizontal" method="post" action="actTopicReply_add.action">
+							<div class="media">
+								<a href="#" class="pull-left"> <img alt="140x140" width="140"
+									height="140" src="${user.headImage }" />
+								</a>
+								<div class="media-body">
+									<input type="hidden" name="actTopicId" value="${id }">
+									<textarea id="editor" class="input-xxlarge" rows="4"
+										name="content" placeholder="内容"></textarea>
+									<br>
+									<button type="submit" class="btn">添加回应</button>
+								</div>
+							</div>
+						</s:form>
+				   </s:else>
+				   
+
+				<div class="pagination">
+					<ul>
+						<pt:page curPage="${curPage}" url="${url}"
+							totalPage="${totalPage}" />
+					</ul>
+				</div>
+			</div>
+			<div class="span3" style="margin-left: 0px;">
+				<p>热门帖子</p>
+				<ul>
+					<li>新闻资讯</li>
+					<li>体育竞技</li>
+					<li>娱乐八卦</li>
+					<li>前沿科技</li>
+					<li>环球财经</li>
+					<li>天气预报</li>
+					<li>房产家居</li>
+					<li>网络游戏</li>
+				</ul>
+				<p>相关推荐</p>
+			</div>
+		</div>
+	</div>
+<div style="height:20px"></div>
+<!-- 页脚 -->
+<%@ include file="/WEB-INF/jsp/public/footer.jsp" %>
+</body>
+</html>

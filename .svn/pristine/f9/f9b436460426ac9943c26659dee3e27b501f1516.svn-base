@@ -1,0 +1,209 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+	<jsp:include page="/WEB-INF/jsp/public/style.jsp" flush="true"></jsp:include>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>个人信息</title>
+	<link rel="stylesheet" type="text/css" href="css/lrtk.css" />
+	<script src="js/modernizr.custom.js"></script>
+	<style type="text/css">
+		 /* .img{
+		 	display: none;
+			  right:180px;
+		 	  z-index:1;
+			  width: 35px;
+			  height: 35px;
+			  top: 200px;
+			  position: absolute;
+			  background: url("${pageContext.request.contextPath}/style/images/pic.jpg") no-repeat;
+			  cursor: pointer;
+		  }
+		  .headImage :focus .img{
+		  	display: block;
+		  } */
+	
+	
+	</style>
+	<script type="text/javascript">
+	function viewPic() {
+		var oFReader = new FileReader();
+		oFReader.onload = function(e) {
+			document.getElementById("uploadPreview").src = e.target.result;
+		}
+		if (document.getElementById("uploadImage").files.length === 0) {
+			return;
+			}
+		var oFile = document.getElementById("uploadImage").files[0];
+		oFReader.readAsDataURL(oFile);
+		function picHidden(){
+		  document.getElementById("head").style.display = "none";
+		}
+		function picShow(){
+		  document.getElementById("head").style.display = "block";
+		}
+	}
+</script>
+</head>
+<body>
+	<!-- 导航栏 -->
+		<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+	<div style="margin-top: 1%;margin-left: 80%">
+		<table class="table">
+		<s:iterator value="#user" status="status">
+			<tr>
+				<td>
+				
+				<%-- <a data-toggle="modal" data-target="#myModal">
+					<span id="head" class="img img-circle" ></span>
+				</a>
+				<img class="headImage"  src="${headImage}" width="180px" height="180px"  onmouseover="picShow();" onmouseout="picHidden();">
+				<br> --%>
+						
+					<ul class="grid" >
+					    <li class="cs-style-3" style="width: 180px;height: 180px">
+					    <figure>
+					    	<s:if test="headImage==null">
+								<div><img src="${pageContext.request.contextPath}/style/images/defaultAvatar.gif" alt="" ></div>
+							</s:if>
+							<s:else>	
+					       		 <div><img src="${headImage}" alt=""></div>
+					        </s:else>	
+				
+					        <figcaption>
+								<img data-toggle="modal" data-target="#myModal" id="head" class="img-circle" src="${pageContext.request.contextPath}/style/images/pic.jpg">
+					        </figcaption>
+					    </figure>
+					    </li>
+					</ul>
+				
+				<!-- <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">上传头像</button> -->
+			 	
+			 	<!-- 上傳圖像彈出框 -->
+			 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 800px;top:30%;left:20%;height: 500px">
+						<div class="modal-content">
+							<s:form action="upload" enctype="multipart/form-data" method="post">
+							
+								<div class="modal-header">
+					        		  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					       			 <h4 class="modal-title" id="myModalLabel">上传图片</h4>
+										<input id="uploadImage" type="file" name="imgFile" onchange='viewPic();'/>
+					       				<s:submit value="提交"></s:submit>
+					     		</div>
+							</s:form>		
+						
+			
+							<div class="modal-body">
+				    			<img id="uploadPreview" src="" width="180px" height="180px"/>
+							</div>
+						  
+							<div class="modal-footer">
+			       				  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+									
+			            	</div>
+						</div>
+					
+				</div>
+			 	
+				
+				
+				</td>
+			</tr>
+			<tr >
+				<td>
+					关注:${attentionCount }<br>
+					粉丝:${fansCount }
+				</td>
+			</tr>
+			<tr >
+				<td>
+				资源上传数量：${resUpCount}
+				</td>
+			</tr>
+			</s:iterator>
+		</table>
+	</div>
+	
+	<!-- 基本資料 -->
+	<div style="margin-top: 10%;margin-left: 200px">
+		<table class="table" >
+			<s:iterator value="#user" status="status">
+					<tr>
+						<td >
+							<font color="#003399">昵称：</font>
+						</td>
+						<td>
+							${name}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">生日：</font>
+						</td>
+						<td>
+							<s:date name="birthday" format="yyyy-MM-dd"/>
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">学历：</font>
+						</td>
+						<td>
+							${education}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">邮箱：</font>
+						</td>
+						<td>
+							${email}
+						</td>
+					</tr>	
+					
+					<tr>
+						<td>
+						<font color="#003399">电话：</font>
+						</td>
+						<td>
+							${telephone}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">QQ：</font>
+						</td>
+						<td>
+							${qq}
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<font color="#003399">注册时间：</font>
+						</td>
+						<td>
+							<s:date name="registTime"/> 
+						</td>
+					</tr>
+					
+					<tr >
+						<td>
+						<s:a action="information_editUI?id=%{id}"><button class="btn btn-default">修改个人资料</button></s:a>
+						<s:a action="information_changePasswordUI?id=%{id}"><button class="btn btn-default">修改密码</button></s:a>
+						</td>
+					</tr>
+			
+			</s:iterator>
+		</table>
+	</div>			
+		<!-- 页脚 -->
+		<%@ include file="/WEB-INF/jsp/public/footer.jsp" %>
+</body>
+</html>

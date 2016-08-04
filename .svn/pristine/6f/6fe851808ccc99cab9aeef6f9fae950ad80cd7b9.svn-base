@@ -1,0 +1,72 @@
+package com.socialization.action.zone;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Tag;
+import com.socialization.domain.Talk;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class TalkAction extends BaseAction<Talk>{
+	
+	/** 列表 */
+	public String list() throws Exception {
+		List<Talk> talkList = talkService.findAll();
+		ActionContext.getContext().put("talkList", talkList);
+		return "list";
+	}
+
+	//查找当前用户好友的说说
+	public String listfriendTalk() throws Exception {
+		List<Talk> talkList = talkService.findByFriends(getCurrentUser());
+		ActionContext.getContext().put("talkList", talkList);
+		return "listfriendTalk";
+	}
+	
+	/** 删除 */
+	public String delete() throws Exception {
+		talkService.delete(model.getId());
+		return "toList";
+	}
+
+	/** 添加页面 */
+	public String addUI() throws Exception {
+		talkService.save(model);
+		return "saveUI";
+	}
+		
+
+	/** 添加 */
+	public String add() throws Exception {
+		model.setPostTime(new Date());
+		System.out.println(getCurrentUser().getLoginName());
+		model.setUser(getCurrentUser());
+		talkService.save(model);
+		return "toList";
+	}
+
+	/** 发表说说 */
+	public String publish() throws Exception {
+		Talk content = talkService.findByContent(model.getContent());
+		if(content==null){
+			addFieldError("fail", "内容不能为空！");
+			return "publishUI";
+		}else{
+			ActionContext.getContext().getSession().put("talk", content);
+			return "SUCCESS";
+		}
+	}
+	
+	/** 发表页面*/
+	public String publishUI() throws Exception {
+		return "publishUI";
+	}
+
+}

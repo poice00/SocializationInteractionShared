@@ -1,0 +1,28 @@
+package com.socialization.service;
+
+import java.util.List;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.User;
+
+public interface UserService extends DaoSupport<User> {
+
+	User findByLoginNameAngPassword(String loginName, String password);
+	
+
+	/**
+	 * @desc 判断用户名是否存在
+	 * @param loginName 用户名
+	 * @return 如果存在，返回true，否则返回false
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 3, 2015 11:55:26 AM
+	 */
+	boolean isExist(String loginName);
+	
+	List<User> OrderByupCount(String st);
+
+
+	List<User> findFansCount();
+	
+
+}

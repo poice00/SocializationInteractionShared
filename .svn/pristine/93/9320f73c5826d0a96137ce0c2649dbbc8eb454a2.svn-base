@@ -1,0 +1,14 @@
+package com.socializationserviceImpl.activity;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.Activity;
+import com.socialization.service.activity.ActivityService;
+
+@Service
+@Transactional
+public class ActivityServiceImpl extends DaoSupportImpl<Activity> implements ActivityService {
+	
+}

@@ -1,0 +1,417 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib prefix="s" uri="/struts-tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap/css/interaction.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<style type="text/css"> 
+.text1{width:600px; height:400px}
+.text2{height:5px}
+.text3{width:200px}
+.text4{width:100px;align:right}
+#footer{position:relative;}
+</style> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>活动首页</title>
+<jsp:include page="/WEB-INF/jsp/public/style.jsp" flush="true"></jsp:include>
+</head>
+<body>
+<!-- 导航栏 -->
+<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+<div class="container">
+		<div class="row">
+			<div class="span12" style="padding-top: 10px;">
+				<div class="span2" style="width: 200px;float:left;margin-left: 100px;">
+					<h3>线下活动</h3>
+				</div>
+				<div class="span6" style="padding-top: 15px;">
+					<ul class="nav nav-pills">
+						<li class="active"><a href="activity_activityHomePage.action" style="margin-right: 100px;">所有活动</a></li>	
+						<li><a class="btn btn-primary" href="activity_createUI.action" style="padding-left: 20px;">+创建活动</a></li>
+						<s:if test='#session.user !=null'>
+						<li><a  href="activity_myAct.action" style="padding-left: 20px;">+我的活动</a></li>
+						</s:if>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span9">
+				<div class="row">
+					<div class="span3">
+						<img src="${activityImg }" /> <br>
+					</div>
+					<div class="span6">
+						<h4>${activityName }</h4>
+						<div>
+							<strong>开始时间:</strong>
+							<s:date format="yyyy年MM月dd日" name="%{startTime }"></s:date>
+							<br> <strong>结束时间:</strong>
+							<s:date format="yyyy年MM月dd日" name="%{endTime }"></s:date>
+							<br> <strong>地点:</strong> ${activityPlace }<br>
+							<strong>费用:</strong> ${activityPrice }<br> <strong>类型:</strong>
+							${activityType.name }<br> <strong>创建者:</strong>
+							${user.name }<br> <br>
+							<div id="user-actions">
+							<s:if test="%{activiName eq 'other'}">
+							<div id="my-interest" style="float:left"><button id="interested" class="btn btn-primary btn-small"
+											type="button" onclick="addInterest()">我感兴趣</button>&nbsp;</div>
+							<div id="my-wantin" style="float:left"><button id="attend" class="btn btn-primary btn-small"
+											type="button" onclick="addAttend()">我要参加</button></div>
+							</s:if>
+							<s:if test="%{activiName eq 'interested'}">
+							<div id="my-interest" style="float:left"><i class="icon-ok"></i>&nbsp;我感兴趣&nbsp;<a href="#"
+											onclick="removeInterest()" >取消</a>&nbsp;</div>
+									<div id="my-wantin" style="float:left"><button onclick="addAttend()" class="btn btn-primary btn-small"
+											type="button">我要参加</button></div>
+							</s:if>
+							<s:if test="%{activiName eq 'attend'}">
+							<i class="icon-ok"></i>&nbsp;我已申请&nbsp;<a href="#" onclick="removeAttend()">取消</a>
+							</s:if>
+							<s:if test="%{activiName eq 'creator'}">
+							我创建的活动
+							</s:if>
+							<s:if test="%{activiName eq 'refuse'}">
+							活动的创建者已经拒绝了你的申请！
+							</s:if>
+							<s:if test="%{activiName eq 'attended'}">
+							<i class="icon-ok"></i>&nbsp;已参加该活动&nbsp;<a href="#"
+											id="removelAttended" onclick="removelAttended()">取消</a>
+							</s:if>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<p>
+					<strong>活动详情：</strong>
+				</p>
+				<p>${activitydescription }</p>
+				<hr>
+				<%-- <c:if test="${user ne null }">
+					<div class="row">
+						<div class="span9">
+							<p>
+								<a href="#"><i class="icon-thumbs-up"></i>推荐</a>&nbsp;&nbsp;<a
+									href="#"><i class="icon-bookmark"></i>收藏</a>&nbsp;
+									<span id="report-span" class="pull-right"> <c:choose>
+										<c:when test="${isReported eq 'false' }">
+											<a href="#reportModal" id="report" data-toggle="modal"><i
+												class="icon-warning-sign"></i>举报</a>
+										</c:when>
+									</c:choose> <c:choose>
+										<c:when test="${isReported eq 'true' }">
+										已举报
+									</c:when>
+									</c:choose> <c:choose>
+										<c:when test="${isReported eq 'mine' }">
+										</c:when>
+									</c:choose>
+								</span>
+							</p>
+							<!-- Modal -->
+							<div id="reportModal" class="modal hide fade"
+								style="width: 600px;" tabindex="-1" role="dialog"
+								aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">×</button>
+									<h3 id="myModalLabel">举报活动</h3>
+								</div>
+								<div class="modal-body">
+									<textarea class="input-xxlarge" rows="4" id="reportReason"
+										placeholder="举报原因"></textarea>
+								</div>
+								<div class="modal-footer">
+									<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+									<button id="addReport" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr>
+				</c:if> --%>
+				<p>
+					<strong>活动相册</strong>
+					<s:if test='#session.user !=null'>
+						<a class="btn pull-right"
+							href="actAlbum_addUI.action?activityId=${id }">新建相册</a>
+							<s:if test="#actAlbumsList.isEmpty()"></s:if><s:else>
+							<button class="btn btn-primary" data-toggle="modal" data-target="#uploadModal" style="margin-left: 600px;">
+								<span class="glyphicon glyphicon-plus"></span> 上传照片
+					        </button>
+							</s:else>					        
+					</s:if>
+				</p>
+				<s:if test="#actAlbumsList.isEmpty()">
+						暂时还没有相册啊~
+				</s:if>
+				<s:else>
+				<s:iterator value="#actAlbumsList" status="actAlbum">
+					<a href="actAlbum_showActAlbum.action?idd=${id }"><img width="140px" height="140px" alt="暂时还没封面"
+						src="${albumCover }" class="img-polaroid" style="width:140px" ;height=:140px"/></a>
+				     </s:iterator>
+				</s:else>
+				<hr>
+				<p>
+					<strong>活动帖子列表</strong>
+					<s:if test='#session.user !=null'>
+						<a class="btn pull-right"
+							href="actTopic_addUI.action?activityId=${id }">发帖</a>
+					</s:if>
+				</p>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>话题</th>
+							<th>作者</th>
+							<th>回应</th>
+							<th>发帖时间</th>
+						</tr>
+					</thead>
+					<tbody>
+					<s:if test="#actTopicsList.isEmpty()">
+						暂时还没有帖子啊~
+				    </s:if>
+				    <s:else>
+				   <s:iterator value="#actTopicsList" status="actTopic">
+				   <tr class="info">
+				   <td><a href="actTopic_showActTopic.action?idd=${id }">${title }</a></td>
+							<td>${user.name }</td>
+							<td>${replyCount }</td>
+							<td><s:date format="yyyy-MM-dd hh:mm:ss" name="%{postTime }"></s:date></td>
+							</tr>
+				     </s:iterator>
+				   </s:else>
+					</tbody>
+				</table>
+				<hr>
+				<div class="pagination">
+					<ul>
+						<pt:page curPage="${curPage}" url="${url}"
+							totalPage="${totalPage}" />
+					</ul>
+				</div>
+				<hr>
+			</div>
+			<div class="span3" style="margin-left: 0px;">
+				<form class="form-search" action="searchActivity.htm" method="get">
+					<div class="input-append">
+						<input name="keyWord" class="span2 search-query" type="text" style="height: 34px;"/>
+						<button type="submit" class="btn">查找</button>
+					</div>
+				</form>
+				<p>活动组织者</p>
+				<div class="member-list">
+					<ul class="inline">
+						<li>
+							<div class="picture">
+								<a href="personalInfo.htm?id=${user.id }"><img
+									src="${user.headImage }" style="height: 40px; width: 40px;"></a>
+							</div>
+							<div class="name" align="center">
+								<small><a
+									href="personalInfo.htm?userId=${user.id }">${user.name }</a>
+								</small>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<p>
+					最近加入成员( <a
+						href="#">${interestUserCount }人感兴趣</a>
+					· <a href="activity_actMem.action?idd=${id }">${activityMemNum }人参加</a>)
+				</p>
+				<div class="member-list">
+					<ul class="inline">
+					<s:iterator value="#newPartInMemList" status="activity">
+							<li>
+								<div class="picture">
+									<a href="personalInfo.htm?userId=${id }"><img
+										src="${headImage }" style="height: 40px; width: 40px;"></a>
+								</div>
+								<div class="name" align="center">
+									<small><a
+										href="personalInfo.htm?userId=${id }">${name }</a></small>
+								</div>
+							</li>
+					</s:iterator>
+					</ul>
+				</div>
+				<p>相关推荐</p>
+				<div class="member-list">
+					<ul class="inline">
+						<%-- <c:forEach items="${recommendActivities }" var="activity"
+							varStatus="status">
+							<li>
+								<div class="picture">
+									<a href="showActivity.htm?activityId=${activity.activityId }"><img
+										src="${activity.activityImg }" width="40" height="40"></a>
+								</div>
+								<div class="name">
+									<small> <c:choose>
+											<c:when test="${activity.activityName.length() > 5 }">
+												<a href="showActivity.htm?activityId=${activity.activityId}">${fn:substring(activity.activityName, 0, 5) }...</a>
+											</c:when>
+											<c:otherwise>
+												<a href="showActivity.htm?activityId=${activity.activityId}">${activity.activityName }</a>
+											</c:otherwise>
+										</c:choose>
+									</small>
+								</div>
+							</li>
+						</c:forEach> --%>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	              <!-- Modal -->
+					<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: block; padding-left: 17px;margin-left: 270px;height: 302px;margin-top: 200px;">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-hidden="true" style="font-size:40px;">×</button>
+							<h3 id="myModalLabel">上传照片</h3>
+						</div>	
+						<s:form action="actAlbum_photoaddTwo.action" method="post" enctype="multipart/form-data">
+						<div class="modal-body">
+						请选择相册：<s:select name="actAlbumId" list="#actAlbumsList"
+							listKey="id" listValue="name" >
+						</s:select><br /><br />
+							<input type="file" name="files" multiple="multiple" accept="image/*" />
+						</div>
+						<div class="modal-footer">
+							<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+							<button type="submit" class="btn btn-primary">提交</button>
+						</div>
+						</s:form>
+					</div>
+<div style="height:20px"></div>
+<!-- 页脚 -->
+<%@ include file="/WEB-INF/jsp/public/footer.jsp" %>
+<script>
+
+
+function addAttend() {
+	$.ajax({
+		type : "post",
+		url : "activity_activityPartIn.action",
+		data : {
+			idd : "${id }"
+		},
+		success : function(response) {
+				$("#user-actions").html("<i class='icon-ok'></i>").append(
+						"&nbsp;我已申请&nbsp;").append(
+						"<a href='#' id='removeAttend' onclick='removeAttend()'>取消</a>&nbsp;");
+				alert(response);
+				window.location.href="activity_activityDetails.action?idd=${id}";
+		}
+	});
+};
+function removeAttend() 
+			{
+				$.ajax({
+							type : 'post',
+							url : 'activity_myWantInActCancel.action',
+							data : {
+								idd : "${id }"
+							},
+							success : function(response) {							
+									$("#user-actions")
+											.html(
+													"<button id='interested' class='btn btn-primary btn-small' type='button' onclick='addInterest()'>我感兴趣</button>&nbsp;")
+											.append(
+													"<button id='attend' class='btn btn-primary btn-small' type='button' onclick='addAttend()'>我要参加</button>");
+									alert(response);
+									window.location.href="activity_activityDetails.action?idd=${id}";
+							}
+						});
+			};
+function addInterest() {
+		$.ajax({
+					type : "post",
+					url : "activity_activityIntesrest.action",
+					data : {
+						idd : "${id }"
+					},
+					success : function(response) {
+							$("#user-actions")
+									.html("<i class='icon-ok'></i>")
+									.append("&nbsp;我感兴趣&nbsp;")
+									.append(
+											"<a href='#' id='removeInterest' onclick='removeInterest()'>取消</a>&nbsp;")
+									.append(
+											"<button id='attend' class='btn btn-primary btn-small' type='button' onclick='addAttend()'>我要参加</button>");
+							alert(response);
+							window.location.href="activity_activityDetails.action?idd=${id}";
+					}
+				});
+	};
+
+function removeInterest() {
+		$.ajax({
+					type : "post",
+					url : "activity_myInterestActCancel.action",
+					data : {
+						idd : "${id }"
+					},
+					success : function(response) {
+							$("#user-actions")
+									.html(
+											"<button id='interested' class='btn btn-primary btn-small' type='button' onclick='addInterest()'>我感兴趣</button>&nbsp;")
+									.append(
+											"<button id='attend' class='btn btn-primary btn-small' type='button' onclick='addAttend()'>我要参加</button>");
+							alert(response);
+							window.location.href="activity_activityDetails.action?idd=${id}";
+					}
+				});
+	};
+	function removeAttended() {
+		$.ajax({
+					type : "post",
+					url : "activity_myWantInActCancel.action",
+					data : {
+						idd : "${id }"
+					},
+					success : function(response) {
+							$("#user-actions")
+									.html(
+											"<button id='interested' class='btn btn-primary btn-small' type='button' onclick='addInterest()'>我感兴趣</button>&nbsp;")
+									.append(
+											"<button id='attend' class='btn btn-primary btn-small' type='button' onclick='addAttend()'>我要参加</button>");
+							alert(response);
+							window.location.href="activity_activityDetails.action";
+					}
+				});
+	};
+function addReport() {
+		$.ajax({
+			type : "post",
+			url : "addReport.htm",
+			data : {
+				"reportedId" : "${activity.activityId }",
+				"reportReason" : $("#reportReason").val(),
+				"reportType" : "activity"
+			},
+			success : function(msg) {
+				if (msg === "success") {
+					$("#report-span").html("已举报");
+					$('#reportModal').modal('hide')
+				}
+			}
+
+		});
+	};
+	$().ready(function() {
+		$("#uploadModal").hide();
+		$("#myModalLabel").click(function() {
+			$("#uploadModal").slideToggle("slow");
+		});
+	});
+</script>
+</body>
+</html>

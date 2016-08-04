@@ -1,0 +1,15 @@
+package com.socialization.service;
+
+import java.util.List;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.User;
+
+public interface UserService extends DaoSupport<User> {
+
+	User findByLoginNameAngPassword(String loginName, String password);
+
+	List<User> OrderByupCount(String st);
+	
+
+}

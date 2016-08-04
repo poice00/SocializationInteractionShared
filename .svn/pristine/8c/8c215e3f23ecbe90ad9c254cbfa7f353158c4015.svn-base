@@ -1,0 +1,12 @@
+package com.socialization.service;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.Forum;
+
+public interface ForumService extends DaoSupport<Forum> {
+
+	void moveUp(Long id);
+
+	void moveDown(Long id);
+
+}

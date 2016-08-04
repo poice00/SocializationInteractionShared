@@ -1,0 +1,14 @@
+package com.socialization.serviceImpl.resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.User;
+import com.socialization.service.UserService;
+
+@Service
+@Transactional
+public class ResourceServiceImpl extends DaoSupportImpl<User> implements UserService {
+	
+}

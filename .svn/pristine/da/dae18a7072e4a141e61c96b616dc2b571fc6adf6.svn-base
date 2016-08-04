@@ -1,0 +1,36 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+   <head>
+<title>Insert title here</title>
+   </head>
+   <body>
+   ++++++++++++++++++++++
+		<table>
+			<tr>
+            		<td width="250px" >用户昵称</td>
+                	<td width="300px">说说内容</td>
+                	<td>相关操作</td>
+     		</tr>
+     
+        			<s:iterator value="#talkList" status="status">
+			<tr>
+					<td>${id}&nbsp;</td>
+					<td>${content}&nbsp;</td>
+					<td><s:a action="talk_delete?id=%{id}" 
+							 onClick="return window.confirm('您确定删除吗?')">删除</s:a>
+					</td>
+			</tr>
+					</s:iterator>
+			<tr>
+			 			<s:a action="talk_addUI">添加说说</s:a>
+			</tr>
+		</table>
+		
+
+<s:a action="talk_listfriendTalk" >显示朋友状态</s:a>
+
+
+   </body> 
+</html>

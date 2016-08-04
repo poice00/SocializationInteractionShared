@@ -1,0 +1,51 @@
+package com.socialization.serviceImpl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.Talk;
+import com.socialization.domain.User;
+import com.socialization.service.TalkService;
+@Service
+@Transactional
+@SuppressWarnings("unchecked")
+public class TalkServiceImpl extends DaoSupportImpl<Talk> implements TalkService{
+
+	@Override
+	public List<Talk> findByContent() {
+		return (List<Talk>) getSession().createQuery(//
+				"FROM Talk r WHERE r.content=? ORDER BY r.postTime DESC")//
+				.list();
+	}
+
+	@Override
+	public Talk findByContent(String content) {
+		return null;
+	}
+
+	@Override
+	public List<Talk> findByFriends(User user) {
+		return getSession().createSQLQuery("select * from talk where userId in (select friendId from user_friend where userId = ?)").addEntity(Talk.class).setParameter(0, user.getId()).list();
+	}
+	
+	@Override
+	public Long findByLoginName(String str) {
+			return (Long) getSession().createQuery(//
+					"FROM Talk r WHERE r.longinName=?")
+					.setParameter(0, str)//
+					.uniqueResult();
+	}
+
+	@Override
+	public List<Talk> getTalkListById(Long id) {
+		return getSession().createQuery(//
+				"FROM Talk r WHERE r.user.id=? ORDER BY r.postTime DESC")//
+				.setParameter(0, id)//
+				.list();
+	}
+
+
+}

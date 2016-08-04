@@ -1,0 +1,114 @@
+package com.socialization.serviceImpl.resource;
+
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.ResReply;
+import com.socialization.domain.ResType;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+import com.socialization.service.resource.UpdowncollectResService;
+import com.sun.org.apache.regexp.internal.recompile;
+
+@Service
+@Transactional
+public class UpdowncollectResServiceImpl extends DaoSupportImpl<Resource> implements UpdowncollectResService {
+
+	
+	@SuppressWarnings("unchecked")
+	@Override        //查询用户所拥有的资源
+	public List<Resource> getByuserupId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createQuery(
+					"FROM Resource r WHERE r.user.id=?")
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所下载的资源
+	public  List<Resource> getByuserdownId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_downresource where userId=?)")
+					.addEntity(Resource.class)
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所搜藏的资源
+	public List<Resource> getByusercolleId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_resource where userId=?)")
+					.addEntity(Resource.class)
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+	
+	@Override     //更新用户-资源下载表
+	public void downsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_downresource(userId,resourceId) values (?,?)")
+		        .setParameter(0,resource.getId())
+		        .setParameter(1, user.getId())
+		        .executeUpdate();
+	}
+	
+	@Override     //更新用户-资源收藏表
+	public void collectsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_downresource(userId,resourceId) values (?,?)")
+		        .setParameter(0,resource.getId())
+		        .setParameter(1, user.getId())
+		        .executeUpdate();
+	}
+	
+	
+	
+	/*@Override
+	public void save(Resource resource) {
+		//保存资源
+		getSession().save(resource);		
+		//维护特殊数据
+		ResType resType=resource.getResType();
+		resType.setResCount(resType.getResCount()+1);
+		getSession().update(resType);
+	}*/
+	
+	
+	@Override
+	public void delete(Resource resource) {
+		//删除
+		getSession().delete(resource);		
+		//维护特殊数据
+		ResType resType=resource.getResType();
+		resType.setResCount(resType.getResCount()-1);
+		getSession().update(resType);
+	}
+
+
+	@Override
+	public List<Resource> highSearch() {
+		
+		return null;
+	}
+}

@@ -1,0 +1,20 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>版块添加</title>
+</head>
+<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+<body>
+	<s:form action="forumManage_%{id==null?'add':'edit'}">
+	<s:hidden name="id"></s:hidden>
+	版块名称:<s:textfield name="name"></s:textfield><br>
+	版块說明:<s:textarea name="description"></s:textarea><br>
+	<s:submit value="保存"></s:submit>
+	 <a href="javascript:history.go(-1);">返回</a>
+	</s:form>
+	<%@ include file="/WEB-INF/jsp/public/commons_foot.jspf"%>	
+</body>
+</html>

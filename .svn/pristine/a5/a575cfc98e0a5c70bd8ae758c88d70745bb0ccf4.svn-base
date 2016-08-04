@@ -1,0 +1,31 @@
+package com.socialization.action;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class HomeAction extends ActionSupport{
+
+	public String index() throws Exception {
+		return "index";
+	}
+	public String mid() throws Exception {
+		return "mid";
+	}
+	public String top() throws Exception {
+		return "top";
+	}
+	public String bottom() throws Exception {
+		return "bottom";
+	}
+	public String blank() throws Exception {
+		return "blank";
+	}
+	public String title() throws Exception {
+		return "title";
+	}
+}

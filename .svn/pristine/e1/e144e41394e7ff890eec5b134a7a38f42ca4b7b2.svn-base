@@ -1,0 +1,188 @@
+package com.socialization.action.resource;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Resource;
+import com.socialization.domain.Tag;
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class UpdowncollectAction extends BaseAction<Resource> {
+	
+	
+	public String uplist() throws Exception {     //  上传列表数据
+		List<Resource> upresList=updowncollectResService.getByuserupId(getCurrentUser());
+		if (upresList.size()!=0) {
+			ActionContext.getContext().put("upresList", upresList);
+			return "upresList";
+		} else{
+			return "toupresList";
+		}	
+	}
+	
+	
+	public String showupload() throws Exception{  //显示上传界面
+		List<Tag> taglist=this.tagService.findAll();
+		ActionContext.getContext().put("taglist", taglist);
+		return "showupload";
+	}
+	
+/*	public static void printFieldsValue(Object obj) {
+        Field[] fields = obj.getClass().getDeclaredFields();
+        try {
+            for (Field f : fields) {
+                f.setAccessible(true);
+                System.out.println(f.get(obj));
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+ 
+	
+	
+	*/
+	public String downlist() throws Exception{     //下载列表数据           
+		List<Resource> downReslist=updowncollectResService.getByuserdownId(getCurrentUser());
+		if (downReslist.size()!=0) {
+			ActionContext.getContext().put("downReslist", downReslist);
+			return "downlist";
+		} else {
+			return "todownlist";
+		}
+	}
+	
+	public String collectlist() throws Exception{  //收藏列表数据
+		List<Resource> collResList=updowncollectResService.getByusercolleId(getCurrentUser());
+		System.out.println(collResList.size());
+		if (collResList.size()!=0) {
+			ActionContext.getContext().put("collResList", collResList);
+			return "collectlist";
+		} else {
+			return "tocollectlist";
+		}
+		
+	}
+	
+	public String showSingleRes() throws Exception{  //准备单个资源的页面数据
+		Resource resource=this.updowncollectResService.getById(idd);
+		ActionContext.getContext().getValueStack().push(resource);
+		return "showSingleRes";	
+	}
+
+     public String delete() throws Exception{  //删除资源的数据
+		this.updowncollectResService.delete(model);
+		return "delete";
+	}
+	
+     
+	public String upResCommit() throws Exception{   //资源上传提交，同时写入数据库
+		byte[] buffer=new byte[102400];
+		InputStream in=new FileInputStream(upFile);
+		String reSize;
+		float aa=(float)in.available();
+		if (aa/1024/1024>99) { //如果文件过大，则关闭文件流，向上传页面返回文件过大的提醒
+			in.close();
+			addActionMessage("文件过大，请重新选择！");
+			return "fileTooBig";
+		}
+		if (aa/1024<1) {      //转化成B
+	     reSize=String.valueOf((int)aa)+"B";
+		} else if (aa/1024/1024<1) {    //转化成KB
+			reSize=String.valueOf((int)(aa/1024))+"KB";
+		} else {      //转化成MB
+           reSize=String.valueOf(((float)(Math.round(aa/1024/1024*100)))/100)+"MB";
+		}
+		String filepath=ServletActionContext.getServletContext().getRealPath("/WEB-INF/upload/");
+		String mm="user1";
+		String filepath2=filepath+"/"+mm;
+		File tmpFile = new File(filepath2);
+		if (!tmpFile.exists()) {   //如果文件名不存在则创建新的文件名
+		 tmpFile.mkdir();
+		 }
+		OutputStream out=new FileOutputStream(new File(filepath2+"/"+upFileFileName));
+		
+		int length= in.read(buffer);
+		while (length>0){
+			out.write(buffer);
+			length=in.read(buffer);
+		}
+		in.close();
+		out.flush();
+		out.close();
+		model.setIpAddr(ServletActionContext.getRequest().getRemoteAddr());
+		model.setPath(filepath2+"/"+upFileFileName);
+		model.setPostTime(new Date());
+		model.setUser(getCurrentUser());
+		model.setResSize(reSize);
+		model.setResTags(model.getResTags());
+		model.setResContentType(upFileContentType);
+		this.updowncollectResService.save(model);
+		return "upResCommit";
+	}
+	
+	private Long idd;
+	
+	
+	private File upFile;
+	private String upFileFileName;
+	private String upFileContentType;
+	public File getUpFile() {
+		return upFile;
+	}
+
+
+	public void setUpFile(File upFile) {
+		this.upFile = upFile;
+	}
+
+
+	public String getUpFileFileName() {
+		return upFileFileName;
+	}
+
+
+	public void setUpFileFileName(String upFileFileName) {
+		this.upFileFileName = upFileFileName;
+	}
+
+
+	public String getUpFileContentType() {
+		return upFileContentType;
+	}
+
+
+	public void setUpFileContentType(String upFileContentType) {
+		this.upFileContentType = upFileContentType;
+	}
+
+
+	public Long getIdd() {
+		return idd;
+	}
+
+
+	public void setIdd(Long idd) {
+		this.idd = idd;
+	}
+
+}

@@ -1,0 +1,14 @@
+package com.socialization.service.resource;
+
+import java.util.List;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.ResReply;
+import com.socialization.domain.Resource;
+
+public interface ResReplyService extends DaoSupport<ResReply>{
+
+	List<ResReply> getbyResID(Resource resource);
+
+	void save(ResReply resReply, int currentscore);
+}

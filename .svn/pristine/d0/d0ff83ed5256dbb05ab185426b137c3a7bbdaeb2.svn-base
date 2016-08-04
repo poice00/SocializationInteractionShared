@@ -1,0 +1,283 @@
+package com.socialization.serviceImpl.resource;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.ResType;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+import com.socialization.service.resource.UpdowncollectResService;
+import com.sun.org.apache.regexp.internal.recompile;
+@Service
+@Transactional
+public class UpdowncollectResServiceImpl extends DaoSupportImpl<Resource> implements UpdowncollectResService {
+
+	
+	@SuppressWarnings("unchecked")
+	@Override        //查询用户所拥有的资源
+	public List<Resource> getByuserupId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createQuery(
+					"FROM Resource r WHERE r.user.id=? order by postTime desc")
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}	
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所下载的资源
+	public  List<Resource> getByuserdownId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_downresource where userId=?) order by postTime desc")
+					.addEntity(Resource.class)
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所收藏的资源
+	public List<Resource> getByusercolleId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_resource where userId=?) order by postTime desc")
+					.addEntity(Resource.class)
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}	
+	@Override     //添加用户-资源下载表
+	public void downsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_downresource(userId,resourceId) values (?,?)")
+		        .setParameter(0,user.getId())
+		        .setParameter(1, resource.getId())
+		        .executeUpdate();
+	}	
+	@Override     //添加用户-资源收藏表
+	public void collectsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_resource(userId,resourceId) values (?,?)")
+		        .setParameter(0,user.getId())
+		        .setParameter(1, resource.getId())
+		        .executeUpdate();
+	}
+	@Override  //重写资源保存的方法
+	public void save(Resource resource) {
+		//保存资源
+		getSession().save(resource);		
+		//维护特殊数据
+		User user=resource.getUser();
+		user.setResUpCount(user.getResUpCount()+1);	
+		getSession().update(user);
+		
+		ResType resType=resource.getResType();
+		resType.setResCount(resType.getResCount()+1);
+		getSession().update(resType);
+	}	
+	//重写资源删除的方法
+	@Override
+	public void delete(Resource resource) {
+		//删除
+		ResType resType=resource.getResType();   //相应的资源类型的资源总数减1
+		resType.setResCount(resType.getResCount()-1);  
+		getSession().update(resType);
+		getSession().createSQLQuery(    //相应的收藏表中的有关该资源的删除
+				                    "delete from user_resource where resourceId= ?")
+		                            .setParameter(0, resource.getId())
+		                            .executeUpdate();
+		getSession().createSQLQuery(   //相应的下载表中的有关该资源的删除
+                "delete from user_downresource where resourceId= ?")
+                .setParameter(0, resource.getId())
+                .executeUpdate();
+		User user=resource.getUser();   //相应的用户上传资源的数目减1
+		user.setResUpCount(user.getResUpCount()-1);
+		getSession().update(user);
+		getSession().delete(resource);		
+		//维护特殊数据	
+	}
+	//按照下载次数的排序，取前3
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> OrderByCount(String st) {	  
+		
+		if (st=="总榜单") {
+			return getSession().createQuery(
+					"FROM Resource r ORDER BY r.downCount DESC")
+					.setMaxResults(3)
+					.list();
+		} else {
+			return getSession().createQuery(
+					"FROM Resource r ORDER BY r.downCount DESC")
+					.list();
+		}
+	}
+	//按照收藏次数的前十排序，取前3
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> OrderByCollect(String st) {
+		if (st=="总榜单") {
+			return getSession().createQuery(
+					"FROM Resource r ORDER BY r.collectionCount DESC")
+					.setMaxResults(3)
+					.list();
+		} else {
+			return getSession().createQuery(
+					"FROM Resource r ORDER BY r.collectionCount DESC")
+					.list();
+		}
+	}
+    //检查用户资源收藏
+	@Override
+	public boolean checkCollectExist(Resource resource,User user) {
+		if (user == null||getSession().createSQLQuery(
+				"select * from user_resource where resourceId=? and userId=?")
+				.setParameter(0, resource.getId())
+				.setParameter(1, user.getId())
+				.list().size()==0) {
+			return true;
+		}else
+		{
+		    return false;
+		}
+	}
+
+    //查看资源时以资源的发布时间排序
+	@SuppressWarnings("unchecked")   
+	@Override
+	public List<Resource> findAllDesc() {
+		return getSession().createQuery(
+				"FROM Resource r ORDER BY r.postTime DESC").list();
+	}
+
+
+	@Override   //检查用户是否重复下载
+	public boolean checkDownExist(Resource resource, User currentUser) {
+		if (getSession().createSQLQuery(
+				"select * from user_downresource where resourceId=? and userId=?")
+				.setParameter(0, resource.getId())
+				.setParameter(1, currentUser.getId())
+				.list().size()==0) {			
+			return true;
+		}else
+		{
+		    return false;
+		}
+	}	
+	
+	//复合条件下的高级搜索,返回至少满足一个条件的！
+	@SuppressWarnings("unchecked")  
+	@Override
+	public List<Resource> highLevelSearch(String resDescription, String resname, String resourceTags,String seaDate,Long resTyId,int kz) {
+		String sa2[]=new String[3];
+		sa2[0]=resname;
+		sa2[1]=resDescription;
+		sa2[2]=resourceTags;
+		String sa[]={"name","description","resTags"};
+		String sql="select * from(select *,sum(";
+		for (int i = 0; i < 3; i++) {
+		sql=sql+"(case when "+sa[i]+" like '%"+sa2[i]+"%' then 1 else 0 end)+";
+		}
+		if (resTyId==null) {
+			sql=sql+"(case when postTime>='"+seaDate+"' then 1 else 0 end)) as cnt from resource group by id) as temp where cnt>="+kz+" order by cnt desc";
+		} else {
+			kz=kz+1;
+			sql=sql+"(case when resTypeId="+resTyId+" then 1 else 0 end)+(case when postTime>='"+seaDate+"' then 1 else 0 end)) as cnt from resource group by id) as temp where cnt>="+kz+" order by cnt desc";
+		}
+		return getSession().createSQLQuery(
+				sql)
+				.addEntity(Resource.class)
+				.list();
+	}
+
+	//根据资源的标签查找相应的资源
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> findByTag(String resTg) {
+			String sql="FROM Resource r WHERE r.resTags like '%"+resTg+"%'";
+			return getSession().createQuery(sql).list();
+	}	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> findByResMap(Map<String, Integer> resTagMap) {
+		Set<String> set=resTagMap.keySet();
+		Iterator iterator = set.iterator();
+		String[] st=new String[set.size()];
+		int i=0;
+		while(iterator.hasNext()&&i<set.size()){
+		st[i]=iterator.next().toString();
+		i++;
+		}
+		if (st.length<=5) {
+			return Collections.emptyList();
+		} else {
+			String sql="select * from resource where id not in (select id from resource where resTags like '%"+st[0]+"%' or resTags like '%"+st[1]+"%' or resTags like '%"+st[2]+"%' or resTags like '%"+st[3]+"%' or resTags like '%"+st[4]+"%')";
+			return getSession().createSQLQuery(sql).addEntity(Resource.class).list();
+		}	
+	}
+	@Override
+	public void deleteCollect(Long idd, Long id) {
+		getSession().createSQLQuery("delete from user_resource where resourceId=? and userId=?").setParameter(0, idd).setParameter(1, id).executeUpdate();
+		
+	}
+    //普通的搜索方法
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> findByName(String searchName) {
+		String sql="FROM Resource r WHERE r.name LIKE '%"+searchName+"%' OR r.description LIKE '%"+searchName+"%' OR r.resTags LIKE '%"+searchName+"%'";
+		return getSession().createQuery(sql).list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	/**
+	 * @desc 根据关键字进行模糊查询
+	 * @param str 关键字
+	 * @return resource集合
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 14, 2015 9:11:27 AM
+	 */
+	public List<Resource> fuzzySearch(String str) {
+		if(str.length() == 0)
+			return null;
+		
+		/*生成模糊字符串*/
+		StringBuilder sb = new StringBuilder("%");
+		
+		for (int i = 0; i < str.length(); i++)
+			sb.append(str.charAt(i)).append("%");
+		
+		return getSession().createQuery(
+				"FROM Resource WHERE name like ?")
+				.setParameter(0, sb.toString())
+				.list();
+	}
+	
+	/**
+	 * @desc 按下载次数排序，取前十条
+	 * @return resource集合
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 14, 2015 10:52:01 AM
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> getTop10() {
+		return getSession().createQuery(
+				"FROM Resource ORDER BY downCount DESC")
+				.setMaxResults(10)
+				.list();
+	}
+	
+}

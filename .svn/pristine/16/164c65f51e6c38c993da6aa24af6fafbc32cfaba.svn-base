@@ -1,0 +1,28 @@
+body {
+	padding-top: 40px;
+}
+
+/*ϵͳ����*/
+.navi2 {
+	width: 300px;
+	height: 310px;
+	/*background-color:#F9F9F9;*/
+	margin: 5px 5px 0 0;
+	float: right;
+	/*border:1px solid silver;*/
+}
+
+/*��������*/
+.notice1 {
+	width: 290px;
+	height: 40px;
+	margin: 5px 5px 0 5px;
+	/*border:1px solid;*/
+}
+
+.notice2 {
+	width: 290px;
+	height: 255px;
+	margin: 0 5px 5px 5px;
+	border: 1px solid silver;
+}

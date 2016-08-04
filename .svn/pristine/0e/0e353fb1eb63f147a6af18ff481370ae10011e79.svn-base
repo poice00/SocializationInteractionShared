@@ -1,0 +1,77 @@
+package com.socialization.action.resource;
+
+
+
+import java.util.Date;
+import java.util.List;
+
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.ResReply;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class ResReplyAction extends BaseAction<ResReply> {
+
+	/** 列表 */
+	private String textContent;
+	private Resource resource;
+	private User user;
+	private int currentscore;
+
+	public String list() throws Exception {
+		List<ResReply> replies = resReplyService.getbyResID(resource);
+		ActionContext.getContext().put("replies", replies);
+		return "list";
+	}
+	public String add() throws Exception{
+		//封装
+	    //-->>表单参数
+		//--〉〉直接获取的信息
+		model.setContent(textContent);
+		model.setPostTime(new Date());
+        model.setIpAddr(ServletActionContext.getRequest().getRemoteAddr());
+        model.setResource(resource);
+		model.setUser(user);
+		//保存
+		this.resReplyService.save(model, currentscore);
+		return "toShow";
+	}
+	
+	
+	
+	public String getTextContent() {
+		return textContent;
+	}
+	public void setTextContent(String textContent) {
+		this.textContent = textContent;
+	}
+	public Resource getResource() {
+		return resource;
+	}
+	public void setResource(Resource resource) {
+		this.resource = resource;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public int getCurrentscore() {
+		return currentscore;
+	}
+	public void setCurrentscore(int currentscore) {
+		this.currentscore = currentscore;
+	}
+}

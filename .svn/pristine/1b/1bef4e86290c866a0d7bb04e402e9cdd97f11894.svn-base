@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"></constant>
+	<constant name="struts.devMode" value="false" />
+	<!-- <constant name="struts.ui.theme" value="simple"></constant> -->
+	<!-- 把扩展名设置为action -->
+	<constant name="struts.action.extension" value="action"></constant>
+
+
+	<package name="default" extends="struts-default">
+		
+		<!-- <interceptors>
+		    <interceptor name="Check" class="com.socialization.util.CheckInterceptor"></interceptor>
+		    
+		    <interceptor-stack name="defaultStack">
+		        <interceptor-ref name="Check"></interceptor-ref>
+		        <interceptor-ref name="defaultStack"></interceptor-ref>
+		    </interceptor-stack>
+		</interceptors>         -->
+        
+		<!-- 全局的result配置 -->
+       	<global-results>
+       	     <result name="loginUI">/WEB-INF/jsp/userAction/loginUI.jsp</result>
+       	</global-results>
+		
+		<!-- 首页 -->
+		<action name="home_*" class="homeAction" method="{1}">
+			<result name="{1}">/WEB-INF/jsp/homeAction/{1}.jsp</result>
+		</action>
+		
+		<!-- 用户管理 -->
+    	<action name="user_*" class="userAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/userAction/list.jsp</result>
+    	    <result name="toList">/WEB-INF/jsp/userAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/userAction/saveUI.jsp</result>
+    	    <result name="toList" type="redirectAction">user_list</result>
+    	    <result name="logout">/WEB-INF/jsp/userAction/logout.jsp</result>
+    	    <result name="toLogin" type="redirect">/index.jsp</result>
+    	    
+    	</action>
+    	
+    	<!-- 标签管理 -->
+    	<action name="tag_*" class="tagAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/tagAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/tagAction/saveUI.jsp</result>
+    	    <result name="toList" type="redirectAction">tag_list</result>
+    	    
+    	</action>
+    	
+    	<!-- 板块管理 -->
+    	<action name="forumManage_*" class="forumManageAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/forumManageAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/forumManageAction/saveUI.jsp</result>
+    	    <result name="toList" type="redirectAction">forumManage_list</result>
+    	 
+    	    
+    	</action>
+    	
+    	<!-- 板块 -->
+    	<action name="forum_*" class="forumAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/forumAction/list.jsp</result>
+    	    <result name="show">/WEB-INF/jsp/forumAction/show.jsp</result>
+    	    
+    	</action>
+    	
+    	<!-- 主题-->
+    	<action name="topic_*" class="topicAction" method="{1}">
+    	    <result name="show">/WEB-INF/jsp/topicAction/show.jsp</result>
+    	    <result name="addUI">/WEB-INF/jsp/topicAction/addUI.jsp</result>
+    	    <result name="moveUI">/WEB-INF/jsp/topicAction/moveUI.jsp</result>
+    	    <result name="toShow" type="redirectAction">topic_show?id=${id}</result>
+    	    <result name="toShowTopicList" type="redirectAction">forum_show?id=${forumId}</result>
+    	</action>
+    	
+    	<!-- 回复 -->
+    	<action name="reply_*" class="replyAction" method="{1}">
+    	    <result name="addUI">/WEB-INF/jsp/replyAction/addUI.jsp</result>
+    	    <result name="toTopicShow" type="redirectAction">topic_show?id=${topicId}</result>
+    	</action>
+    	
+    	<!-- 上传图片 -->
+    	<action name="file_*" class="fileAction" method="{1}">
+		</action>
+    	
+    	<!-- 用户注册登录页面-->
+    	<action name="loginAndregist_*" class="loginAction" method="{1}">
+    	    <result name="registerUI">/WEB-INF/jsp/loginAction/registerUI.jsp</result>
+    	    <result name="registerSuc">/WEB-INF/jsp/loginAction/registerSuc.jsp</result>
+    	    <result name="logining">/WEB-INF/jsp/loginAction/logining.jsp</result>
+    	    <result name="loginUI" >/WEB-INF/jsp/loginAction/logining.jsp</result>
+    	    <result name="toLogin" >/WEB-INF/jsp/loginAction/loginSuccess.jsp</result>
+    	    <result name="logout" >/WEB-INF/jsp/loginAction/loginout.jsp</result>
+    	</action>
+    	
+    	<!-- 我的上传下载收藏资源列表 -->
+    	<action name="myresource_*" class="updowncollectAction" method="{1}">
+    	    <interceptor-ref name="fileUpload"><param name="maximumSize">102400</param></interceptor-ref>
+    	    <result name="showupload">/WEB-INF/jsp/resourceAction/upload.jsp</result><!-- 资源上传页面 -->
+    	    <result name="upResCommit">/WEB-INF/jsp/resourceAction/uploadSuccess.jsp</result> <!-- 资源上传成功页面 -->
+    	    <result name="upresList">/WEB-INF/jsp/resourceAction/myresourceHome.jsp</result> <!-- 上传列表有数据的页面  -->
+    	    <result name="toupresList">/WEB-INF/jsp/resourceAction/toupresList.jsp</result> <!-- 上传列表没数据的页面 -->
+    	    <result name="downlist">/WEB-INF/jsp/resourceAction/mydownResource.jsp</result> <!-- 下载列表有数据的页面  -->
+    	    <result name="todownlist">/WEB-INF/jsp/resourceAction/mytodownResource.jsp</result> <!-- 下载列表没数据的页面 -->
+    	    <result name="collectlist">/WEB-INF/jsp/resourceAction/mycollectResource.jsp</result><!--  收藏列表有数据的页面  -->
+    	    <result name="tocollectlist">/WEB-INF/jsp/resourceAction/mytocollectResource.jsp</result> <!-- 收藏列表没数据的页面 -->
+    	    <result name="showSingleRes">/WEB-INF/jsp/resourceAction/singalfile.jsp</result> <!-- 单个资源的页面 -->
+    	</action>
+    	
+    	<!-- 资源总的页面 -->
+    	<action name="resource_*" class="resourceAction" method="{1}">
+    	    <result name="homePage">/WEB-INF/jsp/resourceAction/resourceHome.jsp</result>
+    	    <result name="jumptoup">/WEB-INF/jsp/resourceAction/myResource.jsp</result>	 
+    	    <result name="upresList">/WEB-INF/jsp/resourceAction/myResource.jsp</result>
+    	    <result name="upResCommit">/WEB-INF/jsp/resourceAction/uploadSuccess.jsp</result> 
+    	</action>
+    	
+    	<!-- 下载资源 -->
+        <action name="resourcedownload" class="downloadAction">
+    	    <result name="success" type="stream"><!-- /WEB-INF/jsp/resourceAction/downSuccess.jsp -->
+            <param name="inputName">fileInput</param>  
+    	    </result>
+    	</action>
+    	
+    	<!-- 标签操作 -->
+        <action name="tagRes_*" class="tagResAction" method="{1}">
+          <result name="list" >/WEB-INF/jsp/resourceAction/tagResList.jsp</result>
+    	  <result name="addUI" >/WEB-INF/jsp/resourceAction/tagResAddUI.jsp</result>
+    	  <result name="addSuc" type="redirectAction">tagRes_list</result>
+    	</action>
+    	
+	</package>
+
+</struts>
+

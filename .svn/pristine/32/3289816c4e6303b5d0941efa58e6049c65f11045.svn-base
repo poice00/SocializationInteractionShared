@@ -1,0 +1,225 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>我的说说</title>
+		<jsp:include page="/WEB-INF/jsp/public/style.jsp" flush="true"></jsp:include>
+		<style>
+			#footer{
+				position:fixed;
+				bottom:0px;
+			}
+			
+			.pager{
+				margin:0;
+			}
+			
+			.pagination{
+				margin:0;
+			}
+			
+			.input-group{
+				margin-top:10px;
+			}
+			
+			.input-group-addon{
+				width:80px;
+			}
+			
+			.well{
+				padding-left:150px;
+			}
+			
+			table{
+				margin-top:20px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 导航栏 -->
+		<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+		<div class="container" style="margin-top: 30px;">
+			<div class="row">
+				<div class="col-md-9">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">我的说说</h3>
+						</div>
+						<div class="panel-body">
+							<!-- 操作按钮 -->
+							<button class="btn btn-primary" data-toggle="modal" data-target="#add">
+								<span class="glyphicon glyphicon-plus"></span> 增加
+							</button>
+							<button class="btn btn-danger" onClick="batch_delete_talk()">
+								<span class="glyphicon glyphicon-remove"></span> 删除
+							</button>
+							<!-- 按条件筛选 -->
+							<input id="select" type="text" class="form-control pull-right" placeholder="请输入要查询的内容"
+								style="display:inline; width:200px;" >		<!-- 样式是有优先级的 -->
+							
+							<table class="table table-striped table-hover table-bordered">
+								<thead>
+									<tr >
+										<th>
+											<label class="checkbox">
+												<input id="fuck" type="checkbox"> 序号
+											</label>
+										</th>
+										<th align="center">ID</th>
+										<th align="center">昵称</th>
+										<th align="center">内容</th>
+										<th align="center">发布时间</th>
+										<th align="center">操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<s:iterator value="#talkList" status="status">
+										<tr class="data">
+											<td>
+												<label class="checkbox">
+													<input name="check" value="${id }" type="checkbox" type="checkbox"> ${status.count }
+												</label>
+											</td>
+											<td>${id}</td>
+											<td>${user.name}</td>
+											<td><a href="talk_show.action?id=${id }">${content}</a></td>
+											<td>${postTime} </td>
+											<td style="width:123px;">
+												<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#myModal"
+													onclick="updatelist(this)">
+													<span class="glyphicon glyphicon-pencil"></span> 修改
+												</button>
+												<s:a class="btn btn-danger btn-xs" href="talk_delete.action?id=%{id}" onClick="return window.confirm('确定要删除吗？')">
+													<span class="glyphicon glyphicon-remove"></span> 删除
+												</s:a>
+											</td>
+										</tr>
+									</s:iterator>
+								</tbody>
+							</table>
+						</div>
+						<div class="panel-footer" style="text-align:center;">
+							<nav>
+								<ul class="pager">
+									<li class="previous"><a>首页</a></li>
+									<li>
+										<ul class="pagination">
+											<li><a href="#">上一页</a></li>
+											<li class="active"><a href="#">1</a></li>
+											<li><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">5</a></li>
+											<li><a href="#">下一页</a></li>
+										</ul>
+									</li>
+									<li class="next"><a>尾页</a></li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 用于增加和修改的模态对话框 -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <!-- 标题 -->
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">修改</h4>
+		      </div>
+		      <!-- 内容 -->
+		      <div class="modal-body" style="text-align:center;">
+		        	<div class="well">
+		        		<div class="input-group">
+					      <div class="input-group-addon">内容</div>
+					      <textarea style="width:200px;height:350px" class="form-control" id="content" placeholder="Amount" ></textarea>
+					    </div>
+		        	</div>
+		      </div>
+		      <!-- 操作 -->
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <a type="button" class="btn btn-primary" href="#" onclick="savelist()">保存</a>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+			<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <!-- 标题 -->
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">增加</h4>
+		      </div>
+		      <s:form action="talk_add"> 
+		      <!-- 内容 -->
+		      <div class="modal-body" style="text-align:center;">
+		        	<div class="well">
+		        		<div class="input-group">
+					      <div class="input-group-addon">内容</div>
+					      <input name="content" type="text" style="width:200px;height:350px" class="form-control" id="content_add" placeholder="Amount">
+					    </div>
+		        	</div>
+		      </div>
+		      <!-- 操作 -->
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		        <a type="button" class="btn btn-primary" href="#" onclick="addlist()">保存</a>
+		      </div>
+		      </s:form>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- 页脚 -->
+		<%@ include file="/WEB-INF/jsp/public/footer.jsp" %>
+		
+		<script>
+			/* window.onload = function(){
+				 $(".data").each(function(){
+					var name = $(this).children("td").get(5);
+					var modify = $(name).children("button");
+					
+					modify.bind("click",function(){
+						id=modify.parent().parent().children("td").get(1).innerHTML;
+						var content = modify.parent().parent().children("td").get(3).innerHTML;
+						
+						var start = content.indexOf(">");
+						var end = content.indexOf("<",start);
+						
+						$("#content").val(content.substring(start + 1,end).trim());
+					});
+				}); 
+			} */
+			
+			 function addlist(){
+				window.location.href="talk_add.action?content=" + $("#content_add").val();
+			} 
+			
+			var id; 
+			function updatelist(obj){
+				id=$(obj).parent().parent().children("td").get(1).innerHTML;
+				var content = $(obj).parent().parent().children("td").get(3).innerHTML;
+				
+				var start = content.indexOf(">");
+				var end = content.indexOf("<",start);
+				
+				$("#content").val(content.substring(start + 1,end).trim());
+				
+			}
+			
+			function savelist(){
+				window.location.href="talk_update.action?content=" + $("#content").val() +"&id="+id;
+			} 
+		</script>
+		
+	</body>
+</html>

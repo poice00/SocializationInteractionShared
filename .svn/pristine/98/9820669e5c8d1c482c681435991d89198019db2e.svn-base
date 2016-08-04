@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+ 论坛
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+					<!--表头-->
+					<tr align="center" valign="middle">
+						<td>版块</td>
+						<td>主题数</td>
+						<td>最后发表的主题</td>
+					</tr>
+					
+					<!--版面列表-->
+						<s:iterator value="#forumList">
+							<tr height="78" align="center" class="template">
+								<td>
+										<s:a action="forum_show?id=%{id}">${name}</s:a><br>
+									${description}</li>
+								</td>
+								<td><b>${topicCount}</b></td>
+								<td>
+									<ul style="list-style-type: none">
+										<li><font color="#444444">┌ 主题：</font> <s:a
+											action="topic_show?id=%{lastTopic.id}">${lastTopic.title}</s:a>
+										</li>
+										<li><font color="#444444">├ 作者：</font>
+											${lastTopic.user.name}</li>
+										<li><font color="#444444">└ 时间：</font>
+											${lastTopic.postTime}</li>
+									</ul>
+								</td>
+							</tr>
+						</s:iterator>
+	</table>
+</body>
+</html>

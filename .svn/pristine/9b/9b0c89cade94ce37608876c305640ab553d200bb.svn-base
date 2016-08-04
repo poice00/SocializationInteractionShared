@@ -1,0 +1,45 @@
+package com.socialization.base;
+
+import java.lang.reflect.ParameterizedType;
+
+import javax.annotation.Resource;
+
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+import com.socialization.service.UserService;
+import com.socialization.service.resource.ResourceService;
+import com.socialization.service.upRes.DownResService;
+
+
+@SuppressWarnings({ "unchecked", "serial" })
+public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
+	// =========================================================
+	protected T model;
+
+	public BaseAction() {
+		try {
+			ParameterizedType pt = (ParameterizedType) this.getClass().getGenericSuperclass();
+			Class<T> clazz = (Class<T>) pt.getActualTypeArguments()[0];
+			model = (clazz.newInstance());
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
+	}
+
+	@Override
+	public T getModel() {
+
+		return model;
+	}
+
+
+
+	// =============================================================
+	@Resource
+	protected UserService userService;
+	@Resource
+	protected ResourceService resourceService;
+	@Resource
+	protected DownResService downResService;
+	
+}

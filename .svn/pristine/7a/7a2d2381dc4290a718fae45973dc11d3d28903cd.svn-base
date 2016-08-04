@@ -1,0 +1,200 @@
+package com.socialization.action.resource;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Resource;
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class UpdowncollectAction extends BaseAction<Resource> {
+
+	/** 列表 */
+	/*private ResType resType;
+	
+	private String description;
+	private String name;
+	private String path;
+	private String resSize;
+	private String resTags;*/
+	
+	public String uplist() throws Exception {     //  上传列表数据
+		List<Resource> upresList=updowncollectResService.getByuserupId(getCurrentUser());
+		if (upresList != null) {
+			ActionContext.getContext().put("upresList", upresList);
+			return "upresList";
+		} else{
+			return "toupresList";
+		}	
+	}
+	public String showupload() throws Exception{
+		return "showupload";
+	}
+	public String downlist() throws Exception{     //下载列表数据           
+		List<Resource> downReslist=updowncollectResService.getByuserdownId(getCurrentUser());
+		System.out.println(downReslist.size());
+		if (downReslist!=null) {
+			ActionContext.getContext().put("downReslist", downReslist);
+			return "downlist";
+		} else {
+			return "todownlist";
+		}
+	}
+	public String collectlist() throws Exception{  //收藏列表数据
+		List<Resource> collResList=updowncollectResService.getByusercolleId(getCurrentUser());
+		if (collResList!=null) {
+			ActionContext.getContext().put("collResList", collResList);
+			return "collectlist";
+		} else {
+			return "tocollectlist";
+		}
+		
+	}
+	
+	public String showSingleRes() throws Exception{  //准备单个资源的页面数据
+		Resource resource=updowncollectResService.getById(model.getId());
+		ActionContext.getContext().put("resource", resource);
+		return "showSingleRes";	
+	}
+	
+	public String addUI() throws Exception{  //添加资源的页面
+		return "addUI";
+	}
+	
+	public String add() throws Exception{  //添加资源的数据
+		
+//		model.setIpAddr(ServletActionContext.getRequest().getRemoteAddr());
+//		model.setCollectionCount(0);
+//		model.setDescription(description);
+//		model.setDownCount(0);
+//		model.setName(name);
+//		model.setPath(path);
+//		model.setPostTime(new Date());
+//		model.setRepCount(0);
+//		model.setUser(getCurrentUser());
+//		model.setResSize(resSize);
+//		model.setScore(0);
+//		model.setResTags(resTags);
+//		model.setResType(resType);
+		this.updowncollectResService.save(model);
+		return "add";
+	}
+	
+     public String delete() throws Exception{  //删除资源的数据
+		this.updowncollectResService.delete(model);
+		return "delete";
+	}
+	
+	public String upResCommit() throws Exception{
+		byte[] buffer=new byte[102400];
+		InputStream in=new FileInputStream(uploadfile);
+		String filepath=ServletActionContext.getServletContext().getRealPath("/WEB-INF/upload/");
+		String mm="user1";
+		String filepath2=filepath+"/"+mm;
+		File tmpFile = new File(filepath2);
+		if (!tmpFile.exists()) {
+		   //创建文件存放目录
+		 tmpFile.mkdir();
+		 }
+		OutputStream out=new FileOutputStream(new File(filepath2+"/"+uploadfileFileName));
+		
+		int length= in.read(buffer);
+		while (length>0){
+			out.write(buffer);
+			length=in.read(buffer);
+		}
+		in.close();
+		out.flush();
+		out.close();
+//		model.setIpAddr(ServletActionContext.getRequest().getRemoteAddr());
+//		model.setCollectionCount(0);
+//		model.setDescription(description);
+//		model.setDownCount(0);
+//		model.setName(name);
+//		model.setPath(path);
+//		model.setPostTime(new Date());
+//		model.setRepCount(0);
+//		model.setUser(getCurrentUser());
+//		model.setResSize(resSize);
+//		model.setScore(0);
+//		model.setResTags(resTags);
+//		model.setResType(resType);
+		return "upResCommit";
+	}
+	
+	private File uploadfile;
+	private String uploadfileFileName;
+	private String uploadfileContentType;
+
+
+	public String getUploadfileFileName() {
+		return uploadfileFileName;
+	}
+	public void setUploadfileFileName(String uploadfileFileName) {
+		this.uploadfileFileName = uploadfileFileName;
+	}
+	public String getUploadfileContentType() {
+		return uploadfileContentType;
+	}
+	public void setUploadfileContentType(String uploadfileContentType) {
+		this.uploadfileContentType = uploadfileContentType;
+	}
+	public File getUploadfile() {
+		return uploadfile;
+	}
+
+	public void setUploadfile(File uploadfile) {
+		this.uploadfile = uploadfile;
+	}
+
+	
+	/*public ResType getResType() {
+		return resType;
+	}
+	public void setResType(ResType resType) {
+		this.resType = resType;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public String getResSize() {
+		return resSize;
+	}
+	public void setResSize(String resSize) {
+		this.resSize = resSize;
+	}
+	public String getResTags() {
+		return resTags;
+	}
+	public void setResTags(String resTags) {
+		this.resTags = resTags;
+	}*/
+}

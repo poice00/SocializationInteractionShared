@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!-- 导航栏 -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display 折叠按钮 -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.jsp"><b>社会化互动分享平台</b></a>
+    </div>
+		
+    <!-- Collect the nav links, forms, and other content for toggling 折叠按钮的内容 -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="home_index.action">论坛 <span class="sr-only">(current)</span></a></li>
+        <li><a href="resource_homePage.action">资源</a></li>
+		<li><a href="#">个人中心</a></li>
+		<li><a href="user_list.action">系统管理</a></li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+				其他
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			    <li><a href="#">小组</a></li>
+			    <li><a href="#">活动</a></li>
+			    <li><a href="#">呵呵</a></li>
+			</ul>
+		</li>
+      </ul>
+      <!-- 已登录用户的信息 -->
+	  <div id="info" style="margin-top:10px; display:none;" class="pull-right">
+		<img id="img_user" src="img/app.jpg" alt="nim" class="img-circle" style="height:30px; width:30px;">
+		<a id="nick_name" href=""></a>
+		<a href="user_logout.action">退出</a>
+	  </div>
+   </div> 
+</div>
+	
+	
+</nav>

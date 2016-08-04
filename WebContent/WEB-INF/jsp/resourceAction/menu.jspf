@@ -1,0 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<div class="nav-bar">
+        	<s:a action="resource_homePage" onclick="foo(this);" class="thisStyle">首页</s:a>
+        	<s:a action="resource_resTypeUI" onclick="foo(this);" class="thisStyle">资源分类</s:a>
+			<s:a action="resource_resRankUI" onclick="foo(this);" class="thisStyle">排行榜</s:a>
+			<s:a action="resource_resHelpUI" onclick="foo(this);" class="thisStyle">帮助</s:a>
+			<s:a action="resource_highsearchUI" onclick="foo(this);" class="thisStyle">高级搜索</s:a>
+			<s:a action="myresource_uplist" onclick="foo(this);" class="thisStyle">我的资源</s:a>
+			<s:a action="myresource_showupload" onclick="foo(this);" class="thisStyle">我要上传</s:a>	
+</div>

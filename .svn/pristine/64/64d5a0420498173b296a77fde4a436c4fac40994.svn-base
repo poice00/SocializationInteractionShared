@@ -1,0 +1,450 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>论坛主页</title>
+<link rel="stylesheet" href="css/breakingnews.css">
+<script src="js/breakingnews.js"></script>
+
+<link href="css/fliptimer.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery.fliptimer.js"></script>
+<!-- 返回顶部 -->
+<style type="text/css">
+	.backToTop {
+	 display: none;
+	 width: 18px;
+	 line-height: 1.2;
+	 padding: 5px 0;
+	 background-color: #000;
+	 color: #fff;
+	 font-size: 12px;
+	 text-align: center;
+	 position: fixed;
+	 _position: absolute;
+	 right: 10px;
+	 bottom: 100px;
+	 _bottom: "auto";
+	 cursor: pointer;
+	 opacity: .6;
+	 filter: Alpha(opacity=60);
+	 
+}
+</style>
+ <div></div>
+<script type="text/javascript">
+	(function() {
+	    var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+	        .text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+	            $("html, body").animate({ scrollTop: 0 }, 120);
+	    }), $backToTopFun = function() {
+	        var st = $(document).scrollTop(), winh = $(window).height();
+	        (st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+	        //IE6下的定位
+	        if (!window.XMLHttpRequest) {
+	            $backToTopEle.css("top", st + winh - 166);
+	        }
+	    };
+	    $(window).bind("scroll", $backToTopFun);
+	    $(function() { $backToTopFun(); });
+	})();
+</script>
+<!--  滚动新闻 -->
+<script>
+$(function(){
+	$('#breakingnews1').BreakingNews({
+		title: '公告'
+	});
+
+	$('#breakingnews2').BreakingNews({
+		title: '滚动新闻',
+		titlebgcolor: '#099',
+		linkhovercolor: '#099',
+		border: '1px solid #099',
+		timer: 3000,
+		effect: 'slide'	
+	});
+
+});
+</script>
+	
+</head>
+
+<%@ include file="/WEB-INF/jsp/public/nav.jsp"%>
+<body style="background: url('img/back.jpg');" >
+		<!-- 滚动新闻 -->
+		<div>
+			<div class="BreakingNewsController easing" id="breakingnews2" >
+					<div class="bn-title"></div>
+						<ul>
+							<s:iterator value="#hotTopicList">
+							<li>
+								<span class="badge">热</span><font color="#0000CC"><s:date name="lastUpdateTime"/>
+								</font> <s:a action="topic_show?id=%{id}">${title }</s:a></td>	
+							</li>
+						</s:iterator> 
+						</ul>
+					<div class="bn-arrows"><span class="bn-arrows-left"></span><span class="bn-arrows-right"></span></div>	
+				</div>
+			
+			<div>
+		</div>
+		<!-- 时间 -->
+		<div align="center">
+			<div class="dowebok" style="margin-left: 1100px;">
+				<div class="hours"></div>
+				<div class="minutes"></div>
+				<div class="seconds"></div>
+			</div>
+		</div>
+
+		<marquee  behavior=alternate style="WIDTH: 600px; margin-top: 10px;margin-left: 30%;" onMouseOver="this.stop()" onMouseOut="this.start()" 
+				scrollamount=100 scrolldelay=10 direction="right" >
+				
+							<div>
+								<b><h3>欢迎来到论坛：
+									<s:if test="#session.user == null">
+										游客,去<s:a action="user_loginUI">登录</s:a>！！！
+									</s:if>
+									<s:else>
+										${user.name }
+									</s:else></h3></b>
+							</div>
+				
+				
+		</marquee>
+	</div>
+	<div style="width: 150px;height: auto; margin-left: 300px; margin-top: 1%;float: left;position: fixed;background: #FFFFFF" >
+		<marquee onMouseOver="this.stop()" onMouseOut="this.start()"  
+			behavior=alternate direction="down" style="width: 150px;height: 700px; margin-top: 1%;float: left;position: fixed;"> 
+			<table class="table table-condensed">
+			  <tr align="center" style=""><td>讨论版分类 <span class="glyphicon glyphicon-th"></span>
+			  </td></tr>
+				  <s:iterator value="#forumList">
+					  <tr align="center">
+					  	<td>
+					  		<s:if test="name=='视频专区'">
+					  		<s:a action="forum_show?id=%{id}"><font color="red"> 【 ${name }】</font></s:a>
+					  		</s:if>
+					  		<s:else>
+					  		<s:a action="forum_show?id=%{id}">【 ${name }】</s:a>
+					  		</s:else>
+					  		
+					  	</td>
+					  </tr>
+				  </s:iterator>
+					  	
+				<tr align="center" style="">
+				<td>
+				<s:a action="forum_list">more</s:a><br>
+				<hr>
+				<s:a action="topic_addUI"><button type="submit" class="btn btn-default">快速发贴</button></s:a><br>
+				<s:a action="message_addUI"><button type="submit" class="btn btn-default">快速发消息</button></s:a>
+				</td>
+				
+				</tr>
+			</table>
+		</marquee>
+	</div>
+	
+	<div style="margin-left: 500px;margin-right: 30%;margin-top: 1%;float:left;">
+		<ul class="nav nav-tabs" id="myTab">
+		  <li class="active"><a href="#new" data-toggle="tab">最新发表</a></li>
+		  <li><a href="#hots" data-toggle="tab">热门主题</a></li>
+		  <li><a href="#collections" data-toggle="tab">我的收藏</a></li>
+		  <li><a href="#myTopics" data-toggle="tab">我的发布</a></li>
+		  <li><a href="#attention" data-toggle="tab">我的关注</a></li>
+		  <li><a href="#fans" data-toggle="tab">我的粉丝</a></li>
+		  <li><a href="#msgs" data-toggle="tab">收信箱</a></li>
+		  <li><a href="#sendmsgs" data-toggle="tab">发信箱</a></li>
+		</ul>
+	<!-- 最新发表 -->
+	<div class="tab-content" >
+	  <div class="tab-pane active" id="new" style="margin-bottom:200px;">
+		<table class="table table-striped">
+			<tr>
+				<td>讨论版<span class="glyphicon glyphicon-th-list"></span></td>
+				<td>文章标题<span class="glyphicon glyphicon-info-sign"></span></td>	
+				<td>回帖<span class="glyphicon glyphicon-cutlery"></span></td>
+				<td>浏览次数<span class="glyphicon glyphicon-eye-open"></span></td>
+				<td>更新时间<span class=" glyphicon glyphicon-time"></span></td>
+			</tr>
+			<s:iterator value="#lastestTopicList">
+				<tr>
+					<td><s:a action="forum_show?id=%{forum.id}">${forum.name }</s:a></td>
+					<td><s:a action="topic_show?id=%{id}">${title }</s:a></td>	
+					<td>${replyCount }</td>
+					<td>${count }</td>
+					<td><s:date name="postTime"/></td>
+				</tr>
+			</s:iterator>
+		</table>
+	  </div>
+	  <!-- 热门主题 -->
+	  <div class="tab-pane" id="hots" style="margin-bottom:200px;">
+	  	
+	  	<table class="table table-striped">
+				<tr>
+					<td>讨论版</td>
+					<td>文章标题</td>	
+					<td>回帖</td>
+					<td>浏览次数</td>
+					<td>更新时间</td>
+				</tr>
+				<s:iterator value="#hotTopicList">
+					<tr>
+						<td><s:a action="forum_show?id=%{forum.id}">${forum.name }</s:a></td>
+						<td><s:a action="topic_show?id=%{id}">${title }</s:a></td>	
+						<td>${replyCount }</td>
+						<td>${count }</td>
+						<td><s:date name="lastUpdateTime"/></td>
+					</tr>
+				</s:iterator>
+			</table>
+	  
+	  
+	  </div>
+	  <!--我的收藏 -->
+	  <div class="tab-pane" id="collections" style="margin-bottom:200px;">
+		  <table class="table table-striped">
+				  <tr align="center">
+				  
+					  <td>讨论版</td>
+					  <td>文章标题</td>	
+					  <td>操作</td>	
+				  
+				  </tr>
+			  
+				  <s:iterator value="#user.collectionTopics">
+					  <tr align="center">
+					  	<td><s:a action="forum_show?id=%{forum.id}">${forum.name }</s:a></td>
+						<td><s:a action="topic_show?id=%{id}">${title }</s:a></td>	
+						<td><s:a action="topic_deleteCollection?id=%{id}" onClick="return confirm('确定取消收藏吗？')"><button class="btn btn-default">移除收藏</button></s:a></td>	
+					  </tr>
+				  </s:iterator>
+				  
+			</table>
+	  
+	  </div>
+	  <!-- 我的发布-->
+	  <div class="tab-pane" id="myTopics" style="margin-bottom:200px;">
+	  
+	  		<table class="table table-striped">
+				  <tr align="center">
+				  
+					  <td>讨论版</td>
+					  <td>文章标题</td>	
+					  <td>浏览次数</td>
+					  <td>发布时间</td>
+					  <td>操作</td>	
+				  
+				  </tr>
+			  
+				  <s:iterator value="#MyTopicList">
+					  <tr align="center">
+					  	<td><s:a action="forum_show?id=%{forum.id}">${forum.name }</s:a></td>
+						<td><s:a action="topic_show?id=%{id}">${title }</s:a></td>	
+						<td>${count }</td>
+						<td><s:date name="postTime"/></td>
+						<td><s:a action="topic_delete?id=%{id}&forumId=%{forum.id}" onClick="return confirm('确定把本主题删除吗？')"><button class="btn btn-default">删除</button></s:a></td>	
+					  </tr>
+				  </s:iterator>
+				  
+			</table>
+	  </div>
+	  <!-- 我的关注 -->
+	  <div class="tab-pane" id="attention" style="margin-bottom:200px;">
+	  
+	  <table>
+		  <s:iterator value="#user.friends">
+					<tr>
+						<td>
+							<img style="width:80px;height:80px;" src="${headImage}" alt="">
+							<s:a action="#">${name }</s:a>
+							<s:a action="user_removeAttention?friendId=%{id}" onClick="return confirm('确定取消关注吗？')"><button class="btn btn-default">不再关注</button></s:a>
+							<s:a action="message_addUI?friendId=%{id}"><button class="btn btn-default">发私信</button></s:a>
+							</td>	
+					  </tr>		
+		  </s:iterator>
+		</table>
+	  </div>
+	  <!-- 我的粉丝 -->
+	  <div class="tab-pane" id="fans" style="margin-bottom:200px;">
+	  
+	  <table>
+		  <s:iterator value="#user.users">
+					<tr>
+						<td><img style="width:80px;height:80px;" src="${headImage}" alt="">
+							<s:a action="#">${name }</s:a>
+							<s:a action="message_addUI?friendId=%{id}"><button class="btn btn-default">发私信</button></s:a>
+						</td>	
+					 </tr>		
+		  </s:iterator>
+		</table>
+	  </div>
+	  
+	  <!-- 收信箱 -->
+	  <div class="tab-pane" id="msgs" style="margin-bottom:200px;">
+	  
+	  <table  class="table table-striped">
+						
+			<tr>
+				<td>发送人</td>
+				<td>状态</td>
+				<td>操作</td>
+		   </tr>		
+		  <s:iterator value="#user.anotherMsgs">
+			<s:if test="sendStatus==1">
+				<tr>
+					<td> ${user.name }</td>
+					<td>
+						
+							<s:if test="status==0">
+						    		<s:a action="message_show?id=%{id}">
+						    		<img style="width: 30px;height: 30px" alt="未读" src="${pageContext.request.contextPath}/style/images/nolook.png">
+						    		<label style="color: red">未读</label>
+						    		</s:a>
+						    </s:if>
+						    	<s:else>
+						    	<img  style="width: 30px;height: 30px" alt="已读" src="${pageContext.request.contextPath}/style/images/look.png">已读
+						    	</s:else>
+						
+						    </td>
+						    
+					<td>
+							<s:a action="message_replyUI?id=%{id}&friendId=%{user.id}">
+								<button class="btn btn-default">回复</button>
+							</s:a>
+							
+							<s:a action="message_show?id=%{id}">
+								<button class="btn btn-default">查看</button>
+							</s:a>
+							
+							
+							<s:a action="message_removeMsg?id=%{id}" onClick="return confirm('确定删除吗？')">
+								<button class="btn btn-default">删除</button>
+							</s:a>
+					
+					</td>
+			 	 </tr>		
+		 	 </s:if>
+		  </s:iterator>
+		</table>
+	  </div>
+	  
+	  
+	  <!-- 发信箱 -->
+	  <div class="tab-pane" id="sendmsgs" style="margin-bottom:200px;">
+	  
+	  <table  class="table table-striped">
+						
+			<tr>
+				<td>发送人</td>
+				<td>收件人</td>
+				<td>状态</td>
+				<td>操作</td>
+		   </tr>		
+		  <s:iterator value="#user.oneMsgs">
+				<tr>
+					<td> ${user.name }</td>
+					<td> ${friend.name }</td>
+						<s:if test="sendStatus==0">
+							<td>
+									<img  style="width: 30px;height: 30px" alt="草稿" src="${pageContext.request.contextPath}/style/images/write.png">
+									<label style="color: red">草稿</label>
+							</td>
+							<td>
+									<s:a action="message_editUI?id=%{id}&friendId=%{friend.id}">
+										<button class="btn btn-default">编辑</button>
+									</s:a>
+									
+									
+									<s:a action="message_removeMsg?id=%{id}" onClick="return confirm('确定删除吗？')">
+										<button class="btn btn-default">删除</button>
+									</s:a>
+							</td>
+						</s:if>
+						<s:else>
+								<td>
+									<img  style="width: 30px;height: 30px" alt="已发送" src="${pageContext.request.contextPath}/style/images/send.png">
+									已发送
+								</td>
+								<td>
+									
+								
+								<s:a action="message_showSend?id=%{id}">
+									<button class="btn btn-default">查看</button>
+								</s:a>
+								<s:a action="message_removeMsg?id=%{id}" onClick="return confirm('确定删除吗？')">
+									<button class="btn btn-default">删除</button>
+								</s:a>
+							</td>
+						</s:else>
+					    	
+					
+			 	 </tr>		
+		  </s:iterator>
+		</table>
+	  </div>
+	  
+	  
+	</div>
+	
+	
+</div>
+	
+	<div style="margin-left: 70%;margin-top: 1%;float:left; position: fixed; width: 208;float: left;" >
+		<ul class="nav nav-tabs" id="myTab">
+		  <li class="active"><a href="#see" data-toggle="tab">阅读排行榜</a></li>
+		  <li><a href="#fansCount" data-toggle="tab">粉丝排行榜</a></li>
+		</ul>
+			<!-- 阅读排行榜 -->
+			<div class="tab-content" >
+				  <div class="tab-pane active" id="see" style="margin-bottom:200px;">
+					<table class="table table-striped">
+						<tr>
+							<td>排名</td>	
+							<td>文章标题</td>	
+							<td>阅读量</td>
+						</tr>
+						<s:iterator value="#lookTopicList" status="status">
+							<tr>
+								<td><span class="badge">${status.count }</span></td>
+								<td><s:a action="topic_show?id=%{id}">${title }</s:a></td>	
+								<td>${count }</td>
+							</tr>
+						</s:iterator>
+					</table>
+				  </div>
+					<!-- 粉丝排行榜 -->
+				  <div class="tab-pane" id="fansCount" style="margin-bottom:200px;">
+				  	<table class="table table-striped">
+					  	<tr>
+					  		<td>排名</td>	
+							<td>用户</td>
+							<td>粉丝量</td>	
+						</tr>
+						<s:iterator value="#fansCountList" status="status">
+							<tr>
+								<td><span class="badge">${status.count }</span></td>
+								<td>${name }</td>
+								<td>${fansCount }</td>
+							</tr>
+						</s:iterator>
+						</table>
+				  </div>
+			</div>
+  	</div>
+  	
+  
+  	<script>
+	$(function(){
+		$('.dowebok').flipTimer({
+			seconds: true
+		});
+	});
+	</script>
+<%@ include file="/WEB-INF/jsp/public/commons_foot.jspf"%>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<style type="text/css">
+    a:link,a:visited{text-decoration:none;}
+    a:hover{color:orange;text-decoration:underline;}  
+ 
+    .subMenu{float:left;padding-top:2px;width:100%;}
+    .subMenu li{ display:inline;}
+    .subMenu li a{ display:inline-block; color:blue; height:25px;line-height:25px;padding:0 5px;margin-left:2px;}
+    .subMenu .thisStyle{background:lightblue;color:red;}
+ 
+</style>
+<script type="text/javascript">
+    function  foo(t){
+        var objs = document.getElementsByTagName("a");
+        for(var i=0;i<objs.length;i++){
+            objs[i].className="";
+        }
+        t.className="thisStyle";
+    }
+</script>

@@ -1,0 +1,8 @@
+package com.socialization.service;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.User;
+
+public interface UserService extends DaoSupport<User> {
+	
+}

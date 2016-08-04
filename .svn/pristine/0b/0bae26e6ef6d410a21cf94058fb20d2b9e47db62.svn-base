@@ -1,0 +1,204 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>我的收藏</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/index.css">	
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+<style type="text/css"> 
+.bd .list-container {
+  background: #fff;
+  padding: 18px;
+  margin-top: 0;
+}
+.bd .list-container dt {
+  padding-right: 1.7em;
+}
+.bd .list-container dt .icon {
+  background: url("/resimg/small-icons-hover.png") no-repeat;
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+}
+.bd .list-container dt .btns {
+  float: right;
+  margin-top: 4px;
+  margin-left: 0.5em;
+  margin-right: -1.7em;
+  font-weight: normal;
+}
+.bd .list-container dt .btns .btn {
+  font-size: 12px;
+  padding: 0;
+}
+.bd .list-container dt .btn-remove {
+  background: url("/resimg/small-icons-hover.png") no-repeat left 4px;
+  padding-left: 1.3em !important;
+  display: inline-block;
+}
+.bd .list-container dt .btn-remove-favicon {
+  background: url("/resimg/small-icons-hover.png") no-repeat left 3px;
+  padding-left: 1.3em !important;
+  display: inline-block;
+}
+.bd .list-container dt .btn-comment,
+.bd .list-container dt .btn {
+  color: #c81622;
+}
+.bd .list-container dt .removed {
+  color: #9a9a9a;
+}
+.bd .list-container dt .commented {
+  color: #2981a9;
+}
+.bd .list-container dt h3 {
+  font-size: 18px;
+  font-weight: normal;
+  /*margin-left: 20px;*/
+}
+.bd .list-container dt .points {
+  display: inline-block;
+  /*background: url("../images/points.png") no-repeat left 3px;*/
+  background: url("../images/ico_coin.gif") no-repeat left 7px;
+  margin-left: 1em;
+  padding-left: 25px;
+  color: #bf930e;
+  font-weight: bold;
+  font-size: 13px;
+  vertical-align: top;
+}
+.bd .list-container dd {
+  padding-left: 1.7em;
+  padding-right: 1.7em;
+  font-size: 12px;
+}
+.bd .list-container .meta {
+  color: #999;
+}
+.bd .list-container .intro {
+  margin-top: 11px;
+  color: #666;
+}
+.bd .list-container .tag {
+  margin-top: 11px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dotted #ccc;
+}
+.bd .list-container .tag a {
+  display: inline-block;
+  color: #333;
+  background: #e7e7e7;
+  padding: 0 1em;
+  line-height: 20px;
+  border-radius: 10px;
+  margin-right: 0.5em;
+}
+.bd .list-container .tag a:hover {
+  background: #c81623;
+  color: #FFF;
+}
+.bd .aside {
+  margin-top: 10px !important;
+}
+.bd .aside .btn-lg {
+  width: 210px;
+  height: 49px;
+  font-size: 22px;
+  text-align: center;
+  color: #fff;
+  margin-top: 20px;
+  border-radius: 0;
+}
+.bd .aside .btn-upload {
+  background: url("../images/upload.png") #77b900 no-repeat 25px 12px;
+  padding-left: 48px;
+}
+.bd .aside .btn-create {
+  background: url("../images/create.png") #2981a9 no-repeat 49px 13px;
+  padding-left: 45px;
+}
+.bd .list-container .empty {
+  padding: 140px 0 140px 50px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: normal;
+  color: #333;
+  background: url("../images/empty-icon.png") no-repeat 175px center;
+}
+.bd .list-container {
+  min-height: 530px;
+}
+.bd .list-container .empty a {
+  color: #c81623;
+}
+h1,h2,h3,h4,h5,h6{
+	font-family:"Helvetica","Tahoma, Arial", "sans-serif";
+	font-weight:bold;
+	line-height:1.5em;
+	color:#333;
+	background:none;
+	}
+h1{font-size:3em;}
+h2{font-size:2.5em;}
+h3{font-size:2em;}
+h4{font-size:1.5em;}
+h5{font-size:1.166666666em;}
+h6{font-size:1em;}
+/* a:link,a:visited{color:#333; text-decoration:none;}
+a:hover{color:#cc0000; text-decoration:none;} */
+div,dl,dt,dd,ul,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;line-height:1.5em;}
+.bd .mb-bg {
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<%@ include file="/WEB-INF/jsp/public/commons_head.jspf"%>
+<%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<center>
+<div class="nav-bar">
+        	<s:a action="resource_homePage" >首页</s:a>
+        	<s:a action="resource_resTypeUI" >资源分类</s:a>
+			<s:a action="resource_resRankUI">排行榜</s:a>
+			<s:a action="resource_resHelpUI" >帮助</s:a>
+			<s:a action="resource_highsearchUI">高级搜索</s:a>
+			<s:a action="myresource_uplist">我的资源</s:a>
+			<s:a action="myresource_showupload">我要上传</s:a>	
+</div>
+<div>
+<s:a action="myresource_uplist">上传资源</s:a>
+<s:a action="myresource_downlist">下载资源</s:a>
+<s:a action="myresource_collectlist">我的收藏</s:a>
+</div>
+		<div class="list-container mb-bg">
+			<dl>
+				<s:iterator value="#collResList">
+					<dt>
+						<div class="btns">
+							<s:a action="myresource_CancelCollect?idd=%{id}"
+								class="btn btn-remove-favicon">取消收藏</s:a>
+						</div>
+						<h3>
+							<s:a action="myresource_showSingleRes?idd=%{id}">${name }</s:a>
+						</h3>
+					</dt>
+					<dd class="meta">
+						上传者：<a class="user_name" href="/user/nokia6100">${user.name }</a>&nbsp;&nbsp;&nbsp;&nbsp;|
+						上传时间：${postTime }&nbsp;&nbsp;&nbsp;&nbsp;| 下载${downCount }次
+					</dd>
+					<dd class="intro">资源描述：${description }</dd>
+					<dd class="tag">资源标签：${resTags }</dd>
+				</s:iterator>
+			</dl>
+		</div>
+	</center>
+</body>
+</html>

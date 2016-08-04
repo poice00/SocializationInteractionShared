@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>${forum.name }</title>
+</head>
+<body>
+<!-- 导航 -->
+	<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+	
+ 
+
+ 
+<div class="panel panel-default" style="background: url('img/back.jpg')">
+	<div class="panel-heading" style="background: url('img/back.jpg')">
+		<ol class="breadcrumb" style="background: url('img/back.jpg')">
+		  <li><s:a action="forum_index">首页</s:a></li>
+		  <li><s:a action="forum_list">版块列表</s:a></li>
+		  <li>${forum.name } </li>
+		</ol> 
+	【${forum.name }】中的主题列表
+	<s:if test="#forum.name=='视频专区'">
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">上传视频</button> 
+	
+	<!-- 上傳视频彈出框 -->
+	 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 800px;top:30%;left:20%;height: 500px">
+				<div class="modal-content">
+					<s:form action="upload_video" enctype="multipart/form-data" method="post">
+					<s:hidden name="forumId" value="%{#forum.id}"></s:hidden>
+						<div class="modal-header">
+			        		  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			       				 <h4 class="modal-title" id="myModalLabel">上传视频</h4>
+			       				 <input type="text" name="title">
+								<input id="videoFile" type="file" name="videoFile"/>
+			       				<s:submit value="提交"></s:submit>
+			     		</div>
+					</s:form>		
+				
+	
+				  
+					<div class="modal-footer">
+	       				  <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> 
+							
+	            	</div>
+				</div>
+			
+		</div>
+		
+	</s:if>
+	<s:else>
+		<s:a action="topic_addUI?forumId=%{#forum.id}">发表新主题</s:a>
+	</s:else>
+	</div>
+	<div class="panel-body" >
+		<s:form id="page" action="forum_show?id=%{id}" >
+			<table class="table table-hover" style="background: url('img/back.jpg')">
+						<!--表头-->
+						<tr align="center">
+							<td>主题</td>
+							<td>作者</td>
+							<td>回复数</td>
+							<td>最后回复</td>
+						</tr>
+						<!--主题列表-->
+							<s:iterator value="recordList" status="status">
+							<tr class="info" align="center" >
+									<td>
+									<img src="${pageContext.request.contextPath}/style/images/topicType_${type}.gif" />
+									<s:a action="topic_show?id=%{id}">${title}</s:a></td>
+									<td>
+										<ul style="list-style-type: none;">
+											<li>${user.name }</li>
+											<li> <s:date name="postTime"/> </li>
+										</ul>
+									</td>
+									<td ><b>${replyCount}</b></td>
+									<td>
+										<ul style="list-style-type: none;">
+											<li >${lastReply.user.name }</li>
+											<li ><s:date name="lastReply.postTime"/></li>
+										</ul>
+									</td>
+								</tr>
+							</s:iterator>
+
+			</table>
+	<!--其他操作-->
+								<tr>
+									<td>
+										<s:select name="viewType" list="#{0:'全部主题', 1:'全部精华贴',2:'全部置顶帖'}" >
+											</s:select> 
+										<s:select name="orderBy" 
+										list="#{0:'默认排序（按最后更新时间排序，但所有置顶帖都在前面）', 1:'按最后更新时间排序',2:'按主题发表时间排序',3:'按回复数量排序'}">
+										</s:select> 
+										<s:select name="asc" list="#{true:'升序', false:'降序'}">
+										</s:select> 
+										 <button type="submit" class="btn btn-default">查询</button>
+									</td>
+								</tr>
+		</s:form>
+	<%@ include file="/WEB-INF/jsp/public/pageView.jspf"%>
+		<div style="margin-bottom: 200px;">	
+				<hr></hr>
+			</div>	
+		</div>
+</div>
+<%@ include file="/WEB-INF/jsp/public/commons_foot.jspf"%>
+</body>
+</html>

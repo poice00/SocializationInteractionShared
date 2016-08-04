@@ -1,0 +1,403 @@
+package com.socialization.action.activity;
+
+
+import java.util.Date;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.ActAlbum;
+import com.socialization.domain.ActApply;
+import com.socialization.domain.ActTopic;
+import com.socialization.domain.Activity;
+import com.socialization.domain.ActivityType;
+import com.socialization.domain.User;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+@Controller
+@Scope("prototype")
+@SuppressWarnings("serial")
+public class ActivityAction extends BaseAction<Activity>{
+
+	
+	/*---创建活动的页面----*/
+	public String createUI() throws Exception{
+		if (getCurrentUser()==null) {
+			return "loginUI";
+		} else {
+			List<ActivityType> activityTypesList=this.activiTypeService.findAll();
+			ActionContext.getContext().put("activityTypesList", activityTypesList);
+			return "createUI";
+		}
+	}
+	
+	/*---创建活动，写入数据库----*/
+	public String create() throws Exception{
+		if (getCurrentUser()==null) {
+			return "loginUI";
+		} else {
+			System.out.println(fileFileName);
+			byte[] buffer=new byte[1024];
+			InputStream in=new FileInputStream(file);
+			System.out.println(savePath);
+			OutputStream out = new FileOutputStream(new File("E:\\workspace\\SocializationInteractionShared\\WebContent\\" +savePath + "/" + fileFileName));
+			int length = in.read(buffer);
+			while (length > 0) {
+				out.write(buffer);
+				length = in.read(buffer);
+			}
+			in.close();
+			out.flush();
+			out.close();
+			String str=model.getActivitydescription();
+			str=str.replaceAll("\r\n", "<br/>");
+			str=str.replaceAll(" ", "&nbsp;");
+			model.setPostTime(new Date());
+			model.setActivitydescription(str);
+			model.setActivityState("活动即将开始");
+			model.setActivityImg(savePath + "/" + fileFileName);
+			model.setActivityType(this.activiTypeService.getById(activityTypeId));
+			model.setUser(getCurrentUser());
+			model.setActivityMemNum(0);
+			model.setInterestUserCount(0);
+			this.activiService.save(model);
+			return "create";
+		}	
+	}
+	
+	/*---修改活动的页面----*/
+	public String updateUI() throws Exception{
+		    Activity activity=this.activiService.getById(idd);
+		    ActionContext.getContext().getValueStack().push(activity);
+			return "updateUI";
+	}
+	
+	/*---修改活动的页面----*/
+	public String update() throws Exception{
+		    Activity activity=this.activiService.getById(idd);
+		    ActionContext.getContext().getValueStack().push(activity);
+			return "updateUI";
+	}
+	
+	
+	/*---活动模块的首页----*/
+	public String activityHomePage() throws Exception{
+		List<ActivityType> activityTypesList=this.activiTypeService.findAll();
+		ActionContext.getContext().put("activityTypesList", activityTypesList); //准备类型的数据		
+		List<Activity> activitiesAllList=this.activiService.getHostTen();
+		ActionContext.getContext().put("activitiesAllList", activitiesAllList);
+		String[] str=new String[activityTypesList.size()];
+		ModelMap map = new ModelMap();
+		for (int i = 0; i < activityTypesList.size(); i++) {
+			str[i]=String.valueOf(i);
+			List<Activity> hotList=this.activiService.findByAcTypeIdOrderByNumDesc(activityTypesList.get(i).getId());
+		    ActionContext.getContext().put("hot"+str[i]+"list", hotList);
+			List<Activity> newList=this.activiService.findByAcTypeIdOrderByStAsc(activityTypesList.get(i).getId());
+			ActionContext.getContext().put("new"+str[i]+"list", newList);
+		}	
+		return "activityHomePage";
+	}
+	
+	/*---单个类型活动页面----*/
+	public String singalactivityPage() throws Exception{
+		ActivityType activityType=this.activiTypeService.getById(activityTypeId);
+		//List<Activity> activitiesList=this.activiService.findByAcTypeIdOrderByStAsc(activityType.getId());
+		List<Activity> activitiesList=this.activiService.findByAcType(activityType);
+		ActionContext.getContext().put("activitiesList", activitiesList);
+		return "singalactivityPage";
+	}
+	
+	/*---单个活动的详细情形画面----*/
+	public String activityDetails() throws Exception{
+		Activity activityDetails=this.activiService.getById(idd);
+		ActionContext.getContext().getValueStack().push(activityDetails);
+		boolean checkInterestResult=this.activiService.checkInterestExit(activityDetails, getCurrentUser());
+		int checkPartInResult=this.actApplyService.checkPartInExit(activityDetails, getCurrentUser());
+		List<User> newPartInMemList=this.activiService.findPartInMem(activityDetails);
+		ActionContext.getContext().put("newPartInMemList", newPartInMemList);
+		this.setActiviName("other");
+		if (getCurrentUser() != null) {
+			if (activityDetails.getUser().getId().equals(getCurrentUser().getId())) {
+				activiName = "creator";
+			} else if (checkPartInResult==3) {
+				activiName = "attended";
+			} else if (checkPartInResult==2) {
+				activiName = "refuse";
+				} else if (checkPartInResult==1) {
+					activiName = "attend";
+					}else if (checkInterestResult==true) {
+					activiName = "interested";
+					}
+		}
+		List<ActAlbum> actAlbumsList=this.actAlbumService.findByActId(idd);
+		ActionContext.getContext().put("actAlbumsList", actAlbumsList);
+		
+		List<ActTopic> actTopicsList=this.actTopicService.findByActId(idd);
+		ActionContext.getContext().put("actTopicsList", actTopicsList);
+        ActionContext.getContext().getValueStack().push(activiName);
+		return "activityDetails";
+	}
+	
+	/*---对活动感兴趣----*/
+	public void activityIntesrest() throws Exception {	
+		 Activity activity=this.activiService.getById(idd);
+		 boolean checkResult=this.activiService.checkInterestExit(activity,getCurrentUser());
+		if (activity.getUser().getId().equals(getCurrentUser().getId())) {
+			this.setActiviName("不能对自己创建的活动感兴趣额");
+			HttpServletResponse hsr=ServletActionContext.getResponse();
+			hsr.setContentType("test/html;charset=UTF-8");
+			hsr.getWriter().write(activiName);
+			return;
+		}
+		if (checkResult) {//还应该检查是否已经收藏过了
+			this.setActiviName("已经在大侠的感兴趣活动列表中了额~");
+		}else {//不在的话更新数据库
+			Activity activityDetails=this.activiService.getById(idd);
+			User user=this.userService.getById(getCurrentUser().getId());
+			user.getUserIntrestActy().add(activityDetails);
+			//getCurrentUser().getUserIntrestActy().add(activityDetails);
+			//this.activiService.save(getCurrentUser(),activityDetails);
+			activityDetails.setInterestUserCount(activityDetails.getInterestUserCount()+1);
+			this.setActiviName("感谢大侠，希望大侠能来参加~");
+			this.activiService.update(activityDetails);			
+		}
+		HttpServletResponse hsr=ServletActionContext.getResponse();
+		hsr.setContentType("test/html;charset=UTF-8");
+		hsr.getWriter().write(activiName);
+	}
+	/*---取消感兴趣的活动----*/
+	public void myInterestActCancel() throws Exception{
+		Activity activityDetails=this.activiService.getById(idd);
+		User user=this.userService.getById(getCurrentUser().getId());
+		this.activiService.deleteUserInterest(user,activityDetails);
+		this.setActiviName("取消成功！");
+		httpSr(activiName);
+		return;
+	}
+	/*---取消感兴趣的活动----*/
+	public String myInterestActremove() throws Exception{
+		Activity activityDetails=this.activiService.getById(idd);
+		User user=this.userService.getById(getCurrentUser().getId());
+		this.activiService.deleteUserInterest(user,activityDetails);
+        activityDetails.setInterestUserCount(activityDetails.getInterestUserCount()-1);
+        this.setActiviName("myInterestActremove");
+		return "toMyAct";
+	}
+	/*---想参加活动----*/
+	public void activityPartIn() throws Exception{
+		Activity activityDetails=this.activiService.getById(idd);
+		boolean checkResult=this.actApplyService.checkApplyExit(activityDetails,getCurrentUser());
+		if (activityDetails.getUser().getId().equals(getCurrentUser().getId())) {
+			this.setActiviName("您是该活动的创建者，不需要申请额");
+			httpSr(activiName);
+			return;
+		}
+		if (checkResult) {
+			this.setActiviName("你已经申请过该活动，请耐心等待创建者审核");
+			httpSr(activiName);
+			return;
+		}
+		if (Integer.parseInt(activityDetails.getActivityInteNum())==activityDetails.getActivityMemNum()) 
+		{
+			this.setActiviName("当前活动人数已满，无法加入！");
+			httpSr(activiName);
+			return;
+		}
+		this.actApplyService.saveActApply(activityDetails,getCurrentUser(),new Date(),"申请中");
+		this.setActiviName("你已成功申请加入该活动，请耐心等待创建者审核通过");
+		//activityDetails.getWantInUsers().add(getCurrentUser());
+		httpSr(activiName);
+	}
+	
+	/*---取消申请或参加的活动----*/
+	public void myWantInActCancel() throws Exception{
+		Activity activityDetails=this.activiService.getById(idd);
+		User user=this.userService.getById(getCurrentUser().getId());
+		this.actApplyService.deleteUserApply(user,activityDetails);
+		this.setActiviName("取消成功！");
+		httpSr(activiName);
+        return;
+	}
+	/*---取消申请或参加的活动----*/
+	public String myApplyremove() throws Exception{
+		ActApply actApply=this.actApplyService.getById(actApplyId);
+		if (actApply.getState()=="已通过") {
+			Activity activity=actApply.getActivity();
+			activity.setActivityMemNum(activity.getActivityMemNum()-1);
+			this.activiService.update(activity);
+		}
+		this.setActiviName("myApplyremove");
+		this.actApplyService.delete(actApplyId);
+        return "toMyAct";
+	}
+	/*---活动审核方法----*/
+	public String activityExam() throws Exception{
+		ActApply actApply=this.actApplyService.getById(actApplyId);
+		actApply.setState("已通过");
+		Activity activity=actApply.getActivity();
+		activity.setActivityMemNum(activity.getActivityMemNum()+1);
+		this.activiService.update(activity);
+		this.setActiviName("activityExam");
+		return "toMyAct";
+	}
+	
+	/*---活动参加未通过----*/
+	public String activityNoPass() throws Exception{
+		ActApply actApply=this.actApplyService.getById(actApplyId);
+		actApply.setState("已拒绝");
+		this.actApplyService.update(actApply);
+		this.setActiviName("activityExam");
+		return "toMyAct";
+	}
+	
+	/*---活动参加通过,将人员从审核列表移到参加列表----*/
+	public String activityPass() throws Exception{
+		User user=this.userService.getById(userId);
+		Activity activityDetails=this.activiService.getById(idd);
+		if (Integer.parseInt(activityDetails.getActivityInteNum())==activityDetails.getActivityMemNum()) {
+			this.setActiviName("当前活动预定参加人数已满，无法继续添加,您可以修改活动信息");
+			return "activityPass";
+		} else {
+			activityDetails.getPartUsers().add(user);
+			user.getUserWantInAct().remove(activityDetails);
+			this.setActiviName(Integer.toString((Integer.parseInt(activityDetails.getActivityInteNum())-activityDetails.getActivityMemNum()-1)));
+			return "activityPass";
+		}
+	}
+    /*---我的活动的页面----*/
+	public String myAct() throws Exception{
+		User user=this.userService.getById(getCurrentUser().getId());
+		List<Activity> myInterestList=this.activiService.findInterAct(user);//我感兴趣的活动
+		ActionContext.getContext().put("myInterestList", myInterestList);
+		List<ActApply> myApplyList=this.actApplyService.findByUserId(getCurrentUser().getId());//我的申请列表
+		ActionContext.getContext().put("myApplyList", myApplyList);
+		List<Activity> myCreateList=this.activiService.findUserCreateAct(user);//我创建的活动
+		ActionContext.getContext().put("myCreateList", myCreateList);
+		List<User> applyUserList=this.actApplyService.findUsers(getCurrentUser().getId());//申请人员列表
+		ActionContext.getContext().put("applyUserList", applyUserList);
+		ActionContext.getContext().getValueStack().push(activiName);
+		return "myAct";
+	}	
+	/*---我参加的活动----*/
+	public String myPartInAct() throws Exception{
+		User user=this.userService.getById(getCurrentUser().getId());
+		//List<Activity> activitiesList=(List<Activity>) user.getPartActivities();
+		List<Activity> activitiesList=this.activiService.findUserPartAct(user);
+		ActionContext.getContext().put("activitiesList", activitiesList);
+		return "myPartInAct";
+	}	
+	/*---我创建的活动----*/
+	public String myCreateAct() throws Exception{
+		User user=this.userService.getById(getCurrentUser().getId());
+		//List<Activity> activitiesList=(List<Activity>) user.getPartActivities();
+		List<Activity> activitiesList=this.activiService.findUserCreateAct(user);
+		ActionContext.getContext().put("activitiesList", activitiesList);
+		return "myCreateAct";
+	}	
+	/*---活动搜索后跳转的页面---*/
+	public String search() throws Exception{
+		String str= new String(keyWord.getBytes("iso-8859-1"),"utf-8");
+		List<Activity> activitiesList=this.activiService.findByName(str);
+		ActionContext.getContext().put("activitiesList", activitiesList);
+		return "searchResult";
+	}
+	/*---向页面传值的方法----*/
+	public void httpSr(String str) throws Exception{
+		HttpServletResponse hsr=ServletActionContext.getResponse();
+		hsr.setContentType("test/html;charset=UTF-8");
+		hsr.getWriter().write(str);
+	}	
+	private String activiName;  //获取搜索时用户的输入
+	private Date startTime;     //获取开始时间
+	private Date endTime;      //获取结束时间
+	private Long activityTypeId;   //获取活动类型的ID
+	private Long idd;         //获取该活动的ID，用于重定向外界传参等
+	private Long userId;     //获取审核列表里面的user	
+	private String keyWord;	//搜索的方法
+	private Long actApplyId;	//搜索的方法
+	private File file;
+	private String fileFileName;
+	private String savePath;	
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	
+	public String getActiviName() {
+		return activiName;
+	}
+	public void setActiviName(String activiName) {
+		this.activiName = activiName;
+	}
+	public Date getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	public Date getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	public Long getActivityTypeId() {
+		return activityTypeId;
+	}
+	public void setActivityTypeId(Long activityTypeId) {
+		this.activityTypeId = activityTypeId;
+	}
+	public File getFile() {
+		return file;
+	}
+	public void setFile(File file) {
+		this.file = file;
+	}
+	public String getFileFileName() {
+		return fileFileName;
+	}
+	public void setFileFileName(String fileFileName) {
+		this.fileFileName = fileFileName;
+	}
+
+	public Long getIdd() {
+		return idd;
+	}
+
+	public void setIdd(Long idd) {
+		this.idd = idd;
+	}
+
+	public String getSavePath() {
+		return savePath;
+	}
+
+	public void setSavePath(String savePath) {
+		this.savePath = savePath;
+	}
+
+	public String getKeyWord() {
+		return keyWord;
+	}
+
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
+	public Long getActApplyId() {
+		return actApplyId;
+	}
+
+	public void setActApplyId(Long actApplyId) {
+		this.actApplyId = actApplyId;
+	}
+}

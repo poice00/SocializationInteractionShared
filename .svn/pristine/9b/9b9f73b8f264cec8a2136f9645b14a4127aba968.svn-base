@@ -1,0 +1,62 @@
+package com.socialization.action;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
+
+import com.opensymphony.xwork2.ActionSupport;
+import com.socialization.action.login.LoginAction;
+import com.socialization.action.resource.ResourceAction;
+import com.socialization.action.resource.UpdowncollectAction;
+import com.socialization.domain.Resource;
+
+public class SpringTest{
+	private ApplicationContext ac = new ClassPathXmlApplicationContext("beans.xml");
+	
+	
+	@Test
+	public void TestBean(){
+		HomeAction at = (HomeAction) ac.getBean("homeAction");	
+		System.out.println(at);
+		LoginAction ra=(LoginAction) ac.getBean("loginAction");
+		UserAction ua=(UserAction) ac.getBean("userAction");
+		UpdowncollectAction udca=(UpdowncollectAction) ac.getBean("updowncollectAction");
+		ResourceAction rsa=(ResourceAction) ac.getBean("resourceAction");
+		System.out.println(ra);
+		System.out.println(ua);
+		System.out.println(udca);
+		System.out.println(rsa);
+	}
+	
+	@Test
+	public void TestSessionFactory(){
+		SessionFactory sf = (SessionFactory) ac.getBean("sessionFactory");
+		System.out.println(sf);
+     	Session session=sf.openSession();
+		session.beginTransaction();
+		/*String sql="insert into user_downresource(userId,resourceId) values (?,?)";
+		Query q=session.createSQLQuery(sql);
+		q.setInteger(0, 99);
+		q.setInteger(1, 88);
+		Query qq=session.createSQLQuery(sql);
+		qq.setInteger(0, 32);
+		qq.setInteger(1, 43);
+		q.executeUpdate();
+		qq.executeUpdate();
+		session.getTransaction().commit();*/
+		Query qqq=session.createQuery("select * from resource where id in (select resourceId from user_downresource where userId=32)");
+		List<Resource> listRes=(List<Resource>)qqq.list();
+		session.getTransaction().commit();
+		System.out.println(listRes.size());
+		session.close();
+	}
+	
+
+}

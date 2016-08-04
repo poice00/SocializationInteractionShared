@@ -1,0 +1,48 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>高级搜索界面</title>
+</head>
+<body>
+<center>
+ <script type="text/javascript" language="JavaScript" charset="UTF-8">
+ function clear(){
+	 var inputs = document.getElementsByTagName_r("textfield");
+	 for(var i=0;i <inputs.length;i++)
+	 {
+	 if (inputs[i].type== "text")
+	 { 
+	 inputs[i].value = '';
+	 }
+	 }
+	 }
+</script>
+<div class="nav-bar">
+        	<s:a action="resource_homePage" >首页</s:a>
+        	<s:a action="resource_resTypeUI" >资源分类</s:a>
+			<s:a action="resource_resRankUI">排行榜</s:a>
+			<s:a action="resource_resHelpUI" >帮助</s:a>
+			<s:a action="resource_highsearchUI">高级搜索</s:a>
+			<s:a action="myresource_uplist">我的资源</s:a>
+			<s:a action="myresource_showupload">我要上传</s:a>	
+</div>
+<div style="margin:0px auto; width:900px;">
+<h2>欢迎你使用高级搜索</h2>
+	<s:actionmessage/>
+	<s:form action="resource_highsearch" method="post">
+	<div>标题中包含:<s:textfield name="resname" /><br/></div>
+	<div>描述中包含:<s:textfield name="resDescription" /><br/></div>
+	<div>Tag中包含:<s:textfield name="resourceTags" /><br/></div>
+	<div>资源类型:<s:select name="resTypeId" list="#resTypeList" listKey="id" listValue="name"
+                        		headerKey="" headerValue="请选择类型" /><br/></div>
+	<div>上传时间:<s:select name="resUpTime" list="{'请选择日期','一周以内','一月以内','一年以内'}"/><br/></div>	
+	<s:submit value="提交"></s:submit> <br/>
+	</s:form>
+</div>
+</center>
+</body>
+</html>

@@ -1,0 +1,9 @@
+package com.socialization.service.resource;
+
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.Resource;
+
+public interface ResourceService extends DaoSupport<Resource>{
+
+}

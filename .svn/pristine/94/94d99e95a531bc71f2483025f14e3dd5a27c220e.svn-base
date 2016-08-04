@@ -1,0 +1,207 @@
+package com.socialization.serviceImpl.resource;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.ResType;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+import com.socialization.service.resource.UpdowncollectResService;
+@Service
+@Transactional
+public class UpdowncollectResServiceImpl extends DaoSupportImpl<Resource> implements UpdowncollectResService {
+
+	
+	@SuppressWarnings("unchecked")
+	@Override        //查询用户所拥有的资源
+	public List<Resource> getByuserupId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createQuery(
+					"FROM Resource r WHERE r.user.id=? order by postTime desc")
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所下载的资源
+	public  List<Resource> getByuserdownId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_downresource where userId=?)")
+					.addEntity(Resource.class)
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override      //查询用户所搜藏的资源
+	public List<Resource> getByusercolleId(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		} else {
+			return getSession().createSQLQuery(
+					"select * from resource where id in (select resourceId from user_resource where userId=?)")
+					.addEntity(Resource.class)
+					.setParameter(0, user.getId())
+					.list();
+		}
+	}
+	
+	@Override     //添加用户-资源下载表
+	public void downsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_downresource(userId,resourceId) values (?,?)")
+		        .setParameter(0,user.getId())
+		        .setParameter(1, resource.getId())
+		        .executeUpdate();
+	}
+	
+	@Override     //添加用户-资源收藏表
+	public void collectsave(Resource resource,User user) {
+		getSession().createSQLQuery(
+				"insert into user_resource(userId,resourceId) values (?,?)")
+		        .setParameter(0,user.getId())
+		        .setParameter(1, resource.getId())
+		        .executeUpdate();
+	}
+
+	@Override  //重写资源保存的方法
+	public void save(Resource resource) {
+		//保存资源
+		getSession().save(resource);		
+		//维护特殊数据
+		User user=resource.getUser();
+		user.setResUpCount(user.getResUpCount()+1);	
+		getSession().update(user);
+		
+		ResType resType=resource.getResType();
+		resType.setResCount(resType.getResCount()+1);
+		getSession().update(resType);
+	}
+	
+	//重写资源删除的方法
+	@Override
+	public void delete(Resource resource) {
+		//删除
+		ResType resType=resource.getResType();   //相应的资源类型的资源总数减1
+		resType.setResCount(resType.getResCount()-1);  
+		getSession().update(resType);
+		getSession().createSQLQuery(    //相应的收藏表中的有关该资源的删除
+				                    "delete from user_resource where resourceId= ?")
+		                            .setParameter(0, resource.getId())
+		                            .executeUpdate();
+		getSession().createSQLQuery(   //相应的下载表中的有关该资源的删除
+                "delete from user_downresource where resourceId= ?")
+                .setParameter(0, resource.getId())
+                .executeUpdate();
+		User user=resource.getUser();   //相应的用户上传资源的数目减1
+		user.setResUpCount(user.getResUpCount()-1);
+		getSession().update(user);
+		getSession().delete(resource);		
+		//维护特殊数据	
+	}
+
+	//按照下载次数的排序，取前3
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> OrderByCount() {	  
+		return getSession().createQuery(
+				"FROM Resource r ORDER BY r.downCount DESC")
+				.setMaxResults(3)
+				.list();
+	}
+
+	//按照收藏次数的前十排序，取前3
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Resource> OrderByCollect() {   
+		return getSession().createQuery(
+				"FROM Resource r ORDER BY r.collectionCount DESC")
+				.setMaxResults(3)
+				.list();
+	}
+
+    //检查用户资源收藏
+	@Override
+	public boolean checkCollectExist(Resource resource,User user) { 
+		if (getSession().createSQLQuery(
+				"select * from user_resource where resourceId=? and userId=?")
+				.setParameter(0, resource.getId())
+				.setParameter(1, user.getId())
+				.list().size()==0) {
+			
+			return true;
+		}else
+		{
+		    return false;
+		}
+	}
+
+    //查看资源时以资源的发布时间排序
+	@SuppressWarnings("unchecked")   
+	@Override
+	public List<Resource> findAllDesc() {
+		return getSession().createQuery(
+				"FROM Resource r ORDER BY r.postTime DESC").list();
+	}
+
+
+	@Override   //检查用户是否重复下载
+	public boolean checkDownExist(Resource resource, User currentUser) {
+		if (getSession().createSQLQuery(
+				"select * from user_downresource where resourceId=? and userId=?")
+				.setParameter(0, resource.getId())
+				.setParameter(1, currentUser.getId())
+				.list().size()==0) {			
+			return true;
+		}else
+		{
+		    return false;
+		}
+	}	
+	
+	//复合条件下的高级搜索,返回至少满足一个条件的！
+	@SuppressWarnings("unchecked")  
+	@Override
+	public List<Resource> highLevelSearch(String resDescription, String resname, String resourceTags,String seaDate,Long resTyId,int kz) {
+		String sa2[]=new String[3];
+		sa2[0]=resname;
+		sa2[1]=resDescription;
+		sa2[2]=resourceTags;
+		String sa[]={"name","description","resTags"};
+		String sql="select * from(select *,sum(";
+		for (int i = 0; i < 3; i++) {
+		sql=sql+"(case when "+sa[i]+" like '%"+sa2[i]+"%' then 1 else 0 end)+";
+		}
+		if (resTyId==null) {
+			sql=sql+"(case when postTime>='"+seaDate+"' then 1 else 0 end)) as cnt from resource group by id) as temp where cnt>="+kz+" order by cnt desc";
+		} else {
+			sql=sql+"(case when resTypeId="+resTyId+" then 1 else 0 end)+(case when postTime>='"+seaDate+"' then 1 else 0 end)) as cnt from resource group by id) as temp where cnt>="+kz+" order by cnt desc";
+		}
+		return getSession().createSQLQuery(
+				sql)
+				.addEntity(Resource.class)
+				.list();
+	}
+
+	//资源分类，根据资源的标签的数量，按从大到小的顺序排
+	@Override
+	public void resTypeUI() {
+		// TODO Auto-generated method stub
+	}
+	
+
+	
+	
+}

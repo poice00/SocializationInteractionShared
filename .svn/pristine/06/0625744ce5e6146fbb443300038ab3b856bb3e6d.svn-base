@@ -1,0 +1,17 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@page isELIgnored="false" %>
+<%@taglib uri="/struts-tags" prefix="s" %>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>资源频道-上传成功</title>
+</head>
+<body>
+<center>
+<h3>上传成功，感谢你为SISP立下了汗马功劳！<s:a action="myresource_showupload">我还要继续上传</s:a></h3>
+</center>
+</body>
+</html>

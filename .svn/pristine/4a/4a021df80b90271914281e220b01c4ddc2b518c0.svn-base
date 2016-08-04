@@ -1,0 +1,12 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<body style="background: #B4CDE6" magin="0px">
+<div style="margin: 0px;padding: 0px">
+	<a href="http://www.baidu.com/" target="mid" >首页</a>
+	<a href="http://www.tianya.cn/" target="mid" >论坛</a>
+	<s:a action="resource_show" target="mid" >资源库</s:a>
+	<a href="http://www.sohu.com/" target="mid" >个人空间</a>
+	<a href="http://www.hao123.com/nba" target="mid" >系统管理</a>
+</div>
+</body>
+</html>

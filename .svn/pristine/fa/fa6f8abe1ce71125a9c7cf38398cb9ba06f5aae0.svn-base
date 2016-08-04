@@ -1,0 +1,62 @@
+package com.socialization.serviceImpl.resource;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.ResReply;
+import com.socialization.domain.Resource;
+import com.socialization.service.resource.ResReplyService;
+
+@Service
+@Transactional
+public class ResReplyServiceImpl extends DaoSupportImpl<ResReply> implements ResReplyService {
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResReply> getbyResID(Resource resource) {
+		return getSession().createQuery(
+				"FROM ResReply r WHERE r.resource = ? )")
+				.setParameter(0, resource)
+				.list();
+	}
+	
+	@Override
+	public void save(ResReply resReply,int currentscore) {
+		//保存
+		getSession().save(resReply);		
+		//维护特殊数据
+		Resource resource=resReply.getResource();  //资源的得分修正，资源的评论数+1
+		if (resource.getScore()==0) {
+			resource.setScore(currentscore);
+			resource.setRepCount(1);
+			getSession().update(resource);
+		}else
+		{
+			resource.setScore((int)((resource.getScore()*resource.getRepCount()+currentscore)/(resource.getRepCount()+1)));
+			resource.setRepCount(resource.getRepCount()+1);
+			getSession().update(resource);
+		}
+	}
+
+	@Override
+	public void deleteByResId(Resource resource) {
+      getSession().createSQLQuery(
+    		  "delete from resReply where resourceId=?")
+              .setParameter(0, resource.getId())
+              .executeUpdate();
+	}
+	
+	@Override
+	public void delete(ResReply resReply) {
+	  getSession().delete(resReply);
+	//维护特殊数据
+	  Resource resource=resReply.getResource();  //资源的得分修正，资源的评论数-1
+	  resource.setScore((int)((resource.getScore()*resource.getRepCount()-resReply.getScore())/(resource.getRepCount()-1)));
+	  resource.setRepCount(resource.getRepCount()+1);
+	  getSession().update(resource);
+	}
+}

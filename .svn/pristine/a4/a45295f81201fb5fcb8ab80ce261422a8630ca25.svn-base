@@ -1,0 +1,661 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap/css/interaction.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>活动首页</title>
+<jsp:include page="/WEB-INF/jsp/public/style.jsp" flush="true"></jsp:include>
+</head>
+<body>
+<!-- 导航栏 -->
+<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+<center>
+<%@ include file="/WEB-INF/jsp/activityAction/activityNav.jsp" %>
+</center>
+
+ <div class="container"  style="height: 3150px;width: 1230px;" >
+ <div class="row">
+			<div class="span12" style="padding-top: 10px;">
+				<div class="span2" style="width: 320px;float:left;margin-left: 100px;">
+					<h3>线下活动</h3>
+				</div>
+				<div class="span6" style="padding-top: 15px;">
+					<ul class="nav nav-pills">
+						<li class="active"><a href="activity_activityHomePage.action" style="margin-right: 100px;">所有活动</a></li>
+						<s:if test='#session.user !=null'>
+						<li><a href="activity_createUI.action" style="padding-left: 20px;">+创建活动</a></li>
+						</s:if>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+     <div class="row" >
+			<div class="span9" style="float:left;width: 810px;margin-top: 20px;color:white;">
+				<div class="carousel slide" id="carousel-455762" style="width: 810px;background-color: #9370DB;height: 420px;">
+					<ol class="carousel-indicators" style="width: 100px;height: 100px;margin-top: 373px;left: 600px;">
+						<li class="active" data-slide-to="0"
+							data-target="#carousel-455762" style="width: 20px;height: 20px;margin-right: 5px;"></li>
+						<li data-slide-to="1" data-target="#carousel-455762" style="width: 20px;height: 20px;margin-right: 5px;"></li>
+						<li data-slide-to="2" data-target="#carousel-455762" style="width: 20px;height: 20px;margin-right: 5px;"></li>
+					</ol>
+					<div class="carousel-inner" >
+						<div class="item active" style="background-color: #9370DB;">
+							<ul class="thumbnails" style="padding-left: 20px;margin-left: 5px;">
+						<s:iterator value="#new0list" status="activity">
+								<div class="thumbnail" style="float:left;margin-right: 20px;width: 240px; height: 370px;margin-top: 10px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+							</ul>
+						</div>
+						<div class="item" style="background-color: #9370DB;">
+							<ul class="thumbnails" style="padding-left: 20px;margin-left: 5px;">
+							<s:iterator value="#new1list" status="activity">
+								<div class="thumbnail" style="float:left; margin-right: 20px;width: 240px; height: 370px;margin-top: 10px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+							</ul>
+						</div>
+						<div class="item" style="background-color: #9370DB;">
+							<ul class="thumbnails" style="padding-left: 20px;margin-left: 5px;">
+								<s:iterator value="#new2list" status="activity">
+								<div class="thumbnail" style="float:left;margin-right: 20px;width: 240px; height: 370px;margin-top: 10px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+							</ul>
+						</div>
+					</div>
+					<a data-slide="prev" href="#carousel-455762" class="left carousel-control" style="margin-top: 170px;width: 86px;height: 46px; font-size: 60px;">‹</a>
+					<a data-slide="next" href="#carousel-455762" class="right carousel-control" style="margin-top: 170px;width: 86px;height: 46px; font-size: 60px;">›</a>
+</div>
+
+
+<div class="tabbable" id="tabs-lectures">
+					<ul class="nav nav-tabs">
+						<li><a><strong>聚会</strong></a></li>
+						<li class="active"><a data-toggle="tab" href="#panel-nl">热门</a>
+						</li>
+						<li><a data-toggle="tab" href="#panel-hl">最新</a></li>
+					</ul>
+					<div class="tab-content" style="height: 400px;">
+						<div class="tab-pane active" id="panel-nl">
+						<s:iterator value="#hot0list" status="activity">
+								<div class="thumbnail" style="float:left; width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+						<div class="tab-pane" id="panel-hl">
+							<s:iterator value="#new0list" status="activity">
+								<div class="thumbnail" style="float:left; width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+					</div>
+				</div>
+	<div class="tabbable" id="tabs-lectures">
+					<ul class="nav nav-tabs">
+						<li><a><strong>讲座</strong></a></li>
+						<li class="active"><a data-toggle="tab" href="#panel-nl">热门</a>
+						</li>
+						<li><a data-toggle="tab" href="#panel-hl">最新</a></li>
+					</ul>
+					<div class="tab-content" style="height: 400px;">
+						<div class="tab-pane active" id="panel-nl">
+						<s:iterator value="#hot1list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+						<div class="tab-pane" id="panel-hl">
+							<s:iterator value="#new1list" status="activity">
+								<div class="thumbnail" style="float:left; width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+					</div>
+				</div>
+				<div class="tabbable" id="tabs-lectures">
+					<ul class="nav nav-tabs">
+						<li><a><strong>电影</strong></a></li>
+						<li class="active"><a data-toggle="tab" href="#panel-nl">热门</a>
+						</li>
+						<li><a data-toggle="tab" href="#panel-hl">最新</a></li>
+					</ul>
+					<div class="tab-content" style="height: 400px;">
+						<div class="tab-pane active" id="panel-nl">
+						<s:iterator value="#hot2list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+						<div class="tab-pane" id="panel-hl">
+							<s:iterator value="#new2list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+					</div>
+				</div>
+				<div class="tabbable" id="tabs-lectures">
+					<ul class="nav nav-tabs">
+						<li><a><strong>运动</strong></a></li>
+						<li class="active"><a data-toggle="tab" href="#panel-nl">热门</a>
+						</li>
+						<li><a data-toggle="tab" href="#panel-hl">最新</a></li>
+					</ul>
+					<div class="tab-content" style="height: 400px;">
+						<div class="tab-pane active" id="panel-nl">
+						<s:iterator value="#hot2list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+						<div class="tab-pane" id="panel-hl">
+							<s:iterator value="#new2list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+					</div>
+				</div>
+				<div class="tabbable" id="tabs-lectures">
+					<ul class="nav nav-tabs">
+						<li><a><strong>旅行</strong></a></li>
+						<li class="active"><a data-toggle="tab" href="#panel-nl">热门</a>
+						</li>
+						<li><a data-toggle="tab" href="#panel-hl">最新</a></li>
+					</ul>
+					<div class="tab-content" style="height: 400px;">
+						<div class="tab-pane active" id="panel-nl">
+						<s:iterator value="#hot2list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+						<div class="tab-pane" id="panel-hl">
+							<s:iterator value="#new2list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+					</div>
+				</div>
+				<div class="tabbable" id="tabs-lectures">
+					<ul class="nav nav-tabs">
+						<li><a><strong>公益</strong></a></li>
+						<li class="active"><a data-toggle="tab" href="#panel-nl">热门</a>
+						</li>
+						<li><a data-toggle="tab" href="#panel-hl">最新</a></li>
+					</ul>
+					<div class="tab-content" style="height: 400px;">
+						<div class="tab-pane active" id="panel-nl">
+						<s:iterator value="#hot2list" status="activity">
+								<div class="thumbnail" style="float:left;width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+						<div class="tab-pane" id="panel-hl">
+							<s:iterator value="#new2list" status="activity">
+								<div class="thumbnail" style="float:left; width: 240px; height: 370px;margin-top: 10px;margin-left: 20px;">
+											<a href="activity_activityDetails.action?idd=${id}"><img
+												src="${activityImg }" style="height: 200px; width: 220px;"/></a>
+											<div class="caption">
+												<h5 style="font-size: 18px;"><a href="activity_activityDetails.action?idd=${id}">
+												<s:if test="%{activityName.length() >= 15}">
+													${activityName.substring(0,10) }...
+													</s:if>
+													<s:else>
+													${activityName }
+													</s:else>
+													</a>
+												</h5>
+												<p>
+												<a href="activity_activityDetails.action?idd=${id}">
+													<s:if test="%{activitydescription.length() >= 30}">
+													${activitydescription.substring(0,30) }...
+													</s:if>
+													<s:else>
+													${activitydescription }
+													</s:else>
+													</a>
+												</p>
+												 <p>
+													<button class="btn btn-primary btn-small" style="margin-left: 10px;" id="${id}" onclick="interestAct(this);" >我感兴趣</button> 
+													<button class="btn btn-primary btn-small" style="margin-left: 20px;" id="${id}" onclick="partInAct(this);">我要参加</button>
+												</p>
+											</div>
+								</div>
+						</s:iterator>
+						</div>
+					</div>
+				</div>
+       </div>
+			<div class="span3" style="float:left;margin-left: 100px;">
+				<form class="form-search" action="searchActivity.htm" method="get">
+					<div class="input-append">
+						<input name="activiName" class="span2 search-query" type="text" style="width: 190px; height: 44px;"/>
+						<button type="submit" class="btn" style=" height: 44px;">查找</button>
+					</div>
+				</form>
+				<p>热门标签</p>
+				<s:iterator value="#activityTypesList" >
+						<a href="activity_singalactivityPage.action?activityTypeId=${id }"><span class="badge badge-success" style="width: 54px;height: 30px;margin-bottom: 10px;font-size: 20px;background-color: #800080;">${Name }</span></a>
+				</s:iterator>
+			</div>
+		</div>
+</div>
+<div style="height:20px"></div>
+<!-- 页脚 -->
+<%@ include file="/WEB-INF/jsp/public/footer.jsp" %>
+<script type="text/javascript">
+function interestAct(obj){
+	 $.ajax({
+		url:'activity_activityIntesrest.action',
+		type:'post',
+		 data:{
+			idd:$(obj).attr("id")
+		}, 
+		success:function(response){
+			alert(response);
+		}
+	});	 
+}
+function partInAct(obj){
+	 $.ajax({
+		url:'activity_activityPartIn.action',
+		type:'post',
+		 data:{
+			idd:$(obj).attr("id")
+		}, 
+		success:function(response){
+			alert(response);
+		}
+	});	 
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+package com.socialization.action.zone;
+
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Social;
+import com.socialization.domain.Talk;
+import com.socialization.domain.User;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class SocialAction extends BaseAction<Social>{
+
+	private Long friendId;
+	
+	//查找当前用户好友的说说
+		public String list() throws Exception {
+			List<Talk> talkList = talkService.findByFriends(getCurrentUser());
+			ActionContext.getContext().put("talkList", talkList);
+			return "list";
+		}
+	
+	/** 列表 *//*
+	public String list() throws Exception {
+		User friend = userService.getById(getFriendId());
+		User user = userService.getById(getCurrentUser().getId());
+		List<Social> socialList = socialService.findByFriends(getCurrentUser());
+		ActionContext.getContext().put("socialList", socialList);
+		return "list";
+	}
+*/
+	
+	public Long getFriendId() {
+		return friendId;
+	}
+	
+	public void setFriendId(Long friendId) {
+		this.friendId = friendId;
+	}
+}
+

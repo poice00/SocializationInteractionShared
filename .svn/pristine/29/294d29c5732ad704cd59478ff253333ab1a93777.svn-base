@@ -1,0 +1,21 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>资源频道首页</title>
+</head>
+<body>
+<div class="nav-bar">
+        	<s:a action="resource_homePage" >首页</s:a>
+        	<a href="http://download.csdn.net/category" >资源分类</a>
+        	<a class=" " href="http://download.csdn.net/doc" >精品专辑</a>
+			<a href="http://download.csdn.net/rankings" >排行榜</a>
+			<a href="http://download.csdn.net/help" >帮助</a>
+			<a href="http://download.csdn.net/advanced_search" class="current">高级搜索</a>
+			<a href="http://download.csdn.net/my" >我的资源</a>
+        </div>
+</body>
+</html>

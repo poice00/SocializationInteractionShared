@@ -1,0 +1,16 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>注册成功页面</title>
+</head>
+<body>
+注册成功，快去登录吧~
+	<s:iterator value="#userList">
+		${id },
+		${name }<br>
+	</s:iterator>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<html>
+<head>
+	<title>社会化互动分享平台</title>
+	
+</head>
+
+	<frameset rows="8%,*,5%" framespacing=0 border=0 frameborder="0">
+		<frameset rows="60%,40%">
+			<frame name="TopMenu" scrolling="no" src="${pageContext.request.contextPath}/homeAction/home_title.action" >
+			<frame name="TopMenu" scrolling="no" src="${pageContext.request.contextPath}/homeAction/home_top.action" >
+		
+		</frameset>
+		
+		
+		<frameset cols="20%,*,20%">
+			<frame scrolling="no" src="${pageContext.request.contextPath}/homeAction/home_blank.action">
+			<frame name="mid" scrolling="yes" src="${pageContext.request.contextPath}/homeAction/home_mid.action">
+			<frame scrolling="no" src="${pageContext.request.contextPath}/homeAction/home_blank.action">
+		</frameset>
+		
+		<frame scrolling="no" src="${pageContext.request.contextPath}/homeAction/home_bottom.action">
+	</frameset>
+
+	<body>
+	</body>
+</html>
+
+
+

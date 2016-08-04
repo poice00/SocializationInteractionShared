@@ -1,0 +1,120 @@
+package com.socialization.serviceImpl;
+
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.User;
+import com.socialization.service.UserService;
+
+@Service
+@Transactional
+@SuppressWarnings("unchecked")
+public class UserServiceImpl extends DaoSupportImpl<User> implements UserService {
+
+	@Override
+	public User findByLoginNameAngPassword(String loginName, String password) {
+		User u = (User) getSession().createQuery(//
+					"FROM User u WHERE u.loginName=? and u.password=?")//
+					.setParameter(0, loginName)//
+					.setParameter(1, password)//
+					.uniqueResult();
+		
+		return u;
+	}
+
+
+	@Override
+	public List<User> OrderByupCount(String st) {
+		// TODO Auto-generated method stub
+		if (st == "总榜单") {
+			return getSession().createQuery(
+					"FROM User u ORDER BY u.resUpCount DESC")
+					.setMaxResults(3)
+					.list();
+		} else {
+			return getSession().createQuery(
+					"FROM User u ORDER BY u.resUpCount DESC")
+					.list();
+		}
+	}
+
+
+	/**
+	 * @desc 判断用户名是否存在
+	 * @param loginName 用户名
+	 * @return 如果存在，返回true，否则返回false
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 3, 2015 11:55:26 AM
+	 */
+	@Override
+	public boolean isExist(String loginName) {
+		long count = (long)getSession().createQuery(
+				"SELECT COUNT(*) FROM User WHERE loginName = ?")//
+				.setParameter(0, loginName)//
+				.uniqueResult();
+		
+		if(count > 0)
+			return true;
+		
+		return false;
+	}
+	
+	/**
+	 * @desc 根据登录名获取用户实体类
+	 * @param loginName 登录名
+	 * @return 用户类对象
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 7, 2015 9:53:32 AM
+	 */
+	public User findByLoginName(String loginName){
+		User u = null;
+		
+		u = (User)getSession().createQuery(
+				"FROM User WHERE loginName = ?")
+				.setParameter(0, loginName)
+				.uniqueResult();
+		
+		return u;
+	}
+
+	@Override
+	public List<User> findFansCount() {
+		return getSession().createQuery(//
+				"FROM User u ORDER BY u.fansCount DESC")//
+				.setFirstResult(0)//
+				.setMaxResults(3)//
+				.list();
+	}
+
+
+	/**
+	 * @desc 对用户名进行模糊查询
+	 * @param str
+	 * @return 符合条件的User实体集合
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 7, 2015 8:22:40 PM
+	 */
+	@Override
+	public List<User> fuzzySearch(String str) {
+		
+		if(str.length() == 0)
+			return null;
+		
+		/*生成模糊字符串*/
+		StringBuilder sb = new StringBuilder("%");
+		
+		for (int i = 0; i < str.length(); i++)
+			sb.append(str.charAt(i)).append("%");
+		
+		return getSession().createQuery(
+				"FROM User WHERE loginName like ?")
+				.setParameter(0, sb.toString())
+				.list();
+	}
+	
+}

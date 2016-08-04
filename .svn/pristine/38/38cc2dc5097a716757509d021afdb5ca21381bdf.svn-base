@@ -1,0 +1,75 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>资源上传页面</title>
+</head>
+<body>
+	<br />
+	<div align="center">
+		<s:a action="resourcedownload">我要下载</s:a>
+		<s:a action="tagRes_addUI">我要添加标签</s:a>
+		<br />
+		<center>
+		<s:form action="myresource_upResCommit" enctype="multipart/form-data" method="POST">
+					<s:file name="upFile" label="请选择文件"></s:file><br />
+					<s:actionmessage></s:actionmessage><br/>
+					<s:textfield name="name" label="资源名称"></s:textfield><br />
+					<s:select name="resTypeId" list="#taglist" listkey="id" listValue="name" label="资源类型"/><br />
+					<s:textfield name="resTags" label="关键词（Tag）" placeholder="标签不多余10个字符，请用空格隔开"></s:textfield><br />
+					<s:textarea name="description"  label="资源描述" placeholder="描述>=20个字符,不支持HTML标签；详细的资源描述有机会获得我们的推荐。"></s:textarea><br />
+					<s:submit value="开始上传"></s:submit>				
+		</s:form>
+		</center>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+<%-- 
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>资源上传页面</title>
+ </head>    
+<body>
+<script type="text/javascript">      
+      
+function getFileSize(fileObj) {  
+     if (document.all) {  
+        window.oldOnError = window.onerror;  
+        window.onerror = function(err) {  
+        if (err.indexOf('utomation') != -1) {  
+             alert('No access to the file permissions.');  
+             return true;  
+        }  
+        else  
+             return false;  
+        };  
+        var fso = new ActiveXObject('Scripting.FileSystemObject');  
+        var file = fso.GetFile(fileName);  
+        window.onerror = window.oldOnError;
+         return file.Size; 
+         window.alert("12412341");
+     }  
+}    
+  
+</script>         
+<INPUT TYPE="file" NAME="file" SIZE="30" onchange="getFileSize(this)">      
+</body>  
+</html> --%>

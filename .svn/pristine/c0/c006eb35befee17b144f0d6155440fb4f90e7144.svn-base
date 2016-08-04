@@ -1,0 +1,188 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<style type="text/css"> 
+.text1{width:600px; height:400px}
+.text2{height:5px}
+.text3{width:200px}
+.text4{width:100px;align:right}
+#footer{position:relative;}
+</style> 
+<title>创建活动</title>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap/css/interaction.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<jsp:include page="/WEB-INF/jsp/public/style.jsp" flush="true"></jsp:include>
+<script type="text/javascript">
+//下面用于图片上传预览功能
+
+	function setImagePreview(avalue) {
+		var docObj = document.getElementById("doc");
+
+		var imgObjPreview = document.getElementById("preview");
+		if (docObj.files && docObj.files[0]) {
+			//火狐下，直接设img属性
+			imgObjPreview.style.display = 'block';
+			imgObjPreview.style.width = '280px';
+			imgObjPreview.style.height = '190px';
+			//imgObjPreview.src = docObj.files[0].getAsDataURL();
+			//火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+			imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+		} else {
+			//IE下，使用滤镜
+			docObj.select();
+			var imgSrc = document.selection.createRange().text;
+			var localImagId = document.getElementById("localImag");
+			//必须设置初始大小
+			localImagId.style.width = "280px";
+			localImagId.style.height = "190px";
+			//图片异常的捕捉，防止用户修改后缀来伪造图片
+			try {
+				localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+				localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+			} catch (e) {
+				alert("您上传的图片格式不正确，请重新选择!");
+				return false;
+			}
+			imgObjPreview.style.display = 'none';
+			document.selection.empty();
+		}
+		return true;
+	}
+</script>
+</head>
+<body>
+<!-- 导航栏 -->
+<%@ include file="/WEB-INF/jsp/public/nav.jsp" %>
+<div class="container">
+		<div class="row">
+			<div class="span12" style="padding-top: 10px;">
+				<div class="span2" style="width: 200px;float:left;">
+					<h3>线下活动</h3>
+				</div>
+				<div class="span6" style="padding-top: 15px;">
+					<ul class="nav nav-pills">
+						<li class="active"><a href="activity_activityHomePage.action" style="margin-right: 100px;">所有活动</a></li>	
+						<li><a class="btn btn-primary" href="activity_createUI.action" style="padding-left: 20px;">+创建活动</a></li>
+						<s:if test='#session.user !=null'>
+						<li><a  href="activity_myAct.action" style="padding-left: 20px;">+我的活动</a></li>
+						</s:if>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span9" style="float:left;width: 810px;margin-top: 20px;">
+<s:form action="activity_create" method="post" enctype="multipart/form-data">
+			<table border="0" cellspacing="0" cellpadding="0">
+			<colgroup span="1" align="left" width="300px"></colgroup>
+				<tr>
+				    <th rowspan="13">
+				   <div id="localImag">
+						<img id="preview"   alt="请为你的活动选择一张精美的图片吧！"
+							width="280" height="190">
+					</div>
+				    </th>
+					<th>活动名称：</th>
+					<td><s:textfield name="activityName" class="text3"/></td>
+				</tr>
+				<tr class="text2">
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>活动地点：</th>
+					<td><s:textfield name="activityPlace" class="text3"/></td>
+				</tr>
+				<tr class="text2">
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>开始时间：</th>
+					<td><input type="date" name="startTime" class="text3"/></td>
+				</tr>
+				<tr class="text2">
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>结束时间：</th>
+					<td><input type="date" name="endTime" class="text3"/></td>
+				</tr>
+				<tr class="text2">
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>活动类型：</th>
+					<td><s:select name="activityTypeId" list="#activityTypesList"
+							listKey="id" listValue="name" headerKey="" headerValue="请选择类型" class="text3">
+						</s:select></td>
+				</tr>
+				<tr class="text2">
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>活动费用：</th>
+					<td><s:textfield name="activityPrice" placeholder="请填写免费或者XX元每人" class="text3"/></td>
+				</tr>
+				<tr class="text2">
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th>人数限制：</th>
+					<td><s:textfield name="activityInteNum" placeholder="请填写具体数值" class="text3"/></td>
+				</tr>
+				<tr>
+				    <td align="left" colspan="3" ><input type="file" name="file" id="doc" onchange="javascript:setImagePreview();"></td>
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
+					<th colspan="3">活动详情：</th>
+				</tr>
+				<tr>
+					<td colspan="3"><s:textarea name="activitydescription" class="text1" align="left" placeholder="请填写活动详细情况，如活动举办的具体时间、活动过程等等"/></td>
+				</tr>
+				<tr class="text3">
+					<td colspan="3" align="center"><s:submit value="创建活动" /></td>
+				</tr>
+			</table>
+		</s:form>
+				<hr>
+
+			</div>
+			<div class="span3" style="margin-left: 0px;">
+				<s:form class="form-search" action="activity_search.action" method="get">
+					<div class="input-append">
+						<input name="keyWord" class="span2 search-query" type="text" style="height: 34px;"/>
+						<button type="submit" class="btn">查找</button>
+					</div>
+				</s:form>
+				<p>最新招聘</p>
+				<ul>
+					<li>新闻资讯</li>
+					<li>体育竞技</li>
+					<li>娱乐八卦</li>
+					<li>前沿科技</li>
+					<li>环球财经</li>
+					<li>天气预报</li>
+					<li>房产家居</li>
+					<li>网络游戏</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+<!-- 页脚 -->
+<div style="height:20px"></div>
+<%@ include file="/WEB-INF/jsp/public/footer.jsp" %>
+</body>
+</html>
+

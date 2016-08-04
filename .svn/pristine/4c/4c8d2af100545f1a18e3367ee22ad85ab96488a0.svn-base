@@ -1,0 +1,86 @@
+package com.socialization.action.zone;
+
+import java.io.File;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.User;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class InformationAction extends BaseAction<User>{
+	
+	private File headImageFile;
+	private String headImageFileName;
+	private String headImageFileContentType;
+	
+	public File getHeadImageFile(){
+		return headImageFile;
+	}
+	public void setHeadImageFile(File HeadImageFile){
+		this.headImageFile=headImageFile;
+	}
+	public String getheadImageFileName(){
+		return headImageFileName;
+	}
+	public void setheadImageFileName(String headImageFileName){
+		this.headImageFileName=headImageFileName;
+	}
+	public String getheadImageFileContentType(){
+		return headImageFileContentType;
+	}
+	public void setheadImageFileContentType(String headImageFileContentType){
+		this.headImageFileContentType=headImageFileContentType;
+	}
+	
+	public String execute() throws Exception{
+		if (headImageFile!=null)
+		{
+			String dataDir="c:\\Users\\qun\\Pictures";
+			File savedFile=new File(dataDir,headImageFileName);//上传文件在服务器集体的·具体的位置
+			//将上传文件从临时文件复制到指定文件
+			headImageFile.renameTo(savedFile);
+		}
+		else
+		{
+			return INPUT;
+		}
+		return SUCCESS;		
+	}
+
+
+	
+	/** 列表 */
+	public String list() throws Exception {
+        User user = informationService.getById(getCurrentUser().getId());
+		ActionContext.getContext().put("user", user);
+		return "list";
+	}
+
+	/** 修改页面 */
+	public String editUI() throws Exception {
+		User information = informationService.getById(model.getId());
+		ActionContext.getContext().getValueStack().push(information);
+		return "saveUI";
+	}
+	
+	/** 修改 */
+	public String edit() throws Exception {
+		User information = informationService.getById(model.getId());
+		information.setName(model.getName());
+		information.setBirthday(model.getBirthday());
+		information.setEducation(model.getEducation());
+		information.setEmail(model.getEmail());
+		information.setTelephone(model.getTelephone());
+		information.setQq(model.getQq());
+		information.setRegistTime(model.getRegistTime());
+		information.setResUpCount(model.getResUpCount());
+		informationService.update(information);
+		return "toList";
+	}
+
+}

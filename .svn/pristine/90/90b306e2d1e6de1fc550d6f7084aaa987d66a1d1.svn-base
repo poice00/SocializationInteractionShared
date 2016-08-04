@@ -1,0 +1,50 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<%@ include file="/WEB-INF/jsp/public/commons_head.jspf"%>	
+<body>
+<table>
+	<tr align="CENTER" valign="MIDDLE" id="TableTitle">
+            	<td width="250px" >版块名称</td>
+                <td width="300px">版块说明</td>
+                <td>相关操作</td>
+     </tr>
+     
+        <s:iterator value="#forumList" status="status">
+			<tr>
+				<td>${name}&nbsp;</td>
+				<td>${description}&nbsp;</td>
+				<td><s:a action="forumManage_delete?id=%{id}" onClick="return window.confirm('您确定删除吗?')">删除</s:a>
+					<s:a action="forumManage_editUI?id=%{id}">修改</s:a>
+					
+					<!-- 最上面的不能上移 -->
+					<s:if test="#status.first">
+						<span class="disabled">上移</span>
+					</s:if>
+					<s:else>
+						<s:a action="forumManage_moveUp?id=%{id}">上移</s:a>
+					</s:else>
+					
+					<!-- 最上面的不能上移 -->
+					<s:if test="#status.last">
+						<span class="disabled">下移</span>
+					</s:if>
+					<s:else>
+						<s:a action="forumManage_moveDown?id=%{id}">下移</s:a>
+					</s:else>
+					
+				</td>
+			</tr>
+			</s:iterator>
+			<tr>
+			 <s:a action="forumManage_addUI">添加板块</s:a>
+			 </tr>
+</table>
+<%@ include file="/WEB-INF/jsp/public/commons_foot.jspf"%>
+</body>
+</html>

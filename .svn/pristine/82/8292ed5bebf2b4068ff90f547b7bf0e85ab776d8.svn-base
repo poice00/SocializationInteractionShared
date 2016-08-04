@@ -1,0 +1,134 @@
+package com.socialization.action;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Message;
+import com.socialization.domain.User;
+
+
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class UserAction extends BaseAction<User> {
+	private Long friendId;
+    
+	
+
+	/** 列表 */
+	public String list() throws Exception {
+		List<User> userList = userService.findAll();
+		ActionContext.getContext().put("userList", userList);
+		return "list";
+	}
+
+	/** 删除 */
+	public String delete() throws Exception {
+		userService.delete(model.getId());
+		return "toList";
+	}
+
+	/** 添加页面 */
+	public String addUI() throws Exception {
+		return "saveUI";
+	}
+
+	/** 添加 */
+	public String add() throws Exception {
+		model.setRegistTime(new Date());
+		userService.save(model);
+		return "toList";
+	}
+
+	/** 修改页面 */
+	public String editUI() throws Exception {
+		return "saveUI";
+	}
+
+	/** 修改 */
+	public String edit() throws Exception {
+		return "toList";
+	}
+	
+	/** 增加关注 */
+	public String addAttention()  throws Exception {
+		//需要加的好友
+		User friend = userService.getById(friendId);
+		
+		//当前登陆用户
+		User user = userService.getById(getCurrentUser().getId());
+		
+		user.getFriends().add(friend);
+		
+		userService.update(user);
+		
+		return "toShowTip";
+	}
+	/** 取消关注*/
+	public String removeAttention()  throws Exception {
+		//需要加的好友
+		User friend = userService.getById(friendId);
+		
+		//当前登陆用户
+		User user = userService.getById(getCurrentUser().getId());
+		
+		user.getFriends().remove(friend);
+		
+		userService.update(user);
+		
+		return "toShowTip";
+	}
+	
+	
+	
+	
+	/** 登陆 */
+	public String login() throws Exception {
+		User u = userService.findByLoginNameAngPassword(model.getLoginName(),model.getPassword());
+		 //获取跳转到登陆界面之前的页面地址，由拦截器提供
+        String prePage = (String) ActionContext.getContext().getSession().get("prePage");
+        
+		if(u==null){
+			addFieldError("fail", "用户名或密码错误！");
+			return "loginUI";
+		}else{
+			ActionContext.getContext().getSession().put("user", u);
+			System.out.println("======prePage========" + prePage);
+			if(prePage==null){
+				return "toLogin";
+			}else {
+				return "myOrder";
+			}
+		}
+	}
+	
+	/** 登录界面 */
+	public String loginUI() throws Exception {
+		return "loginUI";
+	}
+	
+	/** 注销 */
+	public String logout() throws Exception {
+		ActionContext.getContext().getSession().remove("user");
+		return "logout";
+	}
+
+	
+	//=====
+	public Long getFriendId() {
+		return friendId;
+	}
+	
+	public void setFriendId(Long friendId) {
+		this.friendId = friendId;
+	}
+	
+}

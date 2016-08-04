@@ -1,0 +1,85 @@
+package com.socialization.serviceImpl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.Forum;
+import com.socialization.domain.Reply;
+import com.socialization.domain.Topic;
+import com.socialization.service.ForumService;
+import com.socialization.service.TopicService;
+@Service
+@Transactional
+@SuppressWarnings("unchecked")
+public class TopicServiceImpl extends DaoSupportImpl<Topic> implements TopicService{
+
+	@Override
+	public List<Topic> findByForm(Forum forum) {
+		
+		return getSession().createQuery(//
+				"FROM Topic t WHERE t.forum=? ORDER BY (CASE t.type WHEN 2 THEN 2 ELSE 0 END) DESC,t.lastUpdateTime DESC")//
+				.setParameter(0, forum)//
+				.list();
+	}
+	
+	
+	@Override
+	public void save(Topic topic) {
+		//1.设置相关属性
+		topic.setType(topic.TYPE_NORMAL);
+		topic.setLastReply(null);
+		topic.setLastUpdateTime(topic.getPostTime());
+		topic.setReplyCount(0);
+		getSession().save(topic);
+		//2.维护相关属性
+		Forum forum = topic.getForum();
+		forum.setTopicCount(forum.getTopicCount() + 1);
+		forum.setLastTopic(topic);
+		
+		getSession().update(forum);
+	}
+
+
+	@Override
+	public Topic getLastTopicByForum(Forum forum, Topic t) {
+		Topic topic =  (Topic) getSession().createQuery(//
+				"FROM Topic t WHERE t.forum=? AND t.postTime<? ORDER BY t.postTime DESC")//
+				.setFirstResult(0)//
+				.setMaxResults(1)//
+				.setParameter(0, forum)//
+				.setParameter(1, t.getPostTime())//
+				.uniqueResult();
+		return topic;
+	}
+
+
+	@Override
+	public List<Topic> findLastestTopics() {
+				
+		return getSession().createQuery(//
+					"FROM Topic t ORDER BY t.postTime DESC")//
+					.setFirstResult(0)//
+					.setMaxResults(30)//
+					.list();
+	}
+
+
+	@Override
+	public List<Topic> findhotTopics() {
+		return getSession().createQuery(//
+				"FROM Topic t ORDER BY t.replyCount DESC")//
+				.setFirstResult(0)//
+				.setMaxResults(10)//
+				.list();
+	}
+
+
+
+
+	
+
+
+}

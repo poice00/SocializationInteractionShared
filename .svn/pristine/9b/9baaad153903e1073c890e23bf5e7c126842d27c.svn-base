@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"></constant>
+	<constant name="struts.devMode" value="true" />
+	<!-- <constant name="struts.ui.theme" value="simple"></constant> -->
+	<!-- 把扩展名设置为action -->
+	<constant name="struts.action.extension" value="action"></constant>
+
+
+	<package name="default" extends="struts-default">
+		
+		
+		
+		<!-- 首页 -->
+		<action name="home_*" class="homeAction" method="{1}">
+			<result name="{1}">/WEB-INF/jsp/homeAction/{1}.jsp</result>
+		</action>
+		
+		<!-- 用户管理 -->
+    	<action name="user_*" class="userAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/userAction/list.jsp</result>
+    	    <result name="toList">/WEB-INF/jsp/userAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/userAction/saveUI.jsp</result>  
+    	</action>
+    	
+    	<!-- 用户注册登录页面-->
+    	<action name="loginAndregist_*" class="loginAction" method="{1}">
+    	    <result name="registerUI">/WEB-INF/jsp/loginAction/registerUI.jsp</result>
+    	    <result name="registerSuc">/WEB-INF/jsp/loginAction/registerSuc.jsp</result>
+    	    <result name="logining">/WEB-INF/jsp/loginAction/logining.jsp</result>
+    	    <result name="loginUI" >/WEB-INF/jsp/loginAction/logining.jsp</result>
+    	    <result name="toLogin" >/WEB-INF/jsp/loginAction/loginSuccess.jsp</result>
+    	    <result name="logout" >/WEB-INF/jsp/loginAction/loginout.jsp</result>
+    	</action>
+    	
+    	<!-- 我的上传下载收藏资源列表 -->
+    	<action name="myresource_*" class="updowncollectAction" method="{1}">
+    	    <result name="showupload">/WEB-INF/jsp/resourceAction/upload.jsp</result><!-- 资源上传页面 -->
+    	     <result name="upResCommit">/WEB-INF/jsp/resourceAction/uploadSuccess.jsp</result> <!-- 资源上传成功页面 -->
+    	    <result name="upresList">/WEB-INF/jsp/resourceAction/myresourceHome.jsp</result> <!-- 上传列表有数据的页面  -->
+    	    <result name="toupresList">/WEB-INF/jsp/resourceAction/myresourceHome.jsp</result> <!-- 上传列表没数据的页面 -->
+    	    <result name="downlist">/WEB-INF/jsp/resourceAction/mydownResource.jsp</result> <!-- 下载列表有数据的页面  -->
+    	    <result name="todownlist">/WEB-INF/jsp/resourceAction/mytodownResource.jsp</result> <!-- 下载列表没数据的页面 -->
+    	    <result name="collectlist">/WEB-INF/jsp/resourceAction/mycollectResource.jsp</result><!--  收藏列表有数据的页面  -->
+    	    <result name="tocollectlist">/WEB-INF/jsp/resourceAction/mytocollectResource.jsp</result> <!-- 收藏列表没数据的页面 -->
+    	</action>
+    	<!-- 单独配置的资源上传 -->
+    	<!-- <action name="myres_*" class="updowncollectAction" method="{1}">
+    	      <interceptor-ref name="fileUpload">
+    	      <param name="maximumSize">10240000</param>
+    	      </interceptor-ref>
+    	     <result name="upResCommit">/WEB-INF/jsp/resourceAction/uploadSuccess.jsp</result> 资源上传成功页面
+    	</action> -->
+    	<!-- 资源列表 -->
+    	<action name="resource_*" class="resourceAction" method="{1}">
+    	    <result name="homePage">/WEB-INF/jsp/resourceAction/resourceHome.jsp</result>
+    	    <result name="jumptoup">/WEB-INF/jsp/resourceAction/myResource.jsp</result>	 
+    	    <result name="upresList">/WEB-INF/jsp/resourceAction/myResource.jsp</result>
+    	    <result name="upResCommit">/WEB-INF/jsp/resourceAction/uploadSuccess.jsp</result> 
+    	</action>
+    	
+
+	</package>
+
+</struts>
+

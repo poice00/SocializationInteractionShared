@@ -1,0 +1,20 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>移动到其他版块</title>
+</head>
+<body>
+<%@ include file="/WEB-INF/jsp/public/commons_head.jspf"%>	
+	<s:form action="topic_move">
+	<s:hidden name="id"></s:hidden>
+	<s:hidden name="forumId"></s:hidden>
+		<s:select name="otherForumId" list="forumList" listKey="id" listValue="name" headerKey="" headerValue="===请选择移动到板块===" >
+		</s:select>
+		<s:submit value="确定"></s:submit>
+	</s:form>
+<%@ include file="/WEB-INF/jsp/public/commons_foot.jspf"%>
+</body>
+</html>

@@ -1,0 +1,524 @@
+if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){jQuery = null; adsGlobal = null;}//排除网站外部变量干扰
+(function($, ads){
+	// 公共检测，防止和其它flash展示冲突。（例如：打赏）
+	if ($(document).data("TY_AD_POP_IS_USE") === true) {
+		return;
+	}
+	$(document).data("TY_AD_POP_IS_USE", true);
+	var Media_showtime =8;//疯狂广告展现时长
+	var CrazyMedia1_url ="http://801.tianya.cn/dolphin/tianya/2015/07/0_878.swf";//疯狂大图
+	var CrazyMedia1_wdh =600;//疯狂大图宽
+	var CrazyMedia1_hgt =350;//疯狂大图高
+	var CrazyMedia1_cls_pos = CrazyMedia1_wdh - 71;
+	var CrazyMedia1_cls_pos2 = CrazyMedia1_wdh - 69;
+	var CrazyMedia1_mclick =0;
+	var CrazyMedia2_url ="http://801.tianya.cn/dolphin/tianya/2015/07/0_879.jpg";//疯狂小图
+	var CrazyMedia2_wdh =20;//疯狂小图宽
+	var CrazyMedia2_hgt =100;//疯狂小图高
+	var review_flag = 1;//循环计时阻断开关
+	var CrazyMedia2_pos = 0;//疯狂小图位置选择
+	var CrazyMedia2_offset = 200;//角标距页面底端偏移量
+	var clsbtn = "";
+	var btn_switch = 1;//重播关闭选项开关
+	var userAgent = navigator.userAgent;
+	var isOpera = userAgent.indexOf("Opera") > -1;
+	var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera ; 
+	var isFF = userAgent.indexOf("Firefox") > -1 ;
+	var isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") < 1 ;
+	var isChrome = userAgent.indexOf("Chrome") > -1 ;
+	if (btn_switch >0 && Media_showtime >0)
+			{
+			clsbtn = '<div style="width:'+CrazyMedia2_wdh+'px;"><img src="http://static.tianyaui.com/img/static/2008/tygg/r20.jpg" title="重播" alt="重播" style="position:absolute;left:0px;top:'+CrazyMedia2_hgt+'px;cursor:pointer" id="tyRMswrplybtn" data-baiduimageplus-ignore/></div><div style="width:0px;height:0px;" id="tyRMclsbtn"></div>';
+			}
+	else {clsbtn='<div style="width:0px;height:0px;" id="tyRMswrplybtn"></div><div style="width:'+CrazyMedia2_wdh+'px;"><img src="http://801.tianya.cn/res/2013/0827/1377572397322.gif" title="关闭" alt="关闭" style="position:absolute;left:0px;top:'+CrazyMedia2_hgt+'px;cursor:pointer" id="tyRMclsbtn" data-baiduimageplus-ignore/></div>';}
+	if (CrazyMedia2_pos>0){CMediaObj2_pos = "right:10px;";}
+	else{CMediaObj2_pos = "left:0px;";}
+	CMediaobj_css ="position:absolute; width:"+CrazyMedia1_wdh+"px;height:"+CrazyMedia1_hgt+"px;left:"+(document.body.offsetWidth-CrazyMedia1_wdh)/2+document.body.scrollLeft+"px; z-index:500;";
+	CMediaobj2_css ='position:absolute; bottom:200px; '+CMediaObj2_pos+' display: none; width:'+CrazyMedia2_wdh+'px; height:'+CrazyMedia2_hgt+'px; z-index:2000;';
+	CMediaobj_clsbtn ='<div style="position:relative;width:'+CrazyMedia1_wdh+'px;margin:0 auto"><img src="http://static.tianyaui.com/img/static/2008/tygg/cclose.jpg" title="关闭" style="position:absolute;left:'+CrazyMedia1_cls_pos+'px;top:-3px;cursor:pointer" id="tyRMswclsbtn" data-baiduimageplus-ignore/></div>';
+	function tourl(str){return escape(str);}
+	var tyclickUrl = tourl('http://www.niwodai.com/index.do?method=ac&artId=1823227138797576&f&extsid=db850c8f3636ff025f1eb2c3e48839a8&source_id=&utm_source=tianya&utm_medium=cpc&cid=qd-xszx-sydl');
+	var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111101&ci=284&or=366&l=5692&bg=5692&b=5740&u=http://www.niwodai.com/index.do?method=ac&artId=1823227138797576&f&extsid=db850c8f3636ff025f1eb2c3e48839a8&source_id=&utm_source=tianya&utm_medium=cpc&cid=qd-xszx-sydl');
+	function RichMedia_pic1type(){
+		if(CrazyMedia1_url.toLowerCase().indexOf('.swf')>0){
+			if (CrazyMedia1_mclick >0){
+				CMediaobj='<div id="CrazyMedia15740" style="'+CMediaobj_css+'"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+CrazyMedia1_wdh+'" height="'+CrazyMedia1_hgt+'"><param name="movie" value="'+CrazyMedia1_url+'?clickTAG='+tyswfclickUrl+'" /><param name="quality" value="high" /><param name="wmode" value="transparent" /><embed src="'+CrazyMedia1_url+'?clickTAG='+tyswfclickUrl+'" quality="high"  pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+CrazyMedia1_wdh+'" height="'+CrazyMedia1_hgt+'" swliveconnect="true" name="tyfullscr" wmode="transparent"></embed></object>'+CMediaobj_clsbtn+'</div>';
+			}
+			else {
+				CMediaobj='<div id="CrazyMedia15740" style="'+CMediaobj_css+'"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+CrazyMedia1_wdh+'" height="'+CrazyMedia1_hgt+'"><param name="movie" value="'+CrazyMedia1_url+'" /><param name="quality" value="high" /><param name="wmode" value="transparent" /><embed src="'+CrazyMedia1_url+'" quality="high"  pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+CrazyMedia1_wdh+'" height="'+CrazyMedia1_hgt+'" swliveconnect="true" name="tyfullscr" wmode="transparent"></embed></object><a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111101&ci=284&or=366&l=5692&bg=5692&b=5740&u='+tyclickUrl+'" target="_blank"><div style="width:'+CrazyMedia1_wdh+'px;height:'+CrazyMedia1_hgt+'px;position:relative;margin-top:-'+CrazyMedia1_hgt+'px;left:0px;z-index:100;background-color:black;filter:alpha(Opacity=0);-moz-opacity:0;opacity: 0;-khtml-opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>'+CMediaobj_clsbtn+'</div>';
+			}
+		}
+		else if(CrazyMedia1_url.toLowerCase().indexOf('.jpg')>0||CrazyMedia1_url.toLowerCase().indexOf('.gif')>0||CrazyMedia1_url.toLowerCase().indexOf('.png')>0){
+			CMediaobj='<div id="CrazyMedia15740" style="'+CMediaobj_css+'"><a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111101&ci=284&or=366&l=5692&bg=5692&b=5740&u='+tyclickUrl+'" target="_blank"><img src="'+CrazyMedia1_url+'" style="width:'+CrazyMedia1_wdh+'px;height:'+CrazyMedia1_hgt+'px; border:none; overflow: hidden;" border="0" data-baiduimageplus-ignore /></a>'+CMediaobj_clsbtn+'</div>';
+			}
+		else{
+			CMediaobj='<div id="CrazyMedia15740" style="'+CMediaobj_css+'"><div style="width:'+CrazyMedia1_wdh+'px;border:none;"><iframe frameborder="0" width="'+CrazyMedia1_wdh+'" height="'+CrazyMedia1_hgt+'" scrolling="no" src="'+CrazyMedia1_url+'"></iframe></div>'+CMediaobj_clsbtn+'</div>';
+		}
+	}
+	function RichMedia_pic2type(){
+		if (CrazyMedia2_url){
+			if(CrazyMedia2_url.toLowerCase().indexOf('.swf')>0){
+				CMediaobj+='<div id="CrazyMedia25740" style="'+CMediaobj2_css+'"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+CrazyMedia2_wdh+'" height="'+CrazyMedia2_hgt+'"><param name="movie" value="'+CrazyMedia2_url+'?clickTAG='+tyswfclickUrl+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+CrazyMedia2_url+'?clickTAG='+tyswfclickUrl+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+CrazyMedia2_wdh+'" height="'+CrazyMedia2_hgt+'" swliveconnect="true" name="tyscrbtn" wmode=opaque></embed></object><a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111101&ci=284&or=366&l=5692&bg=5692&b=5740&u='+tyclickUrl+'" target="_blank"><div style="width:'+CrazyMedia2_wdh+'px;height:'+CrazyMedia2_hgt+'px;position:relative;margin-top:-'+CrazyMedia2_hgt+'px;left:0px;z-index:100;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>'+clsbtn+'</div>';
+			}
+			else{
+				CMediaobj+='<div id="CrazyMedia25740" style="'+CMediaobj2_css+'"><a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111101&ci=284&or=366&l=5692&bg=5692&b=5740&u='+tyclickUrl+'" target="_blank"><img src="'+CrazyMedia2_url+'" style="width:'+CrazyMedia2_wdh+'px;height:'+CrazyMedia2_hgt+'px; border:none;" border="0" data-baiduimageplus-ignore /></a>'+clsbtn+'</div>';
+			}
+		}
+		else {CMediaobj+='<div id="CrazyMedia25740" style="position:absolute; display: none;"></div>';}
+		if(ads==null){document.write(CMediaobj);}
+		else{var node = ads.qNode('3111101');node.innerHTML = CMediaobj;}
+	}
+	RichMedia_pic1type();
+	RichMedia_pic2type();
+	function Mediafloat(){
+		document.getElementById('CrazyMedia15740').style.left=(document.body.offsetWidth-CrazyMedia1_wdh)/2+document.body.scrollLeft+"px";
+		if (CrazyMedia2_pos>0){
+			document.getElementById('CrazyMedia25740').style.left=document.body.clientWidth+document.body.scrollLeft-CrazyMedia2_wdh+15+"px";
+		}
+		if (isIE || isFF || isOpera){
+			document.getElementById('CrazyMedia15740').style.top=(document.documentElement.clientHeight-CrazyMedia1_hgt)/2+document.documentElement.scrollTop+"px";
+			document.getElementById('CrazyMedia25740').style.top=document.documentElement.clientHeight+document.documentElement.scrollTop-CrazyMedia2_offset-CrazyMedia2_hgt-50+"px";
+		}
+		else{
+			document.getElementById('CrazyMedia15740').style.top=(document.documentElement.clientHeight-CrazyMedia1_hgt)/2+document.body.scrollTop+"px";
+			document.getElementById('CrazyMedia25740').style.top=document.documentElement.clientHeight+document.body.scrollTop-CrazyMedia2_offset-CrazyMedia2_hgt-50+"px";
+		}
+	}
+	function RichMedia_chdiv()
+	{
+		document.getElementById('CrazyMedia15740').style.display="block";
+		review_flag = 1;
+		document.getElementById('CrazyMedia25740').style.display="none";
+		st = setTimeout(function(){RichMedia_hidediv();},Media_showtime*1000);
+	}
+	function RichMedia_hidediv()
+	{
+		if (review_flag>0)
+		{
+		document.getElementById('CrazyMedia15740').style.display="none";
+		review_flag = 0;
+		document.getElementById('CrazyMedia25740').style.display="block";
+		clearTimeout(st);
+		$(document).data("TY_AD_POP_IS_USE", false);
+		}
+	}
+	function RichMedia_hide()
+	{
+		document.getElementById('CrazyMedia15740').style.display="none";
+		document.getElementById('CrazyMedia25740').style.display="none";
+	}
+	function add_agent(oTarget,sEventType,fnHandler){
+		if (oTarget!=null){
+			if(oTarget.addEventListener){oTarget.addEventListener(sEventType,fnHandler,false);}
+			else if(oTarget.attachEvent){oTarget.attachEvent("on"+sEventType,fnHandler);}
+			else{oTarget["on"+sEventType] = fnHandler;}
+		}
+	}
+	var tyRMswrplybtn = document.getElementById("tyRMswrplybtn");
+	var tyRMclsbtn = document.getElementById("tyRMclsbtn");
+	var tyRMswclsbtn = document.getElementById("tyRMswclsbtn");
+	add_agent(window,"scroll",function(){Mediafloat();})
+	add_agent(window,"resize",function(){Mediafloat();})
+	add_agent(tyRMswrplybtn,"click",function(){RichMedia_chdiv();})
+	add_agent(tyRMclsbtn,"click",function(){RichMedia_hide();})
+	add_agent(tyRMswclsbtn,"click",function(){RichMedia_hidediv();})
+	Mediafloat();
+	RichMedia_chdiv();
+})(jQuery, adsGlobal);
+if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){
+    jQuery = null; 
+	adsGlobal = null;
+}
+(function($, ads){
+var typiccode = function (imgurl,link,tlink,imgwidth,imgheight,flashsw)
+	{
+		var imgobj = "";
+		tyframewdh = imgwidth;
+		tyframehgt = imgheight;
+		if(imgurl.toLowerCase().indexOf('.swf')>0){
+			imgobj ='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+imgwidth+'" height="'+imgheight+'"><param name="movie" value="'+imgurl+'?clickTAG='+tlink+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+imgurl+'?clickTAG='+tlink+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+imgwidth+'" height="'+imgheight+'" swliveconnect="true" name="" wmode=opaque></embed></object>';
+			if (flashsw ==0){
+				imgobj+='<a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111103&ci=61&or=542&l=7693&bg=7693&b=7703&u='+link+'" target="_blank"><div style="width:'+imgwidth+'px;height:'+imgheight+'px;position:relative;margin-top:-'+imgheight+'px;left:0px;z-index:100;background-color:black;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>';
+			}
+		 }
+		else if(imgurl.toLowerCase().indexOf('.jpg')>0||imgurl.toLowerCase().indexOf('.gif')>0||imgurl.toLowerCase().indexOf('.png')>0){
+			imgobj ='<a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111103&ci=61&or=542&l=7693&bg=7693&b=7703&u='+link+'" target="_blank"><img src="'+imgurl+'" ';
+			if(imgwidth!="0"&&imgwidth!=""){
+				imgobj+='width="'+imgwidth+'" ';
+			}
+			if(imgheight!="0"&&imgheight!=""){
+				imgobj+='height="'+imgheight+'" ';
+			}
+			imgobj+='border="0" data-baiduimageplus-ignore /></a>';
+		 }
+		else{
+			imgobj ='<div style="border:none;"><iframe frameborder="0" width="'+tyframewdh+'" height="'+tyframehgt+'" scrolling="no" src="'+imgurl+'"></iframe></div>';	
+		 }
+		return imgobj;
+	};
+function tourl(str){return escape(str);}
+var tyclickUrl = tourl('http://www.hx9999.com/cn/lp/jay.html?pmf_group=media&pmf_medium=banner&pmf_source=tianya&pmf_id=tianya_image_jay&utm_source=tianya&utm_medium=banner&utm_content=jay&utm_campaign=tianya_image_jay');
+var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111103&ci=61&or=542&l=7693&bg=7693&b=7703&u=http://www.hx9999.com/cn/lp/jay.html?pmf_group=media&pmf_medium=banner&pmf_source=tianya&pmf_id=tianya_image_jay&utm_source=tianya&utm_medium=banner&utm_content=jay&utm_campaign=tianya_image_jay');
+var typicurl= "http://801.tianya.cn/dolphin/tianya/2015/07/0_944.gif";
+var typicwdh= "860";
+var typichgt= "90";
+var tyagtsw= 0;
+var tylocsw= 0;
+var typicdif= 0;
+var third_imp = "";
+var result = typiccode(typicurl,tyclickUrl,tyswfclickUrl,typicwdh,typichgt,tyagtsw);
+if (tylocsw == 1){
+	picposcss = 'border:none;margin:'+typicdif+'px auto;text-align:center;';
+}
+else if (tylocsw == 2){
+	picposcss = 'border:none;margin:'+typicdif+'px 0;';
+}
+else{picposcss="";}
+if(ads==null){
+	document.write('<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />');
+}else{
+	var node = ads.qNode('3111103');
+	node.innerHTML = '<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />';
+}
+})(jQuery, adsGlobal);//jQuery, adsGlobal 在天涯页面上是全局对象
+ if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){
+    jQuery = null; 
+	adsGlobal = null;
+}
+(function($, ads){
+var typiccode = function (imgurl,link,tlink,imgwidth,imgheight,flashsw)
+	{
+		var imgobj = "";
+		tyframewdh = imgwidth;
+		tyframehgt = imgheight;
+		if(imgurl.toLowerCase().indexOf('.swf')>0){
+			imgobj ='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+imgwidth+'" height="'+imgheight+'"><param name="movie" value="'+imgurl+'?clickTAG='+tlink+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+imgurl+'?clickTAG='+tlink+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+imgwidth+'" height="'+imgheight+'" swliveconnect="true" name="" wmode=opaque></embed></object>';
+			if (flashsw ==0){
+				imgobj+='<a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111105&ci=73&or=769&l=10413&bg=10413&b=10502&u='+link+'" target="_blank"><div style="width:'+imgwidth+'px;height:'+imgheight+'px;position:relative;margin-top:-'+imgheight+'px;left:0px;z-index:100;background-color:black;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>';
+			}
+		 }
+		else if(imgurl.toLowerCase().indexOf('.jpg')>0||imgurl.toLowerCase().indexOf('.gif')>0||imgurl.toLowerCase().indexOf('.png')>0){
+			imgobj ='<a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111105&ci=73&or=769&l=10413&bg=10413&b=10502&u='+link+'" target="_blank"><img src="'+imgurl+'" ';
+			if(imgwidth!="0"&&imgwidth!=""){
+				imgobj+='width="'+imgwidth+'" ';
+			}
+			if(imgheight!="0"&&imgheight!=""){
+				imgobj+='height="'+imgheight+'" ';
+			}
+			imgobj+='border="0" data-baiduimageplus-ignore /></a>';
+		 }
+		else{
+			imgobj ='<div style="border:none;"><iframe frameborder="0" width="'+tyframewdh+'" height="'+tyframehgt+'" scrolling="no" src="'+imgurl+'"></iframe></div>';	
+		 }
+		return imgobj;
+	};
+function tourl(str){return escape(str);}
+var tyclickUrl = tourl('http://travel.tianya.cn/s/wudang/index.shtml');
+var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111105&ci=73&or=769&l=10413&bg=10413&b=10502&u=http://travel.tianya.cn/s/wudang/index.shtml');
+var typicurl= "http://801.tianya.cn/dolphin/tianya/2015/07/0_387.jpg";
+var typicwdh= "670";
+var typichgt= "90";
+var tyagtsw= 0;
+var tylocsw= 0;
+var typicdif= 0;
+var third_imp = "";
+var result = typiccode(typicurl,tyclickUrl,tyswfclickUrl,typicwdh,typichgt,tyagtsw);
+if (tylocsw == 1){
+	picposcss = 'border:none;margin:'+typicdif+'px auto;text-align:center;';
+}
+else if (tylocsw == 2){
+	picposcss = 'border:none;margin:'+typicdif+'px 0;';
+}
+else{picposcss="";}
+if(ads==null){
+	document.write('<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />');
+}else{
+	var node = ads.qNode('3111105');
+	node.innerHTML = '<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />';
+	node.style.display = "block";
+}
+})(jQuery, adsGlobal);//jQuery, adsGlobal 在天涯页面上是全局对象
+if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){
+    jQuery = null; 
+	adsGlobal = null;
+}
+(function($, ads){
+var typiccode = function (imgurl,link,tlink,imgwidth,imgheight,flashsw)
+	{
+		var imgobj = "";
+		tyframewdh = imgwidth;
+		tyframehgt = imgheight;
+		if(imgurl.toLowerCase().indexOf('.swf')>0){
+			imgobj ='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+imgwidth+'" height="'+imgheight+'"><param name="movie" value="'+imgurl+'?clickTAG='+tlink+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+imgurl+'?clickTAG='+tlink+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+imgwidth+'" height="'+imgheight+'" swliveconnect="true" name="" wmode=opaque></embed></object>';
+			if (flashsw ==0){
+				imgobj+='<a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111107&ci=11&or=90&l=9411&bg=9411&b=9448&u='+link+'" target="_blank"><div style="width:'+imgwidth+'px;height:'+imgheight+'px;position:relative;margin-top:-'+imgheight+'px;left:0px;z-index:100;background-color:black;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>';
+			}
+		 }
+		else if(imgurl.toLowerCase().indexOf('.jpg')>0||imgurl.toLowerCase().indexOf('.gif')>0||imgurl.toLowerCase().indexOf('.png')>0){
+			imgobj ='<a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111107&ci=11&or=90&l=9411&bg=9411&b=9448&u='+link+'" target="_blank"><img src="'+imgurl+'" ';
+			if(imgwidth!="0"&&imgwidth!=""){
+				imgobj+='width="'+imgwidth+'" ';
+			}
+			if(imgheight!="0"&&imgheight!=""){
+				imgobj+='height="'+imgheight+'" ';
+			}
+			imgobj+='border="0" data-baiduimageplus-ignore /></a>';
+		 }
+		else{
+			imgobj ='<div style="border:none;"><iframe frameborder="0" width="'+tyframewdh+'" height="'+tyframehgt+'" scrolling="no" src="'+imgurl+'"></iframe></div>';	
+		 }
+		return imgobj;
+	};
+function tourl(str){return escape(str);}
+var tyclickUrl = tourl('http://bbs.tianya.cn/post-travel-712366-1.shtml#fabu_anchor');
+var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111107&ci=11&or=90&l=9411&bg=9411&b=9448&u=http://bbs.tianya.cn/post-travel-712366-1.shtml#fabu_anchor');
+var typicurl= "http://801.tianya.cn/dolphin/tianya/2015/06/0_453.jpg";
+var typicwdh= "180";
+var typichgt= "150";
+var tyagtsw= 0;
+var tylocsw= 0;
+var typicdif= 0;
+var third_imp = "";
+var result = typiccode(typicurl,tyclickUrl,tyswfclickUrl,typicwdh,typichgt,tyagtsw);
+if (tylocsw == 1){
+	picposcss = 'border:none;margin:'+typicdif+'px auto;text-align:center;';
+}
+else if (tylocsw == 2){
+	picposcss = 'border:none;margin:'+typicdif+'px 0;';
+}
+else{picposcss="";}
+if(ads==null){
+	document.write('<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />');
+}else{
+	var node = ads.qNode('3111107');
+	node.innerHTML = '<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />';
+	node.style.display = "block";
+}
+})(jQuery, adsGlobal);//jQuery, adsGlobal 在天涯页面上是全局对象
+if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){
+    jQuery = null; 
+	adsGlobal = null;
+}
+(function($, ads){
+var typiccode = function (imgurl,link,tlink,imgwidth,imgheight,flashsw)
+	{
+		var imgobj = "";
+		tyframewdh = imgwidth;
+		tyframehgt = imgheight;
+		if(imgurl.toLowerCase().indexOf('.swf')>0){
+			imgobj ='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+imgwidth+'" height="'+imgheight+'"><param name="movie" value="'+imgurl+'?clickTAG='+tlink+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+imgurl+'?clickTAG='+tlink+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+imgwidth+'" height="'+imgheight+'" swliveconnect="true" name="" wmode=opaque></embed></object>';
+			if (flashsw ==0){
+				imgobj+='<a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111108&ci=560&or=778&l=11043&bg=11043&b=11040&u='+link+'" target="_blank"><div style="width:'+imgwidth+'px;height:'+imgheight+'px;position:relative;margin-top:-'+imgheight+'px;left:0px;z-index:100;background-color:black;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>';
+			}
+		 }
+		else if(imgurl.toLowerCase().indexOf('.jpg')>0||imgurl.toLowerCase().indexOf('.gif')>0||imgurl.toLowerCase().indexOf('.png')>0){
+			imgobj ='<a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111108&ci=560&or=778&l=11043&bg=11043&b=11040&u='+link+'" target="_blank"><img src="'+imgurl+'" ';
+			if(imgwidth!="0"&&imgwidth!=""){
+				imgobj+='width="'+imgwidth+'" ';
+			}
+			if(imgheight!="0"&&imgheight!=""){
+				imgobj+='height="'+imgheight+'" ';
+			}
+			imgobj+='border="0" data-baiduimageplus-ignore /></a>';
+		 }
+		else{
+			imgobj ='<div style="border:none;"><iframe frameborder="0" width="'+tyframewdh+'" height="'+tyframehgt+'" scrolling="no" src="'+imgurl+'"></iframe></div>';	
+		 }
+		return imgobj;
+	};
+function tourl(str){return escape(str);}
+var tyclickUrl = tourl('https://www.hairongyi.com/financing/sbtz/bdxq/1225.html');
+var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111108&ci=560&or=778&l=11043&bg=11043&b=11040&u=https://www.hairongyi.com/financing/sbtz/bdxq/1225.html');
+var typicurl= "http://801.tianya.cn/dolphin/tianya/2015/08/0_242.gif";
+var typicwdh= "180";
+var typichgt= "150";
+var tyagtsw= 0;
+var tylocsw= 0;
+var typicdif= 0;
+var third_imp = "";
+var result = typiccode(typicurl,tyclickUrl,tyswfclickUrl,typicwdh,typichgt,tyagtsw);
+if (tylocsw == 1){
+	picposcss = 'border:none;margin:'+typicdif+'px auto;text-align:center;';
+}
+else if (tylocsw == 2){
+	picposcss = 'border:none;margin:'+typicdif+'px 0;';
+}
+else{picposcss="";}
+if(ads==null){
+	document.write('<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />');
+}else{
+	var node = ads.qNode('3111108');
+	node.innerHTML = '<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />';
+	node.style.display = "block";
+}
+})(jQuery, adsGlobal);//jQuery, adsGlobal 在天涯页面上是全局对象
+if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){
+    jQuery = null; 
+	adsGlobal = null;
+}
+(function($, ads){
+var typiccode = function (imgurl,link,tlink,imgwidth,imgheight,flashsw)
+	{
+		var imgobj = "";
+		tyframewdh = imgwidth;
+		tyframehgt = imgheight;
+		if(imgurl.toLowerCase().indexOf('.swf')>0){
+			imgobj ='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+imgwidth+'" height="'+imgheight+'"><param name="movie" value="'+imgurl+'?clickTAG='+tlink+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+imgurl+'?clickTAG='+tlink+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+imgwidth+'" height="'+imgheight+'" swliveconnect="true" name="" wmode=opaque></embed></object>';
+			if (flashsw ==0){
+				imgobj+='<a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111109&ci=330&or=471&l=9364&bg=9364&b=9338&u='+link+'" target="_blank"><div style="width:'+imgwidth+'px;height:'+imgheight+'px;position:relative;margin-top:-'+imgheight+'px;left:0px;z-index:100;background-color:black;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>';
+			}
+		 }
+		else if(imgurl.toLowerCase().indexOf('.jpg')>0||imgurl.toLowerCase().indexOf('.gif')>0||imgurl.toLowerCase().indexOf('.png')>0){
+			imgobj ='<a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111109&ci=330&or=471&l=9364&bg=9364&b=9338&u='+link+'" target="_blank"><img src="'+imgurl+'" ';
+			if(imgwidth!="0"&&imgwidth!=""){
+				imgobj+='width="'+imgwidth+'" ';
+			}
+			if(imgheight!="0"&&imgheight!=""){
+				imgobj+='height="'+imgheight+'" ';
+			}
+			imgobj+='border="0" data-baiduimageplus-ignore /></a>';
+		 }
+		else{
+			imgobj ='<div style="border:none;"><iframe frameborder="0" width="'+tyframewdh+'" height="'+tyframehgt+'" scrolling="no" src="'+imgurl+'"></iframe></div>';	
+		 }
+		return imgobj;
+	};
+function tourl(str){return escape(str);}
+var tyclickUrl = tourl('http://hd.tianya.cn/2015pijiujie/index.shtml');
+var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111109&ci=330&or=471&l=9364&bg=9364&b=9338&u=http://hd.tianya.cn/2015pijiujie/index.shtml');
+var typicurl= "http://801.tianya.cn/dolphin/tianya/2015/06/0_381.swf";
+var typicwdh= "180";
+var typichgt= "300";
+var tyagtsw= 0;
+var tylocsw= 0;
+var typicdif= 0;
+var third_imp = "";
+var result = typiccode(typicurl,tyclickUrl,tyswfclickUrl,typicwdh,typichgt,tyagtsw);
+if (tylocsw == 1){
+	picposcss = 'border:none;margin:'+typicdif+'px auto;text-align:center;';
+}
+else if (tylocsw == 2){
+	picposcss = 'border:none;margin:'+typicdif+'px 0;';
+}
+else{picposcss="";}
+if(ads==null){
+	document.write('<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />');
+}else{
+	var node = ads.qNode('3111109');
+	node.innerHTML = '<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />';
+}
+})(jQuery, adsGlobal);//jQuery, adsGlobal 在天涯页面上是全局对象
+if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){
+    jQuery = null; 
+	adsGlobal = null;
+}
+(function($, ads){
+var typiccode = function (imgurl,link,tlink,imgwidth,imgheight,flashsw)
+	{
+		var imgobj = "";
+		tyframewdh = imgwidth;
+		tyframehgt = imgheight;
+		if(imgurl.toLowerCase().indexOf('.swf')>0){
+			imgobj ='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+imgwidth+'" height="'+imgheight+'"><param name="movie" value="'+imgurl+'?clickTAG='+tlink+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+imgurl+'?clickTAG='+tlink+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+imgwidth+'" height="'+imgheight+'" swliveconnect="true" name="" wmode=opaque></embed></object>';
+			if (flashsw ==0){
+				imgobj+='<a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111111&ci=504&or=699&l=9270&bg=9270&b=9224&u='+link+'" target="_blank"><div style="width:'+imgwidth+'px;height:'+imgheight+'px;position:relative;margin-top:-'+imgheight+'px;left:0px;z-index:100;background-color:black;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>';
+			}
+		 }
+		else if(imgurl.toLowerCase().indexOf('.jpg')>0||imgurl.toLowerCase().indexOf('.gif')>0||imgurl.toLowerCase().indexOf('.png')>0){
+			imgobj ='<a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111111&ci=504&or=699&l=9270&bg=9270&b=9224&u='+link+'" target="_blank"><img src="'+imgurl+'" ';
+			if(imgwidth!="0"&&imgwidth!=""){
+				imgobj+='width="'+imgwidth+'" ';
+			}
+			if(imgheight!="0"&&imgheight!=""){
+				imgobj+='height="'+imgheight+'" ';
+			}
+			imgobj+='border="0" data-baiduimageplus-ignore /></a>';
+		 }
+		else{
+			imgobj ='<div style="border:none;"><iframe frameborder="0" width="'+tyframewdh+'" height="'+tyframehgt+'" scrolling="no" src="'+imgurl+'"></iframe></div>';	
+		 }
+		return imgobj;
+	};
+function tourl(str){return escape(str);}
+var tyclickUrl = tourl('');
+var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111111&ci=504&or=699&l=9270&bg=9270&b=9224&u=');
+var typicurl= "http://zt.tianya.cn/top10/index.shtml";
+var typicwdh= "860";
+var typichgt= "90";
+var tyagtsw= 1;
+var tylocsw= 0;
+var typicdif= 0;
+var third_imp = "";
+var result = typiccode(typicurl,tyclickUrl,tyswfclickUrl,typicwdh,typichgt,tyagtsw);
+if (tylocsw == 1){
+	picposcss = 'border:none;margin:'+typicdif+'px auto;text-align:center;';
+}
+else if (tylocsw == 2){
+	picposcss = 'border:none;margin:'+typicdif+'px 0;';
+}
+else{picposcss="";}
+if(ads==null){
+	document.write('<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />');
+}else{
+	var node = ads.qNode('3111111');
+	node.innerHTML = '<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />';
+	node.style.display = "block";
+}
+})(jQuery, adsGlobal);//jQuery, adsGlobal 在天涯页面上是全局对象
+if(typeof(jQuery) == 'undefined'||typeof(adsGlobal)=='undefined'){
+    jQuery = null; 
+	adsGlobal = null;
+}
+(function($, ads){
+var typiccode = function (imgurl,link,tlink,imgwidth,imgheight,flashsw)
+	{
+		var imgobj = "";
+		tyframewdh = imgwidth;
+		tyframehgt = imgheight;
+		if(imgurl.toLowerCase().indexOf('.swf')>0){
+			imgobj ='<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="'+imgwidth+'" height="'+imgheight+'"><param name="movie" value="'+imgurl+'?clickTAG='+tlink+'" /><param name="quality" value="high" /><param name="wmode" value="opaque" /><embed src="'+imgurl+'?clickTAG='+tlink+'" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="'+imgwidth+'" height="'+imgheight+'" swliveconnect="true" name="" wmode=opaque></embed></object>';
+			if (flashsw ==0){
+				imgobj+='<a style="cursor: pointer; display: block;" href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111112&ci=246&or=316&l=6033&bg=6033&b=6009&u='+link+'" target="_blank"><div style="width:'+imgwidth+'px;height:'+imgheight+'px;position:relative;margin-top:-'+imgheight+'px;left:0px;z-index:100;background-color:black;filter:alpha(opacity=0);-moz-opacity:0;opacity:0;cursor:pointer;border:none;padding:0px;overflow:hidden;"></div></a>';
+			}
+		 }
+		else if(imgurl.toLowerCase().indexOf('.jpg')>0||imgurl.toLowerCase().indexOf('.gif')>0||imgurl.toLowerCase().indexOf('.png')>0){
+			imgobj ='<a href="http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111112&ci=246&or=316&l=6033&bg=6033&b=6009&u='+link+'" target="_blank"><img src="'+imgurl+'" ';
+			if(imgwidth!="0"&&imgwidth!=""){
+				imgobj+='width="'+imgwidth+'" ';
+			}
+			if(imgheight!="0"&&imgheight!=""){
+				imgobj+='height="'+imgheight+'" ';
+			}
+			imgobj+='border="0" data-baiduimageplus-ignore /></a>';
+		 }
+		else{
+			imgobj ='<div style="border:none;"><iframe frameborder="0" width="'+tyframewdh+'" height="'+tyframehgt+'" scrolling="no" src="'+imgurl+'"></iframe></div>';	
+		 }
+		return imgobj;
+	};
+function tourl(str){return escape(str);}
+var tyclickUrl = tourl('');
+var tyswfclickUrl = tourl('http://dol.tianya.cn/c?z=tianya&la=0&si=382&cg=615&c=3111112&ci=246&or=316&l=6033&bg=6033&b=6009&u=');
+var typicurl= "http://star.tianya.cn/zt/bbs/index.shtml";
+var typicwdh= "670";
+var typichgt= "160";
+var tyagtsw= 0;
+var tylocsw= 0;
+var typicdif= 0;
+var third_imp = "";
+var result = typiccode(typicurl,tyclickUrl,tyswfclickUrl,typicwdh,typichgt,tyagtsw);
+if (tylocsw == 1){
+	picposcss = 'border:none;margin:'+typicdif+'px auto;text-align:center;';
+}
+else if (tylocsw == 2){
+	picposcss = 'border:none;margin:'+typicdif+'px 0;';
+}
+else{picposcss="";}
+if(ads==null){
+	document.write('<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />');
+}else{
+	var node = ads.qNode('3111112');
+	node.innerHTML = '<div class="adsame-box" style="'+picposcss+'">'+result+'</div><img src="'+third_imp+'" style="width:0px;height:0px;border:none;display:none;" border="0" />';
+}
+})(jQuery, adsGlobal);//jQuery, adsGlobal 在天涯页面上是全局对象
+ 

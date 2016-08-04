@@ -1,0 +1,18 @@
+ADFHOST475="http://csdnim.allyes.com";
+ADFCID475=77;
+ADFBID475=475;
+ADFLOC='CNXAXA00';
+ADFUSER475="http://csdnim.allyes.com/c?d=csdnim&i=z77,10319085,475,1048&rf=&a=dbBWrhUGK1Rl12A5yG729WlcQ8ws&u=";
+ALLYESID4="LygHZ0MtM2A5yGX5GjC";
+ADFPGC="2,25,77,0,461,475,1048,10319085";
+
+document.write("<script async src=\"//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\"></Scr"+"ipt>\n");
+document.write("<!-- 下载频道资源分类页下Button -->\n");
+document.write("<ins class=\"adsbygoogle\"\n");
+document.write("     style=\"display:inline-block;width:220px;height:90px\"\n");
+document.write("     data-ad-client=\"ca-pub-1076724771190722\"\n");
+document.write("     data-ad-slot=\"8794159845\"></ins>\n");
+document.write("<script>\n");
+document.write("(adsbygoogle = window.adsbygoogle || []).push({});\n");
+document.write("</Scr"+"ipt>");
+

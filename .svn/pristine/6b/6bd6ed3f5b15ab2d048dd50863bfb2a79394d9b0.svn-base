@@ -1,0 +1,17 @@
+package com.socialization.action.resource;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Resource;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class ResourceAction extends BaseAction<Resource> {
+
+	public String homePage() {
+		return "homePage";
+	}
+}

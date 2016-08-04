@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true"></constant>
+	<constant name="struts.devMode" value="true" />
+	
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<!-- 把扩展名设置为action -->
+	<constant name="struts.action.extension" value="action"></constant>
+	<!-- 设置上传文件的大小 -->
+	 <constant name="struts.multipart.maxSize" value="10240000000"/> 
+
+	<package name="default" extends="struts-default">
+		
+		<interceptors>
+		    <interceptor name="Check" class="com.socialization.util.CheckInterceptor"></interceptor>
+		    <interceptor-stack name="defaultStack">
+		        <interceptor-ref name="Check"></interceptor-ref>
+		        <interceptor-ref name="defaultStack"></interceptor-ref>
+		    </interceptor-stack>
+		</interceptors>        
+        
+		<!-- 全局的result配置 -->
+       	<global-results>
+       	     <result name="loginUI">/WEB-INF/jsp/userAction/globalSign.jsp</result>
+       	     <result name="forbidden">/WEB-INF/jsp/public/forbidden.jsp</result>
+       	</global-results>
+		
+		
+		<!-- 首页 -->
+		<action name="home_*" class="homeAction" method="{1}">
+			<result name="{1}">/WEB-INF/jsp/homeAction/{1}.jsp</result>
+		</action>
+
+		
+		<!-- 用户管理 -->
+    	<action name="user_*" class="userAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/userAction/list.jsp</result>
+    	    <result name="toList">/WEB-INF/jsp/userAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/userAction/saveUI.jsp</result>
+    	    <result name="toList" type="redirectAction">user_list</result>
+    	    <result name="logout">/index.jsp</result>
+    	    <result name="toLogin" type="redirect">/index.jsp</result>
+    	    <result name="myOrder" type="redirectAction">${#session.prePage}</result>
+    	    <result name="toShowTip">/WEB-INF/jsp/topicAction/toShowTip.jsp</result>
+    	    <result name="toIndex" type="redirectAction">forum_index</result>
+    	</action>
+    	
+    	<!-- 权限管理 -->
+		<action name="privilege_*" class="privilegeAction" method="{1}">
+			<result name="{1}">/WEB-INF/jsp/privilegeAction/{1}.jsp</result>
+		</action>
+    	
+    	<!-- 标签管理 -->
+    	<action name="tag_*" class="tagAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/tagAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/tagAction/saveUI.jsp</result>
+    	    <result name="toList" type="redirectAction">tag_list</result>
+    	    
+    	</action>
+    	
+    	<!-- 消息管理 -->
+    	<action name="message_*" class="messageAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/messageAction/list.jsp</result>
+    	    <result name="addUI">/WEB-INF/jsp/messageAction/addUI.jsp</result>
+    	    <result name="editUI">/WEB-INF/jsp/messageAction/editUI.jsp</result>
+    	    <result name="replyUI">/WEB-INF/jsp/messageAction/replyUI.jsp</result>
+    	    <result name="sendUI">/WEB-INF/jsp/messageAction/sendUI.jsp</result>
+    	    <result name="receiveUI">/WEB-INF/jsp/messageAction/receiveUI.jsp</result>
+    	    <result name="CollectionUI">/WEB-INF/jsp/messageAction/CollectionUI.jsp</result>
+    	    <result name="MyTopicListUI">/WEB-INF/jsp/messageAction/MyTopicListUI.jsp</result>
+    	    <result name="toList" type="redirectAction">message_list</result>
+    	    <result name="toForumIndex" type="redirectAction">forum_index</result>
+    	    <result name="toshowTip">/WEB-INF/jsp/messageAction/toShowTip.jsp</result>
+    	    <result name="showMessage">/WEB-INF/jsp/messageAction/showMessage.jsp</result>
+    	    <result name="showMessageReceive">/WEB-INF/jsp/messageAction/showMessageReceive.jsp</result>
+    	    
+    	</action>
+    	
+    	<!-- 板块管理 -->
+    	<action name="forumManage_*" class="forumManageAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/forumManageAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/forumManageAction/saveUI.jsp</result>
+    	    <result name="toList" type="redirectAction">forumManage_list</result>
+    	</action>
+    	
+    	<!-- 板块 -->
+    	<action name="forum_*" class="forumAction" method="{1}">
+    	    <result name="list">/WEB-INF/jsp/forumAction/list.jsp</result>
+    	    <result name="show">/WEB-INF/jsp/forumAction/show.jsp</result>
+    	    <result name="index">/WEB-INF/jsp/forumAction/test.jsp</result> 
+    	    <result name="welcome">/WEB-INF/jsp/forumAction/welcome.jsp</result>
+    	    
+    	</action>
+    	
+    	<!-- 视频上传-->
+    	<action name="upload_*" class="videoAction" method="{1}">
+			<result name="toShow" type="redirectAction">topic_show?id=${id}</result>
+		</action>
+    	
+    	<!-- 主题-->
+    	<action name="topic_*" class="topicAction" method="{1}">
+    	    <result name="show">/WEB-INF/jsp/topicAction/show.jsp</result>
+    	    <result name="addUI">/WEB-INF/jsp/topicAction/addUI.jsp</result>
+    	    <result name="moveUI">/WEB-INF/jsp/topicAction/moveUI.jsp</result>
+    	    <result name="toShow" type="redirectAction">topic_show?id=${id}</result>
+    	    <result name="toShowTopicList" type="redirectAction">forum_show?id=${forumId}</result>
+    	    <result name="toShowTip">/WEB-INF/jsp/topicAction/toShowTip.jsp</result>
+    	    <result name="toCollection" type="redirectAction">message_CollectionUI</result>
+    	   
+    	</action>
+    	
+    	<!-- 回复 -->
+    	<action name="reply_*" class="replyAction" method="{1}">
+    	    <result name="addUI">/WEB-INF/jsp/replyAction/addUI.jsp</result>
+    	    <result name="toTopicShow" type="redirectAction">topic_show?id=${topicId}</result>
+    	</action>
+    	
+    	<!-- 上传图片 -->
+    	<action name="file_*" class="fileAction" method="{1}">
+		</action>
+		
+    	
+		
+    	<!-- 用户注册登录页面 -->
+    	<action name="loginAndRegist_*" class="loginAction" method="{1}">
+    	    <result name="registerUI">/WEB-INF/jsp/loginAction/registerUI.jsp</result>
+    	    <result name="registerSuc">/WEB-INF/jsp/loginAction/registerSuc.jsp</result>
+    	    <result name="logining">/WEB-INF/jsp/loginAction/logining.jsp</result>
+    	    <result name="loginUI" >/WEB-INF/jsp/loginAction/logining.jsp</result>
+    	    <result name="toLogin" >/WEB-INF/jsp/loginAction/loginSuccess.jsp</result>
+    	    <result name="logout" >/WEB-INF/jsp/loginAction/global_sign.jsp</result>
+    	</action>
+    	
+    	<!-- 我的上传下载收藏资源列表 -->
+    	<action name="myresource_*" class="updowncollectAction" method="{1}"> 
+    	    <result name="showupload">/WEB-INF/jsp/resourceAction/upload.jsp</result><!-- 资源上传页面 -->
+    	    <result name="fileTooBig" type="redirectAction">myresource_showupload?warnMessage=fileto</result><!-- 上传资源过大时页面，传值表明filetobig不为空 -->
+    	    <result name="upResCommit">/WEB-INF/jsp/resourceAction/uploadSuccess.jsp</result> <!-- 资源上传成功页面 -->
+    	    <result name="upresList">/WEB-INF/jsp/resourceAction/myresourceHome.jsp</result> <!-- 上传列表有数据的页面  -->
+    	    <result name="toupresList">/WEB-INF/jsp/resourceAction/toupresList.jsp</result> <!-- 上传列表没数据的页面 -->
+    	    <result name="downlist">/WEB-INF/jsp/resourceAction/mydownResource.jsp</result> <!-- 下载列表有数据的页面  -->
+    	    <result name="todownlist">/WEB-INF/jsp/resourceAction/mytodownResource.jsp</result> <!-- 下载列表没数据的页面 -->
+    	    <result name="collectlist">/WEB-INF/jsp/resourceAction/mycollectResource.jsp</result><!--  收藏列表有数据的页面  -->
+    	    <result name="tocollectlist">/WEB-INF/jsp/resourceAction/mytocollectResource.jsp</result> <!-- 收藏列表没数据的页面 -->
+    	    <result name="showSingleRes">/WEB-INF/jsp/resourceAction/singalfile.jsp</result> <!-- 单个资源的页面 -->
+    	    <result name="resCollectSuc" type="redirectAction"><!-- myresource_showSingleRes?idd=${idd} -->
+    	     <param name="actionName">myresource_showSingleRes</param>  
+             <param name="idd">${idd}</param> 
+             <param name="warnMessage">${warnMessage}</param> 
+             <param name="encode">true</param>
+    	    </result> <!-- 资源收藏，并重定向到当前的资源页面 -->
+    	    <result name="delete" type="redirectAction">myresource_uplist</result> <!-- 删除资源 -->
+    	    <result name="CancelCollect" type="redirectAction">myresource_myRes?warnMessage=${warnMessage}</result> 
+    	    <result name="myRes">/WEB-INF/jsp/resourceAction/myresourceHome.jsp</result>     
+    	     <result name="normalSearch">/WEB-INF/jsp/resourceAction/highsearchSuc.jsp</result> <!-- -->
+    	</action>
+    	
+    	<!-- 资源总的页面 -->
+    	<action name="resource_*" class="resourceAction" method="{1}">
+    	    <result name="homePage">/WEB-INF/jsp/resourceAction/resourceHome.jsp</result> <!-- 资源页面首页 --> 
+    	    <result name="resTypeUI">/WEB-INF/jsp/resourceAction/resTypeUI.jsp</result>  <!-- 资源分类页面-->
+    	    <result name="highsearchUI">/WEB-INF/jsp/resourceAction/highsearchUI.jsp</result> <!-- 资源高级搜索页面-->
+    	    <result name="highsearchSuc">/WEB-INF/jsp/resourceAction/highsearchSuc.jsp</result> <!-- 资源高级搜索成功页面-->
+    	    <result name="highsearchFai">/WEB-INF/jsp/resourceAction/highsearchUI.jsp</result> <!-- 资源高级搜索失败页面-->
+    	    <result name="resRankUI">/WEB-INF/jsp/resourceAction/resRankUI.jsp</result> <!-- 资源排序页面-->
+    	    <result name="singalresRankUI">/WEB-INF/jsp/resourceAction/singalresRankUI.jsp</result> <!-- 资源单个排序/分类页面-->
+    	    <result name="singalresTagUI">/WEB-INF/jsp/resourceAction/singalresTagUI.jsp</result> <!-- 资源单个排序/分类页面-->   	    
+    	</action>
+    	
+    	<!-- 活动总的页面 -->
+    	<action name="activity_*" class="activityAction" method="{1}">
+    	    <param name="savePath">upload</param>
+    	    <result name="createUI">/WEB-INF/jsp/activityAction/activityCreateUI.jsp</result> <!-- 活动创建页面 --> 	
+    	    <result name="create" type="redirectAction">activity_myAct</result><!-- 活动创建成功页面 -->
+    	    <result name="activityHomePage">/WEB-INF/jsp/activityAction/activityHome.jsp</result> <!-- 活动总页面 --> 	
+    	    <result name="singalactivityPage">/WEB-INF/jsp/activityAction/actsearchResult.jsp</result> <!-- 单个类型活动页面 --> 
+    	    <result name="activityDetails">/WEB-INF/jsp/activityAction/activityDetails.jsp</result> <!-- 单个活动详细页面 --> 
+    	    <result name="myAct">/WEB-INF/jsp/activityAction/myActivity.jsp</result> <!-- 我所创建的活动详细页面 --> 
+	        <result name="actTopicAddUI">/WEB-INF/jsp/activityAction/actTopicAddUI.jsp</result> <!-- 我所创建的活动详细页面 -->
+	        <result name="searchResult">/WEB-INF/jsp/activityAction/actsearchResult.jsp</result><!-- 搜索结果页面 -->
+	        <result name="toMyAct" type="redirectAction">activity_myAct?activiName=${activiName}</result>
+	        <result name="actMem" >/WEB-INF/jsp/activityAction/showActMem.jsp</result>
+    	</action>
+    	<!-- 活动话题 -->
+    	
+    	<action name="actTopic_*" class="actTopicAction" method="{1}">
+	        <result name="actTopicAddUI">/WEB-INF/jsp/activityAction/actTopicAddUI.jsp</result> <!-- 创建活动话题的页面 -->
+	         <result name="add" type="redirectAction">actTopic_showActTopic?idd=${id}</result> <!--活动话题创建成功-->
+	         <result name="showActTopic">/WEB-INF/jsp/activityAction/showActTopic.jsp</result>
+    	</action>
+    	<!-- 活动回复-->	
+    	<action name="actTopicReply_*" class="actTopicReplyAction" method="{1}">
+	        <result name="add" type="redirectAction">actTopic_showActTopic?idd=${actTopic.id}</result>
+    	</action>
+    	<!-- 活动相册创建-->	
+    	<action name="actAlbum_*" class="actAlbumAction" method="{1}">
+	        <result name="AddUI">/WEB-INF/jsp/activityAction/actAlbumAddUI.jsp</result>
+	        <result name="add" type="redirectAction">actAlbum_showActAlbum?idd=${id}</result>
+	        <result name="showActAlbum" >/WEB-INF/jsp/activityAction/showActAlbum.jsp</result>
+	        <result name="backToAct" type="redirectAction">activity_activityDetails?idd=${activityId}</result>
+	        <result name="ShowalbumPhoto">/WEB-INF/jsp/activityAction/ShowalbumPhoto.jsp</result>
+	        <result name="backToAlbum" type="redirectAction">actAlbum_showActAlbum?idd=${id}</result>
+	         <result name="next">/WEB-INF/jsp/activityAction/ShowalbumPhoto.jsp</result>
+	         <result name="privew">/WEB-INF/jsp/activityAction/ShowalbumPhoto.jsp</result>
+	         <result name="addDescription" type="redirectAction">actAlbum_ShowalbumPhoto?photoId=${photoId}</result>
+	         <result name="updateAlbumCover" type="redirectAction">actAlbum_ShowalbumPhoto?photoId=${photoId}</result>
+	          <result name="photoDelete" type="redirectAction">actAlbum_ShowalbumPhoto?photoId=${photoId}</result>	 
+	          <result name="photoadd" type="redirectAction">actAlbum_showActAlbum?idd=${idd}</result>	
+	          <result name="photoaddTwo" type="redirectAction">actAlbum_showActAlbum?idd=${actAlbumId}</result>	        
+    	</action>
+    	<!-- 照片回复-->	
+    	<action name="actAlbumReply_*" class="actAlbumReplyAction" method="{1}">
+    	  <result name="add" type="redirectAction">actAlbum_ShowalbumPhoto?photoId=${actAlbumPhoto.id}</result>
+    	</action>
+    	<!-- 下载资源 -->
+        <action name="resourcedownload" class="downloadAction">
+    	    <result name="success" type="stream">
+               <param name="contentDisposition">attachment;fileName="${filename}"</param>  
+               <param name="bufferSize">1024</param>
+               <param name="inputName">targetFile</param>
+    	    </result>
+    	</action>
+    	
+    	<!-- 资源回复-->
+    	 <action name="resReply_*" class="resReplyAction" method="{1}">
+    	    <result name="toShow" type="redirectAction">myresource_showSingleRes?idd=${idd}</result>
+    	    <result name="resRepDelete" type="redirectAction">myresource_showSingleRes?idd=${idd}</result>
+    	</action>
+    	
+    	<!-- 资源标签操作 -->
+        <action name="tagRes_*" class="tagResAction" method="{1}">
+          <result name="list" >/WEB-INF/jsp/resourceAction/tagResList.jsp</result>
+    	  <result name="addUI" >/WEB-INF/jsp/resourceAction/tagResAddUI.jsp</result>
+    	  <result name="addSuc" type="redirectAction">tagRes_list</result>
+    	</action>
+    	
+    	<!-- 个人空间 -->
+        <action name="zone_*" class="zoneAction" method="{1}">
+    	</action>
+    	
+    	<!-- 上传头像 -->
+    	<action name="upload" class="uploadAction" method="img">
+    		<result name="toList" type="redirectAction">information_list</result>
+		</action>
+		
+    	<!-- 个人信息 -->
+        <action name="information_*" class="informationAction" method="{1}">
+        	<result name="list">/WEB-INF/jsp/informationAction/list.jsp</result>
+        	<result name="saveUI">/WEB-INF/jsp/informationAction/saveUI.jsp</result>
+        	<result name="changePasswordUI">/WEB-INF/jsp/informationAction/changePasswordUI.jsp</result>
+        	<result name="changePassword">/WEB-INF/jsp/informationAction/tip.jsp</result>
+        	<result name="success">/WEB-INF/jsp/informationAction/success.jsp</result>
+        	<result name="toList" type="redirectAction">information_list</result>
+    	</action>
+    	
+    	<!-- 定义上传头像Action -->
+	    <action name="headImageFileAction" class="headImageFileAction" method="{1}">
+	    	<result>/WEB-INF/jsp/informationAction/success.jsp</result>
+	    	<!-- 使用拦截器设置上传文件大小类型 -->
+	    	<interceptor-ref name="defaultStack">
+	    		<!-- 设置文件大小 -->
+	    		<param name="headImageFile.maximumSize">1000000000</param>
+	    		<!-- 设置文件类型 -->
+	    		<param name="headImageFile.allowedTypesSet">image/jpg,image/jpeg,image/png</param>
+	    	</interceptor-ref>
+	    </action>
+    	
+    	<!-- 好友动态 -->
+        <action name="social_*" class="socialAction" method="{1}">
+        	<result name="list">/WEB-INF/jsp/socialAction/list.jsp</result>
+    	</action>
+    	
+    	<!-- 好友管理 -->
+        <action name="friend_*" class="friendAction" method="{1}">
+        	<result name="list">/WEB-INF/jsp/friendAction/list.jsp</result>
+    	    <result name="toList">/WEB-INF/jsp/friendAction/list.jsp</result>
+    	    <result name="saveUI">/WEB-INF/jsp/friendAction/saveUI.jsp</result>
+    	</action>
+    	
+    	<!-- 说说管理 -->
+        <action name="talk_*" class="talkAction" method="{1}">
+        	<result name="list">/WEB-INF/jsp/talkAction/list.jsp</result>
+    	    <result name="toList" type="redirectAction">talk_list</result>
+    	    <result name="saveUI">/WEB-INF/jsp/talkAction/saveUI.jsp</result>
+        	<result name="listfriendTalk">/WEB-INF/jsp/talkAction/listfriendTalk.jsp</result>
+        	<result name="show">/WEB-INF/jsp/talkAction/show.jsp</result>
+    	</action>
+    	
+    	<!-- 说说回复 -->
+    	<action name="talkReply_*" class="talkReplyAction" method="{1}">
+    	    <result name="addUI">/WEB-INF/jsp/talkreplyAction/addUI.jsp</result>
+    	    <result name="toTalkShow" type="redirectAction">talk_show?id=${talkId}</result>
+    	</action>
+    	
+	</package>
+
+</struts>
+

@@ -1,0 +1,120 @@
+package com.socialization.action.resource;
+
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class ResourceAction extends BaseAction<Resource> {
+
+	/*---资源页面首页----*/
+	public String homePage() {
+		List<Resource> resourcehomeList=this.updowncollectResService.findAllDesc();
+		ActionContext.getContext().put("resourcehomeList", resourcehomeList);
+		return "homePage";
+	}
+	/*---高级搜索页面----*/
+	public String highsearchUI() throws Exception{
+		this.setResDescription(null);
+        this.setResname(null);
+        this.setResourceTags(null);
+        this.setResTypes(null);
+        this.setResUpTime(null);
+        this.setResUserId(null);
+		return "highsearchUI";
+	}
+	/*---高级搜索结果----*/
+	   public String highsearch() throws Exception{
+		//List<Resource> highresList=this.updowncollectResService.highSearch(resDescription,resname,resourceTags,resTypes,resUpTime,resUserId);
+		List<Resource> highresLevelList=this.updowncollectResService.highLevelSearch(resDescription, resname, resourceTags);
+		if (highresLevelList.size()==0) {
+			addActionMessage("大侠，暂无你想要的资源，还请换个条件再搜一次吧~");
+			return "highsearchFai";
+		}else {
+			System.out.println(highresLevelList.size());
+			ActionContext.getContext().put("highresLevelList", highresLevelList);
+			return "highsearchSuc";
+		}	
+	}
+	/*---资源分类页面----*/
+	public String resTypeUI() throws Exception{
+		
+		return "resTypeUI";
+	}
+	/*---帮助页面----*/
+	public String resHelpUI() throws Exception{
+		return "resHelpUI";
+	}
+	
+	/*---排行耪页面----*/
+	public String resRankUI() throws Exception{  //  准备各种回显数据
+		List<Resource> resCounList=this.updowncollectResService.OrderByCount(); //按下载数量排行
+		ActionContext.getContext().put("resCounList", resCounList);
+		
+		List<Resource> resColleList=this.updowncollectResService.OrderByCollect();  //按收藏数量排行
+		ActionContext.getContext().put("resColleList", resColleList);
+		
+		List<User> userupCountList=this.userService.OrderByupCount();  //按上传数量对用户排行
+		ActionContext.getContext().put("userupCountList", userupCountList);
+		return "resRankUI";
+	}
+	/*---单个排行耪页面或单个分类页面----*/
+	public String singalresRankUI() throws Exception{
+		
+		return "singalresRankUI";
+	}
+	
+	
+	
+	/*---得到高级搜索界面的各种数据----*/
+	private String resname;
+	private String resDescription;
+	private String resUserId;
+	private String resourceTags;
+	private String resTypes;
+	private String resUpTime;
+	public String getResname() {
+		return resname;
+	}
+	public void setResname(String resname) {
+		this.resname = resname;
+	}
+	public String getResDescription() {
+		return resDescription;
+	}
+	public void setResDescription(String resDescription) {
+		this.resDescription = resDescription;
+	}
+	public String getResUserId() {
+		return resUserId;
+	}
+	public void setResUserId(String resUserId) {
+		this.resUserId = resUserId;
+	}
+	public String getResourceTags() {
+		return resourceTags;
+	}
+	public void setResourceTags(String resourceTags) {
+		this.resourceTags = resourceTags;
+	}
+	public String getResTypes() {
+		return resTypes;
+	}
+	public void setResTypes(String resTypes) {
+		this.resTypes = resTypes;
+	}
+	public String getResUpTime() {
+		return resUpTime;
+	}
+	public void setResUpTime(String resUpTime) {
+		this.resUpTime = resUpTime;
+	}	
+}

@@ -1,0 +1,14 @@
+package com.socialization.service.upRes;
+
+import java.util.List;
+
+import com.socialization.base.DaoSupport;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+
+public interface DownResService extends DaoSupport<User>{
+
+	List<Resource> getByuserupId(Long id);
+	List<Resource> getByuserdownId(Long id);
+	List<Resource> getByusercolleId(Long id);
+}

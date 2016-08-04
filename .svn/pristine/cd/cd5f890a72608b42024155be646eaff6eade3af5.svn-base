@@ -1,0 +1,79 @@
+package com.socialization.action.zone;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Talk;
+import com.socialization.domain.User;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class TalkAction extends BaseAction<Talk>{
+	
+	/** 列表 */
+	public String list() throws Exception {
+		User user = userService.getById(getCurrentUser().getId());
+		List<Talk> talkList = talkService.getTalkListById(user.getId());
+		ActionContext.getContext().put("talkList", talkList);
+		return "list";
+	}
+
+	//查找当前用户好友的说说
+	public String listfriendTalk() throws Exception {
+		List<Talk> talkList = talkService.findByFriends(getCurrentUser());
+		ActionContext.getContext().put("talkList", talkList);
+		return "listfriendTalk";
+	}
+	
+	/** 删除 */
+	public String delete() throws Exception {
+		talkService.delete(model.getId());
+		return "toList";
+	}
+
+	/** 添加页面 */
+	public String addUI() throws Exception {
+		talkService.save(model);
+		return "saveUI";
+	}
+		
+
+	/** 添加 */
+    public String add() throws Exception {
+		model.setPostTime(new Date());
+		String  str= new String(model.getContent().getBytes("iso-8859-1"),"utf-8");
+		User user=this.userService.getById(getCurrentUser().getId());
+		model.setUser(user);
+		model.setContent(str);
+		talkService.save(model);
+		return "toList";
+	}
+    
+    public String update() throws Exception {
+    	String  str= new String(model.getContent().getBytes("iso-8859-1"),"utf-8");
+    	Talk talk=this.talkService.getById(model.getId());
+    	talk.setPostTime(new Date());
+    	talk.setContent(str);
+		this.talkService.update(talk);
+		return "toList";
+	}
+
+	/** 发表说说 *//*
+	public String add() throws Exception {
+		Talk content = talkService.findByContent(model.getContent());
+		if(content==null){
+			addFieldError("fail", "内容不能为空！");
+			return "add";
+		}else{
+			ActionContext.getContext().getSession().put("talk", content);
+			return "toList";
+		}
+	}*/
+
+}

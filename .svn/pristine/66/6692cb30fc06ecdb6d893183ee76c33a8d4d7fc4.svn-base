@@ -1,0 +1,192 @@
+package com.socialization.util;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.coyote.http11.filters.VoidInputFilter;
+import org.apache.struts2.ServletActionContext;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.socialization.domain.Privilege;
+import com.socialization.domain.Role;
+import com.socialization.domain.User;
+import com.socialization.service.PrivilegeService;
+import com.socialization.service.RoleService;
+import com.socialization.service.UserService;
+
+@SuppressWarnings("serial")
+public class CheckInterceptor implements Interceptor{
+	
+	@Resource
+	private RoleService roleService;
+	
+	@Resource
+	private UserService userService;
+	
+	@Resource
+	private PrivilegeService privilegeService;
+
+	private HashMap<String, String> systemPrivilege = new HashMap<>();		//系统所有的权限，K:name，V：url
+	private HashMap<String, Boolean> userPrivilegeTable = new HashMap<>();	//用户权限表，K:name, V:true/false
+	
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String intercept(ActionInvocation invocation) throws Exception {
+		
+		/*
+		 * user和navshow这两个session的生命周期
+		 * 用户主动退出时，肯定都销毁了，
+		 * 如果是系统强行销毁的，会出现一个存在一个不存在的情况吗？
+		 * 考虑这种情况，user消失了，但navShow还在，而且保存的是之前user的权限
+		 * 此时，是需要重新生成navShow的
+		 * 重新生成navShow的条件是？？？
+		 */
+		createNavShowSession();
+		
+		System.out.println("test");
+		
+		String actionName = invocation.getProxy().getActionName();		//获取action
+		
+		/*
+		 * 如果不在白名单，拦截下来，强迫去登录
+		 * action的种类，用户直接发送的请求和完成某些功能所需要的系统action
+		 * 只拦截在系统权限中，但当前角色不拥有的action
+		 */
+		if(systemPrivilege.containsValue(actionName) && !isUrlOfRolePrivilege(actionName)){
+			if(ActionContext.getContext().getSession().get("user") != null)
+				return "forbidden";
+			
+			/*把被拦截的请求保存，以便登录之后，继续请求*/
+			HttpServletRequest request = ServletActionContext.getRequest();
+			String reqParm = request.getQueryString();
+			String prePage = actionName + ".action?" + (reqParm != null  ? reqParm : "");
+			
+			System.out.println("reqParm:" + reqParm);
+			
+			Map<String, Object> session = invocation.getInvocationContext().getSession();
+			session.put("prePage", prePage);
+			
+			return "loginUI";
+		}
+		
+		return invocation.invoke();
+		
+	}
+	
+	/**
+	 * @desc 根据当前用户角色判断导航栏的每个item是否显示，
+	 * 		  并把标记着保存在session中
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 11, 2015 10:17:48 AM
+	 */
+	public void createNavShowSession(){
+		/*
+		 * 显示与否
+		 * 1.获取当前用户的角色
+		 * 2.查询当前角色所拥有的权限
+		 * 3.把拥有的权限存入list
+		 * 4.前端根据list中的值进行判断
+		 */
+		long roleId = 0;	//角色id，根据它的值去获取所拥有的权限
+		
+		/*获取角色id*/
+		User user = (User) ActionContext.getContext().getSession().get("user");
+		if(user == null)
+			roleId = roleService.getIdByName("游客");
+		else
+			roleId = user.getRole().getId();
+		
+		/*根据角色id获取此角色所拥有的权限列表*/
+		Role role= roleService.getById(roleId);
+		Set<Privilege> privileges = role.getPrivileges();
+		
+		/*获取系统所有权限的列表*/
+		List<Privilege> allPrivilege = privilegeService.findRealPrivilege();
+		
+		/*初始化权限表*/
+		for (Privilege p : allPrivilege) {
+			userPrivilegeTable.put(p.getName(), false);
+			systemPrivilege.put(p.getName(), p.getUrl());
+		}
+		
+		/*修改当前角色的权限*/
+		System.out.print("用户拥有的权限：");
+		for (Privilege p : privileges) {
+			userPrivilegeTable.put(p.getName(), true);
+			
+			System.out.print(p.getName() + ",");
+		}
+		
+		/*
+		 * 判断导航栏里论坛、资源、活动、小组、系统管理是否显示
+		 * 以及系统管理模块下的用户管理、权限管理、论坛管理、资源管理。。。是否显示
+		 * 这里有两种区分：通常意义上的交互分享操作和管理操作
+		 */
+		boolean forumShow = userPrivilegeTable.get("查看论坛").booleanValue() ? true : false;
+		boolean resourceShow = userPrivilegeTable.get("查看资源").booleanValue() ? true : false;
+//		boolean activityShow = userPrivilegeTable.get("查看论坛").booleanValue() ? true : false;
+//		boolean forumShow = userPrivilegeTable.get("查看论坛").booleanValue() ? true : false;
+		boolean userManage = userPrivilegeTable.get("用户管理").booleanValue() ? true : false;
+		boolean privilegManage = userPrivilegeTable.get("权限管理").booleanValue() ? true : false;
+		boolean forumManage = userPrivilegeTable.get("论坛管理").booleanValue() ? true : false;
+		boolean resourceManage = userPrivilegeTable.get("资源管理").booleanValue() ? true : false;
+		boolean activityManage = userPrivilegeTable.get("活动管理").booleanValue() ? true : false;
+		
+		boolean sysShow = (forumManage || resourceManage || userManage || privilegManage || activityManage) ? true : false;
+		
+		HashMap<String, Boolean> navShow = new HashMap<>();
+		navShow.put("forumShow", forumShow);
+		navShow.put("resourceShow", resourceShow);
+		navShow.put("userManage", userManage);
+		navShow.put("privilegManage", privilegManage);
+		navShow.put("forumManage", forumManage);
+		navShow.put("resourceManage", resourceManage);
+		navShow.put("activityManage", activityManage);
+		navShow.put("sysShow", sysShow);
+		ActionContext.getContext().getSession().put("navShow", navShow);	//标记导航栏里的某些菜单是否显示
+	}
+
+	/**
+	 * @desc 判断action是不是当前角色所拥有的权限中某个的url
+	 * @param str action名字
+	 * @return true，false
+	 * @author yanbaobin@yeah.net
+	 * @date Aug 11, 2015 11:23:19 AM
+	 */
+	public boolean isUrlOfRolePrivilege(String str){
+		
+		System.out.println("action:" + str);
+		
+		Set<String> url = new HashSet<>();		//当前角色所拥有的权限所对应的url
+		
+		for (String string : systemPrivilege.keySet()) {
+			if(userPrivilegeTable.get(string))
+				url.add(systemPrivilege.get(string));
+		}
+		
+		if(url.contains(str))
+			return true;
+		
+		return false;
+	}
+	
+}

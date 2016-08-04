@@ -1,0 +1,51 @@
+package com.socialization.action.resource;
+
+
+
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Tag;
+
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class TagResAction extends BaseAction<Tag> {
+
+	private String tagname;
+	private String tagdescription;
+	
+	public String list() throws Exception {
+		List<Tag> taglist=tagResourceService.findAll();
+		ActionContext.getContext().put("taglist", taglist);
+		return "list";
+	}
+	public String addUI() throws Exception{
+		model.setDescription(tagdescription);
+		model.setName(tagname);
+		this.tagResourceService.save(model);
+		return "addUI";
+	}
+	public String add() throws Exception{
+		/*this.tagResService.save(model);*/
+		return "addSuc";
+	}
+	public String getTagname() {
+		return tagname;
+	}
+	public void setTagname(String tagname) {
+		this.tagname = tagname;
+	}
+	public String getTagdescription() {
+		return tagdescription;
+	}
+	public void setTagdescription(String tagdescription) {
+		this.tagdescription = tagdescription;
+	}
+}

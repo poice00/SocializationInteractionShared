@@ -1,0 +1,62 @@
+package com.socialization.action.resource;
+
+import java.util.List;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class ResourceAction extends BaseAction<Resource> {
+
+	public String homePage() {
+		return "homePage";
+	}
+	/*---高级搜索页面----*/
+	public String highsearchUI() throws Exception{
+		return "highsearchUI";
+	}
+	/*---高级搜索结果----*/
+	public String highsearch() throws Exception{
+		List<Resource> highresList=this.updowncollectResService.highSearch();
+		if (highresList.size()==0) {
+			addActionMessage("大侠，暂无你想要的资源，还请换个条件再搜一次吧~");
+			return "highsearchFai";
+		}
+		ActionContext.getContext().put("highresList", highresList);
+		return "highsearchSuc";
+	}
+	/*---资源分类页面----*/
+	public String resTypeUI() throws Exception{
+		
+		return "resTypeUI";
+	}
+	/*---帮助页面----*/
+	public String resHelpUI() throws Exception{
+		return "resHelpUI";
+	}
+	
+	/*---排行耪页面----*/
+	public String resRankUI() throws Exception{  //  准备各种回显数据
+		List<Resource> resCounList=this.updowncollectResService.OrderByCount(); //按下载数量排行
+		ActionContext.getContext().put("resCounList", resCounList);
+		
+		List<Resource> resColleList=this.updowncollectResService.OrderByCollect();  //按收藏数量排行
+		ActionContext.getContext().put("resColleList", resColleList);
+		
+		List<User> userupCountList=this.userService.OrderByupCount();  //按上传数量对用户排行
+		ActionContext.getContext().put("userupCountList", userupCountList);
+		return "resRankUI";
+	}
+	/*---单个排行耪页面或单个分类页面----*/
+	public String singalresRankUI() throws Exception{
+		
+		return "singalresRankUI";
+	}
+}

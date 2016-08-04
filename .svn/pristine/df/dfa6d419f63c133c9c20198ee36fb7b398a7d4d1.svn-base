@@ -1,0 +1,39 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div class="nav-bar">
+        	<s:a action="resource_homePage" >首页</s:a>
+        	<s:a action="resource_resTypeUI" >资源分类</s:a>
+			<s:a action="resource_resRankUI">排行榜</s:a>
+			<s:a action="resource_resHelpUI" >帮助</s:a>
+			<s:a action="resource_highsearchUI">高级搜索</s:a>
+			<s:a action="myresource_uplist">我的资源</s:a>
+			<s:a action="myresource_showupload">我要上传</s:a>	
+</div>
+<br />
+按下载数量排行：
+<s:iterator value="#resCounList">
+		<s:a action="myresource_showSingleRes?idd=%{id}">${name }</s:a><br/>
+		作者：${user.name }|+++++++上传时间：${postTime }|下载次数：${downCount }<br/>
+		————————————————————————————————————————————————————————————<br/>
+</s:iterator>
+按收藏数量排行：
+<s:iterator value="#resColleList">
+		<s:a action="myresource_showSingleRes?idd=%{id}">${name }</s:a><br/>
+		作者：${user.name }|+++++++上传时间：${postTime }|下载次数：${downCount }<br/>
+		————————————————————————————————————————————————————————————<br/>
+</s:iterator>
+按上传数量排行：
+<s:iterator value="#userupCountList">
+		<s:a action="">${name }</s:a><br/>
+		————————————————————————————————————————————————————————————<br/>
+</s:iterator>
+</body>
+</html>

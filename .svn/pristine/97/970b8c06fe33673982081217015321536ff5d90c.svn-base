@@ -1,0 +1,47 @@
+package com.socialization.serviceImpl;
+
+
+import java.util.List;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import com.socialization.base.DaoSupportImpl;
+import com.socialization.domain.Resource;
+import com.socialization.domain.User;
+import com.socialization.service.UserService;
+
+@Service
+@Transactional
+public class UserServiceImpl extends DaoSupportImpl<User> implements UserService {
+
+	@Override
+	public User findByLoginNameAngPassword(String loginName, String password) {
+		User u = (User) getSession().createQuery(//
+					"FROM User u WHERE u.loginName=? and u.password=?")//
+					.setParameter(0, loginName)//
+					.setParameter(1, password)//
+					.uniqueResult();
+		
+		return u;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> OrderByupCount(String st) {
+		// TODO Auto-generated method stub
+		if (st == "总榜单") {
+			return getSession().createQuery(
+					"FROM User u ORDER BY u.resUpCount DESC")
+					.setMaxResults(3)
+					.list();
+		} else {
+			return getSession().createQuery(
+					"FROM User u ORDER BY u.resUpCount DESC")
+					.list();
+		}
+	}
+	
+}

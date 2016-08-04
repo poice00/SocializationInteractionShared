@@ -1,0 +1,46 @@
+package com.socialization.action.activity;
+
+import java.util.List;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import com.opensymphony.xwork2.ActionContext;
+import com.socialization.base.BaseAction;
+import com.socialization.domain.Activity;
+import com.socialization.service.activity.ActivityService;
+import com.socializationserviceImpl.activity.ActivityServiceImpl;
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class ActivityAction extends BaseAction<Activity>{
+	
+	
+	public ActivityService activityService = new ActivityServiceImpl();
+	
+	
+	/*---活动列表----*/
+	public String activityHome() {
+		List<Activity> activitiesList=this.activityService.findAll();
+		ActionContext.getContext().put("activitiesList", activitiesList);
+		return "activityHome";
+	}
+	
+	/*---活动创建页面----*/
+	public String activityCreateUI() {
+		return "activityCreateUI";
+	}
+	/*---活动创建并写入数据库----*/
+	public String activityCreate() {
+		this.activityService.save(model);
+		return "activityCreate";
+	}
+	
+	/*---参加活动----*/
+	public String activityPart() {
+		this.activityService.save(model);
+		return "activityPart";
+	}
+	
+	
+}

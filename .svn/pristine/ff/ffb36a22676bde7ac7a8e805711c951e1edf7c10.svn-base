@@ -1,0 +1,13 @@
+/*切换登录和注册面板*/
+function toggle(){
+	if(document.getElementById("up").style.display != "block"){
+		$("#in").hide();
+		$("#up").show("slow");
+	}
+	else{
+		//$("#up").style.display = "none";
+		//$("#in").style.display = "block";
+		$("#up").hide();
+		$("#in").show("slow");
+	}
+}

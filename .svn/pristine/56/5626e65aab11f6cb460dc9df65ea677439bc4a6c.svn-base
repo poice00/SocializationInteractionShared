@@ -1,0 +1,196 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/jsp/public/commons.jspf"%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="kindeditor/themes/default/default.css" />
+<script charset="utf-8" type="text/javascript" language="javascript"
+	src="kindeditor/kindeditor-reply.js"></script>
+<script charset="utf-8" type="text/javascript" language="javascript"
+	src="kindeditor/lang/zh_CN.js"></script>
+<script>
+	KindEditor.ready(function(K) {
+		K.create('textarea[name="content"]', {
+			uploadJson : 'kindeditor/jsp/upload_json.jsp',
+			fileManagerJson : 'kindeditor/jsp/file_manager_json.jsp',
+			allowFileManager : true,
+			allowImageUpload : true,
+			autoHeightMode : true,
+			afterCreate : function() {
+				this.loadPlugin('autoheight');
+			},
+			afterBlur : function() {
+				this.sync();
+			} //Kindeditor下获取文本框信息
+		});
+	});
+	
+</script>
+
+</head>
+<body>
+
+
+<font> &gt; </font>
+	<s:a action="forum_list">论坛</s:a>
+	<font> &gt; </font>
+	<s:a action="forum_show?id=%{#topic.forum.id}">${ topic.forum.name}</s:a>
+	<font> &gt;&gt; </font> 帖子阅读 <s:debug></s:debug>
+	<table>
+		<tr>
+			<td class="ForumPageTableTitle"><b>本帖主题：${topic.title }</b></td>
+			<s:a action="reply_addUI?topicId=%{#topic.id}">回复</s:a>
+		</tr>
+	</table>
+	
+	<!-- ~~~~~~~~~~~~~~~ 显示主帖 ~~~~~~~~~~~~~~~ -->
+	<s:if test="currentPage == 1">
+					<table>
+						<tr>
+							<td>
+								<!--作者头像-->
+								<div >
+									<img border="0" width="110" height="110"
+										src="${pageContext.request.contextPath}/style/images/defaultAvatar.gif"
+										onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/style/images/defaultAvatar.gif';" />
+								</div> 
+								<!--作者名称-->
+								<div >作者:${topic.user.name }</div>
+							</td>
+							<td >
+								<ul style="list-style-type: none;">
+									<!--操作列表-->
+									<li class="TopicFuncLi">
+									<s:a action="topic_moveUI?id=%{id}&forumId=%{#topic.forum.id}">
+									<img border="0" src="${pageContext.request.contextPath}/style/images/edit.gif" />移动到其他版块</s:a>
+									
+									<s:a action="topic_setBest?id=%{id}&forumId=%{#topic.forum.id}" onClick="return confirm('要把本主题设为精华吗？')">
+									<img border="0" src="${pageContext.request.contextPath}/style/images/forum_hot.gif" />精华</s:a>
+									
+									<s:a action="topic_setTop?id=%{id}&forumId=%{#topic.forum.id}" onClick="return confirm('要把本主题设为置顶吗？')">
+									<img border="0" src="${pageContext.request.contextPath}/style/images/forum_top.gif" />置顶</s:a>
+									
+									<s:a action="topic_setNormal?id=%{id}&forumId=%{#topic.forum.id}" onClick="return confirm('要把本主题设为普通吗？')">
+									<img border="0" src="${pageContext.request.contextPath}/style/images/forum_comm.gif" />普通</s:a>
+									
+									<s:a action="topic_delete?id=%{id}&forumId=%{#topic.forum.id}" onClick="return confirm('确定要删除本帖吗？')">删除</s:a>
+									</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<!-- 文章内容 -->
+							<td >
+								<div>内容：${topic.content }</div>
+							</td>
+						</tr>
+						<tr>
+							<!--显示楼层等信息-->
+							<td><font color=#C30000>[楼主]</font> ${topic.postTime }</td>
+						</tr>
+					</table>
+					</s:if>					
+						<!-- ~~~~~~~~~~~~~~~ 显示回复列表 ~~~~~~~~~~~~~~~ -->
+					<table>
+						<s:iterator value="recordList" status="status">
+							<tr>
+								<td>
+									<!--作者头像-->
+									<div>
+										<img border="0" width="110" height="110"
+											src="${pageContext.request.contextPath}/style/images/defaultAvatar.gif"
+											onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/style/images/defaultAvatar.gif';" />
+									</div> <!--作者名称-->
+								</td>
+								<td align="center">
+									<ul style="list-style-type: none;">
+										<!--操作列表-->
+										
+										<!-- 文章标题 -->
+										<li>回复主题：
+											${title}</li>
+										<li><!-- 回复内容 -->
+											【${user.name }】 说:${content}
+											<s:a action="reply_addUI?topicId=%{#topic.id}&id=%{id}">回复</s:a>
+											<s:a action="reply_delete?id=%{id}&topicId=%{#topic.id}" onClick="return confirm('确定要删除本条回复吗？')">删除</s:a>
+											Id	${id }
+										</li>
+										
+									</ul>
+								</td>
+								
+							</tr>
+							
+							<tr>
+								<td >
+								【${user.name }】 
+								</td>
+								<td>		
+											<s:iterator value="childrens">
+												${user.name} 对${parent.user.name} 说 :${content} ===我是对${parent.id}的回复id ${id }===
+												<s:a action="reply_addUI?topicId=%{#topic.id}&id=%{id}">回复</s:a>
+												<s:a action="reply_delete?id=%{id}&topicId=%{#topic.id}" onClick="return confirm('确定要删除本条回复吗？')">删除</s:a><br>
+													<s:iterator value="childrens">
+													${user.name} 对${parent.user.name} 说 :${content} ===我是对${parent.id}的回复id ${id }===
+													<s:a action="reply_addUI?topicId=%{#topic.id}&id=%{id}">回复</s:a>
+													<s:a action="reply_delete?id=%{id}&topicId=%{#topic.id}" onClick="return confirm('确定要删除本条回复吗？')">删除</s:a><br>
+														<s:iterator value="childrens">
+														${user.name} 对${parent.user.name} 说 :${content} ===我是对${parent.id}的回复id ${id }===
+														<s:a action="reply_addUI?topicId=%{#topic.id}&id=%{id}">回复</s:a>
+														<s:a action="reply_delete?id=%{id}&topicId=%{#topic.id}" onClick="return confirm('确定要删除本条回复吗？')">删除</s:a><br>
+														</s:iterator>
+													
+													</s:iterator>
+											</s:iterator>
+								</td>
+							</tr>
+							<tr>
+								<!--显示楼层等信息-->
+								<td >
+									<ul style="margin: 0px; width: 98%;">
+										<li style="float: left; line-height: 18px;"><font
+											color=#C30000>[${(currentPage - 1) * pageSize + status.count}楼]</font> ${postTime }
+											</li>
+									</ul>
+								</td>
+							</tr>
+						</s:iterator>
+					</table>
+				<!-- ~~~~~~~~~~~~~~~ 显示回复列表结束 ~~~~~~~~~~~~~~~ -->
+				<!--分页信息-->
+			<%@ include file="/WEB-INF/jsp/public/pageView.jspf"%>
+			<s:form action="topic_show?id=%{id}"></s:form>
+			
+		<!--快速回复-->
+		<s:form action="reply_add">
+				<s:hidden name="topicId" value="%{#topic.id}"></s:hidden>
+				<div style="padding-left: 3px;">
+					<table border="0" cellspacing="1" width="98%" cellpadding="5"
+						class="TableStyle">
+						<tr height="30" class="Tint">
+							<td width="50px" class="Deep"><b>标题</b></td>
+							<td class="no_color_bg"><s:textfield name="title"
+									cssClass="InputStyle" value="回复：%{#topic.title}"
+									cssStyle="width: 90%" /></td>
+						</tr>
+						<tr class="Tint" height="200">
+							<td valign="top" rowspan="2" class="Deep"><b>内容</b></td>
+							<td valign="top" class="no_color_bg"><s:textarea
+									name="content" cssStyle="width: 95%; height: 300px"></s:textarea></td>
+						</tr>
+						<tr height="30" class="Tint">
+							<td class="no_color_bg" colspan="2" align="center"><input
+								type="image"
+								src="${pageContext.request.contextPath}/style/blue/images/button/submit.PNG"
+								style="margin-right: 15px;" /></td>
+						</tr>
+					</table>
+				</div>
+		</s:form>
+			
+			
+					
+</body>
+</html>
